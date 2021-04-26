@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>The Peer test</title>
+    <script type="application/javascript" src="https://money.thepeer.co/send.js"> </script>
+</head>
+
+<body onload="usePeerstack()">
+
+    <div>
+        <button id="launch-btn">Send Money (The Peer)</button>
+    </div>
+
+    <script type="application/javascript">
+        function usePeerstack() {
+            let send = new ThePeer({
+                publicKey: "pspk_test_n4saqlmmjcie4xc1rzl2urpx0fwbwgp5cibnrdvkipl2t",
+                amount: "10000",
+                userReference: "chiziaruhoma@gmail.com",
+                firstName: "Chiziaruhoma",
+                receiptUrl: "api.codenka.com/payment",
+                onSuccess: function (data) {
+                    const response = { "type": "thepeer.dart.success", response: { ...data } }
+                    PeerstackClientInterface.postMessage(JSON.stringify(response))
+                },
+                onClose: function () {
+                    const response = { type: 'thepeer.dart.closed', }
+                    PeerstackClientInterface.postMessage(JSON.stringify(response))
+                }
+            });
+            send.setup();
+            send.open();
+        }
+    </script>
+</body>
+
+</html>
