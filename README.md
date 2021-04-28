@@ -1,14 +1,13 @@
 # Flutter Peerstack
-`** This is an unofficial SDK for flutter`
 
 This package makes it easy to use the Peerstack in a flutter project.
 
 ## 📸 Screen Shots
 
 <p float="left">
-<img src="https://github.com/Zfinix/thepeer_flutter/blob/main/1.png?raw=true" width="200">
-<img src="https://github.com/Zfinix/thepeer_flutter/blob/main/2.png?raw=true" width="200">
-<img src="https://github.com/Zfinix/thepeer_flutter/blob/main/3.png?raw=true" width="200">
+![1](https://user-images.githubusercontent.com/5338836/116476583-55419980-a873-11eb-9790-09e4c201c635.png)
+![2](https://user-images.githubusercontent.com/5338836/116476590-57a3f380-a873-11eb-8353-be6f8b95185c.png)
+![3](https://user-images.githubusercontent.com/5338836/116476596-5a064d80-a873-11eb-8cd4-dc7e7bbe1211.png)
 </p>
 
 ### 🚀 How to Use plugin
