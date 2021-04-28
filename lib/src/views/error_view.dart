@@ -27,13 +27,12 @@ class ErrorView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CupertinoButton(
-                child: Text(
-                  'Reload',
-                  style: TextStyle(fontSize: 14),
-                ),
-                color: Color(0xff1890ff),
-                onPressed: reload 
-              ),
+                  child: Text(
+                    'Reload',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  color: Color(0xff1890ff),
+                  onPressed: reload),
             ),
           ],
         ),
