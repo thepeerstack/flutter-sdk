@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -15,7 +14,7 @@ import 'package:thepeer_flutter/src/utils/extensions.dart';
 
 import 'package:thepeer_flutter/src/views/error_view.dart';
 
-class PeerstackView extends StatefulWidget {
+class ThepeerView extends StatefulWidget {
   /// Public Key from your https://app.withPeerstack.com/apps
   final ThePeerData data;
 
@@ -28,13 +27,13 @@ class PeerstackView extends StatefulWidget {
   /// Error Widget will show if loading fails
   final Widget? error;
 
-  /// Show PeerstackView Logs
+  /// Show ThepeerView Logs
   final bool showLogs;
 
   /// Toggle dismissible mode
   final bool isDismissible;
 
-  const PeerstackView({
+  const ThepeerView({
     Key? key,
     required this.data,
     this.error,
@@ -68,7 +67,7 @@ class PeerstackView extends StatefulWidget {
                 Center(
                   child: Container(
                     height: context.screenHeight(.9),
-                    child: PeerstackView(
+                    child: ThepeerView(
                       data: data,
                       onClosed: onClosed,
                       onSuccess: onSuccess,
@@ -84,10 +83,10 @@ class PeerstackView extends StatefulWidget {
       );
 
   @override
-  _PeerstackViewState createState() => _PeerstackViewState();
+  _ThepeerViewState createState() => _ThepeerViewState();
 }
 
-class _PeerstackViewState extends State<PeerstackView> {
+class _ThepeerViewState extends State<ThepeerView> {
   @override
   void initState() {
     super.initState();
@@ -110,72 +109,113 @@ class _PeerstackViewState extends State<PeerstackView> {
       body: FutureBuilder<String>(
           future: _getURL(),
           builder: (context, snapshot) {
-            if (hasError) {
-              return widget.error ??
-                  ErrorView(reload: () async {
-                    setState(() {});
-                    (await _webViewController).reload();
-                  });
+            if (hasError == true) {
+              return Center(
+                child: widget.error ??
+                    ErrorView(reload: () async {
+                      setState(() {});
+                      (await _webViewController).reload();
+                    }),
+              );
             } else
               return snapshot.hasData
-                  ? FutureBuilder<WebViewController>(
-                      future: _controller.future,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<WebViewController> controller) {
-                        return WebView(
-                          initialUrl: snapshot.data!,
-                          onWebViewCreated:
-                              (WebViewController webViewController) {
-                            _controller.complete(webViewController);
-                          },
-                          javascriptChannels: {_peerstackJavascriptChannel()},
-                          javascriptMode: JavascriptMode.unrestricted,
-                          onPageStarted: (String url) async {
-                            setState(() {
-                              isLoading = true;
-                            });
-                          },
-                          onPageFinished: (String url) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                          },
-                          navigationDelegate: (_) =>
-                              _handleNavigationInterceptor(_),
-                        );
-                      },
+                  ? Center(
+                      child: FutureBuilder<WebViewController>(
+                        future: _controller.future,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<WebViewController> controller) {
+                          return WebView(
+                            initialUrl: snapshot.data!,
+                            onWebViewCreated:
+                                (WebViewController webViewController) {
+                              _controller.complete(webViewController);
+                            },
+                            javascriptChannels: {_peerstackJavascriptChannel()},
+                            javascriptMode: JavascriptMode.unrestricted,
+                            onPageStarted: (String url) async {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              await injectPeerStack(controller.data!);
+                            },
+                            onPageFinished: (String url) {
+                              setState(() {
+                                isLoading = false;
+                              });
+                            },
+                            navigationDelegate: (_) =>
+                                _handleNavigationInterceptor(_),
+                          );
+                        },
+                      ),
                     )
                   : Center(child: CupertinoActivityIndicator());
           }),
     );
   }
 
-  /// javascript channel for events sent by Peerstack
+  Future<String> injectPeerStack(WebViewController controller) {
+    return controller.evaluateJavascript('''
+       window.onload = usePeerstack;
+        function usePeerstack() {
+
+            let send = new ThePeer({
+                publicKey: "${widget.data.publicKey}",
+                amount: "${widget.data.amount}",
+                userReference: "${widget.data.userReference}",
+                firstName: "${widget.data.firstName ?? ''}",
+                receiptUrl: "${widget.data.receiptUrl ?? ''}",
+                onSuccess: function (data) {
+                    sendMessage(data)
+                },
+                onClose: function () {
+                    sendMessage("thepeer.dart.closed")
+                }
+            });
+
+            send.setup();
+            send.open();
+        }
+
+
+        function sendMessage(message) {
+            if (window.PeerstackClientInterface && window.PeerstackClientInterface.postMessage) {
+                PeerstackClientInterface.postMessage(message);
+            }
+        }
+      ''');
+  }
+
+  /// Javascript channel for events sent by Peerstack
   JavascriptChannel _peerstackJavascriptChannel() {
     return JavascriptChannel(
         name: 'PeerstackClientInterface',
-        onMessageReceived: (JavascriptMessage message) {
-          if (widget.showLogs == true)
-            print('PeerstackClientInterface, ${message.message}');
-          Map<String, dynamic> res = json.decode(message.message);
-          handleResponse(res);
+        onMessageReceived: (JavascriptMessage msg) {
+          try {
+            print('PeerstackClientInterface, ${msg.message}');
+            handleResponse(msg.message);
+          } on Exception catch (e) {
+            print(e.toString());
+          }
         });
   }
 
   /// parse event from javascript channel
-  void handleResponse(Map<String, dynamic>? body) async {
+  void handleResponse(String? res) async {
     try {
-      String? key = body?['event'];
-      if (body != null && key != null) {
-        switch (key) {
+      if (res != null) {
+        switch (res) {
           case 'send.success':
             if (widget.onSuccess != null) widget.onSuccess!();
-            return;
-          case 'thepeer.dart.success':
-            if (widget.onSuccess != null) widget.onSuccess!();
+
             return;
           case 'thepeer.dart.closed':
             if (mounted && widget.onClosed != null) widget.onClosed!();
+
+            return;
+          case 'send.close':
+            if (mounted && widget.onClosed != null) widget.onClosed!();
+
             return;
           default:
         }
@@ -192,8 +232,7 @@ class _PeerstackViewState extends State<PeerstackView> {
         setState(() {
           hasError = false;
         });
-        return Uri.dataFromString(buildPeerstackHtml(widget.data),
-                mimeType: 'text/html')
+        return Uri.dataFromString(buildPeerstackHtml, mimeType: 'text/html')
             .toString();
       } else {
         return Uri.dataFromString('<html><body>An Error Occurred</body></html>',
