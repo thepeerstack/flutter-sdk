@@ -1,4 +1,7 @@
 
+## [1.0.5]
+refactor to thepeer
+
 ## [1.0.4]
 modify readme
 
