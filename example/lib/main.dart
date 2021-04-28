@@ -38,7 +38,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final peerstackPublicKey = '';
+  final peerstackPublicKey =
+      "";
 
   @override
   Widget build(BuildContext context) {
@@ -80,13 +81,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   onPressed: () async {
-                    await PeerstackView(
+                    await ThepeerView(
                       data: ThePeerData(
-                        amount: 10000,
-                        firstName: 'Chiziaruhoma',
-                        receiptUrl: 'api.codenka.com/payment',
+                        amount: 4000,
+                        firstName: 'Doreen',
+                        receiptUrl: 'https://lucas.thepeerstack.com/callback',
                         publicKey: peerstackPublicKey,
-                        userReference: 'chiziaruhoma@gmail.com',
+                        userReference: '73f03de5-1043-4ad1-bc2e-aa4d94ebee4f',
                       ),
                       showLogs: true,
                       onClosed: () {
@@ -94,6 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                       onSuccess: () {
                         Navigator.pop(context);
+                        final snackBar = SnackBar(
+                            content: Text("Yay! Your payment was successful"));
+
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       },
                     ).show(context);
                   },
