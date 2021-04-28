@@ -1,7 +1,7 @@
 name: thepeer_flutter
 description: Official plugin for using Thepeer SDK with flutter https://thepeer.co
-version: 1.0.5
-homepage: https://github.com/thethepeer/flutter_sdk
+version: 1.0.6
+homepage: https://github.com/thepeerstack/flutter_sdk
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
