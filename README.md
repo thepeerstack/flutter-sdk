@@ -1,4 +1,4 @@
-# Flutter Peerstack
+# Flutter Thepeer
 
 This package makes it easy to use the Peerstack in a flutter project.
 
