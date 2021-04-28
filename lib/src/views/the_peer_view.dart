@@ -15,13 +15,13 @@ import 'package:thepeer_flutter/src/utils/extensions.dart';
 import 'package:thepeer_flutter/src/views/error_view.dart';
 
 class ThepeerView extends StatefulWidget {
-  /// Public Key from your https://app.withPeerstack.com/apps
+  /// Public Key from your https://app.withThepeer.com/apps
   final ThePeerData data;
 
   /// Success callback
   final VoidCallback? onSuccess;
 
-  /// Peerstack popup Close callback
+  /// Thepeer popup Close callback
   final VoidCallback? onClosed;
 
   /// Error Widget will show if loading fails
@@ -130,7 +130,7 @@ class _ThepeerViewState extends State<ThepeerView> {
                                 (WebViewController webViewController) {
                               _controller.complete(webViewController);
                             },
-                            javascriptChannels: {_peerstackJavascriptChannel()},
+                            javascriptChannels: {_thepeerJavascriptChannel()},
                             javascriptMode: JavascriptMode.unrestricted,
                             onPageStarted: (String url) async {
                               setState(() {
@@ -156,8 +156,8 @@ class _ThepeerViewState extends State<ThepeerView> {
 
   Future<String> injectPeerStack(WebViewController controller) {
     return controller.evaluateJavascript('''
-       window.onload = usePeerstack;
-        function usePeerstack() {
+       window.onload = useThepeer;
+        function useThepeer() {
 
             let send = new ThePeer({
                 publicKey: "${widget.data.publicKey}",
@@ -179,20 +179,20 @@ class _ThepeerViewState extends State<ThepeerView> {
 
 
         function sendMessage(message) {
-            if (window.PeerstackClientInterface && window.PeerstackClientInterface.postMessage) {
-                PeerstackClientInterface.postMessage(message);
+            if (window.ThepeerClientInterface && window.ThepeerClientInterface.postMessage) {
+                ThepeerClientInterface.postMessage(message);
             }
         }
       ''');
   }
 
-  /// Javascript channel for events sent by Peerstack
-  JavascriptChannel _peerstackJavascriptChannel() {
+  /// Javascript channel for events sent by Thepeer
+  JavascriptChannel _thepeerJavascriptChannel() {
     return JavascriptChannel(
-        name: 'PeerstackClientInterface',
+        name: 'ThepeerClientInterface',
         onMessageReceived: (JavascriptMessage msg) {
           try {
-            print('PeerstackClientInterface, ${msg.message}');
+            print('ThepeerClientInterface, ${msg.message}');
             handleResponse(msg.message);
           } on Exception catch (e) {
             print(e.toString());
@@ -232,7 +232,7 @@ class _ThepeerViewState extends State<ThepeerView> {
         setState(() {
           hasError = false;
         });
-        return Uri.dataFromString(buildPeerstackHtml, mimeType: 'text/html')
+        return Uri.dataFromString(buildThepeerHtml, mimeType: 'text/html')
             .toString();
       } else {
         return Uri.dataFromString('<html><body>An Error Occurred</body></html>',
@@ -257,10 +257,10 @@ class _ThepeerViewState extends State<ThepeerView> {
 
   NavigationDecision _handleNavigationInterceptor(NavigationRequest request) {
     if (request.url.toLowerCase().contains('peer')) {
-      // Navigate to all urls contianing Peerstack
+      // Navigate to all urls contianing Thepeer
       return NavigationDecision.navigate;
     } else {
-      // Block all navigations outside Peerstack
+      // Block all navigations outside Thepeer
       return NavigationDecision.prevent;
     }
   }

@@ -17,12 +17,12 @@ class MyApp extends StatelessWidget {
         systemNavigationBarColor: Colors.white,
       ),
       child: MaterialApp(
-        title: 'Peerstack Flutter Demo',
+        title: 'Thepeer Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
         debugShowCheckedModeBanner: false,
-        home: MyHomePage(title: 'Peerstack Demo'),
+        home: MyHomePage(title: 'Thepeer Demo'),
       ),
     );
   }
@@ -38,7 +38,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final peerstackPublicKey = "";
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 60,
                 margin: EdgeInsets.symmetric(horizontal: 60),
                 child: CupertinoButton(
-                  color: peerstackColor,
+                  color: thepeerColor,
                   child: Center(
                     child: Text(
                       'Launch thePeer',
@@ -83,10 +82,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     await ThepeerView(
                       data: ThePeerData(
                         amount: 4000,
-                        firstName: 'Doreen',
-                        receiptUrl: 'https://lucas.thepeerstack.com/callback',
-                        publicKey: peerstackPublicKey,
-                        userReference: '73f03de5-1043-4ad1-bc2e-aa4d94ebee4f',
+                        firstName: '',
+                        receiptUrl: '',
+                        publicKey: '',
+                        userReference: '',
                       ),
                       showLogs: true,
                       onClosed: () {
@@ -111,4 +110,4 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-final peerstackColor = Color(0xff1890ff);
+final thepeerColor = Color(0xff1890ff);

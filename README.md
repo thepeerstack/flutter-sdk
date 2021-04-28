@@ -1,6 +1,6 @@
 # Flutter Thepeer
 
-This package makes it easy to use the Peerstack in a flutter project.
+This package makes it easy to use the Thepeer in a flutter project.
 
 ## 📸 Screen Shots
 

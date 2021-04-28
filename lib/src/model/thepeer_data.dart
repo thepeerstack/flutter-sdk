@@ -4,7 +4,7 @@ class ThePeerData {
   /// Your public key an be found on your dashboard settings
   final String publicKey;
 
-  /// The user reference returned by the Peerstack API when a user has been indexed
+  /// The user reference returned by the Thepeer API when a user has been indexed
   final String userReference;
 
   /// Your user's first name

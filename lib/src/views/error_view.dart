@@ -20,7 +20,7 @@ class ErrorView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Text(
-                'Could not connect with Peerstack',
+                'Could not connect with Thepeer',
                 textAlign: TextAlign.center,
               ),
             ),

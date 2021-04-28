@@ -1,5 +1,5 @@
-/// Raw Peerstack html formation
-String get buildPeerstackHtml => '''
+/// Raw Thepeer html formation
+String get buildThepeerHtml => '''
 <!DOCTYPE html>
 <html lang="en">
 
