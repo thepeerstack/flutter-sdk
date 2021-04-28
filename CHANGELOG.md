@@ -1,4 +1,7 @@
 
+## [1.0.2]
+version bump to 1.0.2
+
 ## [1.0.1]
 minor bug fixes
 
