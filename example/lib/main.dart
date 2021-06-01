@@ -67,16 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 margin: EdgeInsets.symmetric(horizontal: 60),
                 child: CupertinoButton(
                   color: thepeerColor,
-                  child: Center(
-                    child: Text(
-                      'Launch thePeer',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
                   onPressed: () async {
                     await ThepeerView(
                       data: ThePeerData(
@@ -93,12 +83,22 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSuccess: () {
                         Navigator.pop(context);
                         final snackBar = SnackBar(
-                            content: Text("Yay! Your payment was successful"));
+                            content: Text('Yay! Your payment was successful'));
 
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       },
                     ).show(context);
                   },
+                  child: Center(
+                    child: Text(
+                      'Launch thePeer',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],

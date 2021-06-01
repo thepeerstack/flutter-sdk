@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class ThePeerData {
+import 'package:equatable/equatable.dart';
+
+class ThePeerData with EquatableMixin {
   /// Your public key an be found on your dashboard settings
   final String publicKey;
 
@@ -66,28 +68,16 @@ class ThePeerData {
       ThePeerData.fromMap(json.decode(source));
 
   @override
-  String toString() {
-    return 'ThePeerData(publicKey: $publicKey, userReference: $userReference, firstName: $firstName, receiptUrl: $receiptUrl, amount: $amount)';
-  }
+  bool get stringify => true;
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is ThePeerData &&
-        other.publicKey == publicKey &&
-        other.userReference == userReference &&
-        other.firstName == firstName &&
-        other.receiptUrl == receiptUrl &&
-        other.amount == amount;
-  }
-
-  @override
-  int get hashCode {
-    return publicKey.hashCode ^
-        userReference.hashCode ^
-        firstName.hashCode ^
-        receiptUrl.hashCode ^
-        amount.hashCode;
+  List<Object> get props {
+    return [
+      publicKey,
+      userReference,
+      firstName ?? '',
+      receiptUrl ?? '',
+      amount,
+    ];
   }
 }
