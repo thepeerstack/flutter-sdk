@@ -23,6 +23,7 @@ dependencies:
 
   connectivity: ^3.0.3
   dio: any
+  intl: any
 
   # Others
   logger: ^1.0.0

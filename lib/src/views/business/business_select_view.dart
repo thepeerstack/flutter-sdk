@@ -3,10 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:hooks_riverpod/all.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:thepeer_flutter/src/consts/consts.dart';
 import 'package:thepeer_flutter/src/core/providers.dart';
 import 'package:thepeer_flutter/src/utils/colors.dart';
+import 'package:thepeer_flutter/src/utils/validator.dart';
 import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
 class BusinessSelectView extends HookWidget {
@@ -16,6 +17,11 @@ class BusinessSelectView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final amount = useProvider(peerControllerVM.select(
+      (v) => Validator.currency.format(
+        v.peerViewData.data.amount,
+      ),
+    ));
     return Column(
       children: [
         Container(
@@ -25,6 +31,7 @@ class BusinessSelectView extends HookWidget {
             top: 38,
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PeerHeader(),
               Gap(22),
@@ -42,7 +49,7 @@ class BusinessSelectView extends HookWidget {
               Gap(8),
               Center(
                 child: Text(
-                  '$ngn' '5,000',
+                  amount,
                   style: TextStyle(
                     fontFamily: 'Gilroy-Bold',
                     package: package,
@@ -112,37 +119,36 @@ class PeerBusinessList extends HookWidget {
         ),
         physics: BouncingScrollPhysics(),
         children: [
-          for (var i = 0; i < 3; i++)
-            ...businesses.map((e) => Column(
-                  children: [
-                    TouchableOpacity(
-                      onTap: () {},
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        width: double.infinity,
-                        child: Row(
-                          children: [
-                            Image.network(
-                              e.logo ?? '',
-                              width: 38,
-                              height: 38,
+          ...businesses.map((e) => Column(
+                children: [
+                  TouchableOpacity(
+                    onTap: () {},
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      width: double.infinity,
+                      child: Row(
+                        children: [
+                          Image.network(
+                            e.logo ?? '',
+                            width: 38,
+                            height: 38,
+                          ),
+                          Gap(21),
+                          Text(
+                            e.name,
+                            style: TextStyle(
+                              fontFamily: 'Gilroy-Medium',
+                              package: package,
+                              fontSize: 16,
+                              color: peerBoldTextColor,
                             ),
-                            Gap(21),
-                            Text(
-                              e.name,
-                              style: TextStyle(
-                                fontFamily: 'Gilroy-Medium',
-                                package: package,
-                                fontSize: 16,
-                                color: peerBoldTextColor,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    )
-                  ],
-                ))
+                    ),
+                  )
+                ],
+              ))
         ],
       ),
     );
