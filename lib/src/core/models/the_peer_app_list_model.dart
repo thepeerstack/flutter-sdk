@@ -48,7 +48,7 @@ class ThePeerBusiness with EquatableMixin {
   final String id;
   final String name;
   final String email;
-  final Object? logo;
+  final String? logo;
   final String identifier_type;
   ThePeerBusiness({
     required this.id,
@@ -62,7 +62,7 @@ class ThePeerBusiness with EquatableMixin {
     String? id,
     String? name,
     String? email,
-    Object? logo,
+    String? logo,
     String? identifier_type,
   }) {
     return ThePeerBusiness(

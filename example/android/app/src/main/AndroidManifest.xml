@@ -2,6 +2,7 @@
     package="com.chizi.thepeer_flutter_example">
    <application
         android:label="example"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

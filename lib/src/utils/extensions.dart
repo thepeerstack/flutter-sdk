@@ -7,3 +7,10 @@ extension CustomContext on BuildContext {
   double screenWidth([double percent = 1]) =>
       MediaQuery.of(this).size.width * percent;
 }
+
+extension PostFrameCallback on VoidCallback {
+  void withPostFrameCallback() =>
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        this();
+      });
+}

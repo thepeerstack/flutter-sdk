@@ -10,8 +10,11 @@ import 'package:thepeer_flutter/src/core/network/helper/api_helper.dart';
 import 'package:thepeer_flutter/src/utils/logger.dart';
 import 'package:thepeer_flutter/src/utils/peer_api_url.dart';
 
-class ThePeer {
-  final apiHelper = ApiHelper();
+class ThePeerApiServices {
+  ApiHelper get apiHelper => ApiHelper(publicKey);
+  final String publicKey;
+
+  ThePeerApiServices(this.publicKey);
 
   /// Gets List of available businesses
   Future<Either<Failure, ThePeerAppListModel>> getApps() async {

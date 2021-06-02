@@ -1,8 +1,7 @@
 
 class PeerApiURL {
   //Base URL
-  //ƒ static const bool isProd = kReleaseMode || bool.fromEnvironment('prod');
-  static const String base = 'http://sdk.peerstack.test';
+  static const String base = 'https://send.api.thepeer.co';
 
   // Send
   static const String send = '$base/send';

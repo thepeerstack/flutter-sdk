@@ -39,6 +39,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  void initState() {
+    super.initState();
+    
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      load();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -68,26 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: CupertinoButton(
                   color: thepeerColor,
                   onPressed: () async {
-                    await ThepeerView(
-                      data: ThePeerData(
-                        amount: 4000,
-                        firstName: '',
-                        receiptUrl: '',
-                        publicKey: '',
-                        userReference: '',
-                      ),
-                      showLogs: true,
-                      onClosed: () {
-                        Navigator.pop(context);
-                      },
-                      onSuccess: () {
-                        Navigator.pop(context);
-                        final snackBar = SnackBar(
-                            content: Text('Yay! Your payment was successful'));
-
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      },
-                    ).show(context);
+                    load();
                   },
                   child: Center(
                     child: Text(
@@ -106,6 +96,29 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       )),
     );
+  }
+
+  void load() async {
+    await ThePeerView(
+      data: ThePeerData(
+        amount: 4000,
+        firstName: 'Doreen',
+        receiptUrl: 'https://lucas.thepeerstack.com/callback',
+        publicKey: 'pspk_test_n4saqlmmjcie4xc1rzl2urpx0fwbwgp5cibnrdvkipl2t',
+        userReference: '73f03de5-1043-4ad1-bc2e-aa4d94ebee4f',
+      ),
+      showLogs: true,
+      onClosed: () {
+        Navigator.pop(context);
+      },
+      onSuccess: () {
+        Navigator.pop(context);
+        final snackBar =
+            SnackBar(content: Text('Yay! Your payment was successful'));
+
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      },
+    ).show(context);
   }
 }
 

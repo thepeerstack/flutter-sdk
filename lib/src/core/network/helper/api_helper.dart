@@ -7,6 +7,11 @@ import 'package:thepeer_flutter/src/utils/logger.dart';
 
 /// API Helper class for Authenticated Requests
 class ApiHelper extends AuthenticatedDioClient {
+  /// The Peer API Key
+  final String publicKey;
+
+  ApiHelper(this.publicKey);
+
   Future<String> getReq({
     /// Request Url
     required String url,
@@ -24,6 +29,9 @@ class ApiHelper extends AuthenticatedDioClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     var responseJson = '';
+
+    apiKey = publicKey;
+
     try {
       // Make Request
       final response = await get(
@@ -89,6 +97,9 @@ class ApiHelper extends AuthenticatedDioClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     var responseJson = '';
+
+    apiKey = publicKey;
+
     try {
       logger.d(body);
 
