@@ -10,7 +10,8 @@ import 'package:thepeer_flutter/src/core/models/the_peer_data.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_view_controller_data.dart';
 import 'package:thepeer_flutter/src/core/providers.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
-import 'package:thepeer_flutter/src/widgets/peer_loaDer_widget.dart';
+import 'package:thepeer_flutter/src/widgets/internal_page.dart';
+import 'package:thepeer_flutter/src/widgets/peer_loader_widget.dart';
 
 class ThePeerView extends StatefulHookWidget {
   /// Public Key from your https://app.withThePeer.com/apps
@@ -53,7 +54,7 @@ class ThePeerView extends StatefulHookWidget {
   }
 
   /// Show Dialog with a custom child
-  Future show(BuildContext context) => showMaterialModalBottomSheet(
+  Future show(BuildContext context) => showCupertinoModalBottomSheet(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -65,8 +66,8 @@ class ThePeerView extends StatefulHookWidget {
         enableDrag: false,
         context: context,
         builder: (context) => ProviderScope(
-          child: PeerViewWrapper(
-            peerViewData: thePeerViewControllerData,
+          child: PeerViewBuilder(
+            thePeerViewControllerData: thePeerViewControllerData,
           ),
         ),
       );
@@ -74,6 +75,24 @@ class ThePeerView extends StatefulHookWidget {
   @override
   _ThePeerViewState createState() {
     return _ThePeerViewState(peerViewData: thePeerViewControllerData);
+  }
+}
+
+class PeerViewBuilder extends HookWidget {
+  const PeerViewBuilder({
+    Key? key,
+    required this.thePeerViewControllerData,
+  }) : super(key: key);
+
+  final ThePeerViewControllerData thePeerViewControllerData;
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = useProvider(peerControllerVM);
+    provider.context = context;
+    return PeerViewWrapper(
+      peerViewData: thePeerViewControllerData,
+    );
   }
 }
 
@@ -88,20 +107,52 @@ class _ThePeerViewState extends State<ThePeerView> {
   void initState() {
     super.initState();
     () {
-      context.read(peerControllerVM).initialize(
-            context,
-            data: peerViewData,
-          );
+      context.read(peerControllerVM).initialize(data: peerViewData);
     }.withPostFrameCallback();
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = useProvider(peerControllerVM);
+    final currentView = useProvider(
+      peerControllerVM.select(
+        (v) => v.currentView,
+      ),
+    );
+
+    final controllerPageKey = useProvider(
+      peerControllerVM.select(
+        (v) => v.controllerPageKey,
+      ),
+    );
+
+    final isLoading = useProvider(
+      peerLoaderVM.select(
+        (v) => v.isLoading,
+      ),
+    );
+
+    print(isLoading);
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
-        child: provider.currentView ?? PeerLoaderWidget(),
+        child: Stack(
+          children: [
+            InternalPage(
+              key: controllerPageKey,
+              child: currentView ?? PeerLoaderWidget(),
+            ),
+            if (isLoading == true)
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.white70,
+                child: Center(
+                  child: PeerLoaderWidget(),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart' show Either, Right, Left;
 import 'package:thepeer_flutter/src/core/commons/errors/failure.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_app_details_model.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_app_list_model.dart';
+import 'package:thepeer_flutter/src/core/models/the_peer_business_model.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_receipt_model.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_user_ref_model.dart';
 import 'package:thepeer_flutter/src/core/network/helper/api_helper.dart';
@@ -37,10 +38,10 @@ class ThePeerApiServices {
     }
   }
 
-  /// Gets Current business Details
-  Future<Either<Failure, ThePeerAppDetailsModel>> getAppDetails() async {
+  /// Gets Current business
+  Future<Either<Failure, ThePeerBusinessModel>> getBusiness() async {
     try {
-      logger.d('func: getAppDetails() ->');
+      logger.d('func: getBusiness() ->');
 
       /// Handle Request
       final res = await apiHelper.getReq(
@@ -49,15 +50,14 @@ class ThePeerApiServices {
 
       /// Handle Response
       if (res.contains('business')) {
-        return Right(ThePeerAppDetailsModel.fromJson(res));
+        return Right(ThePeerBusinessModel.fromJson(res));
       } else {
-        return Left(Failure(message: 'Unable to get App Detail'));
+        return Left(Failure(message: 'Unable to get Current Business'));
       }
     } catch (e) {
       return Left(Failure(message: "Couldn't connect to Server"));
     }
   }
-
   /// Gets User from Business Id & Identifier
   Future<Either<Failure, ThePeerUserRefModel>> resolveUser({
     required String businessId,
@@ -70,7 +70,7 @@ class ThePeerApiServices {
       final res = await apiHelper.getReq(
         url: PeerApiURL.resolveUser(
           businessId: businessId,
-          identifier: identifier,
+          identifier: identifier.replaceAll('@', ''),
         ),
       );
 

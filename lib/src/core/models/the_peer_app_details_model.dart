@@ -1,8 +1,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-
-import 'the_peer_app_list_model.dart';
+import 'the_peer_business_model.dart';
 
 class ThePeerAppDetailsModel with EquatableMixin {
   final ThePeerBusiness business;

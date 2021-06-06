@@ -8,6 +8,8 @@ import 'package:thepeer_flutter/src/consts/consts.dart';
 import 'package:thepeer_flutter/src/core/providers.dart';
 import 'package:thepeer_flutter/src/utils/colors.dart';
 import 'package:thepeer_flutter/src/utils/validator.dart';
+import 'package:thepeer_flutter/src/views/business/input_identifier_view.dart';
+import 'package:thepeer_flutter/src/widgets/peer_header.dart';
 import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
 class BusinessSelectView extends HookWidget {
@@ -22,6 +24,13 @@ class BusinessSelectView extends HookWidget {
         v.peerViewData.data.amount,
       ),
     ));
+
+    final name = useProvider(
+      peerControllerVM.select(
+        (v) => v.peerViewData.data.firstName ?? '',
+      ),
+    );
+
     return Column(
       children: [
         Container(
@@ -37,7 +46,7 @@ class BusinessSelectView extends HookWidget {
               Gap(22),
               Center(
                 child: Text(
-                  'Hi Trojan, you are about to send',
+                  'Hi $name, you are about to send',
                   style: TextStyle(
                     fontFamily: 'Gilroy-Medium',
                     package: package,
@@ -95,7 +104,7 @@ class BusinessSelectView extends HookWidget {
             ),
           ],
         ),
-        Gap(18),
+        Gap(32),
       ],
     );
   }
@@ -122,7 +131,14 @@ class PeerBusinessList extends HookWidget {
           ...businesses.map((e) => Column(
                 children: [
                   TouchableOpacity(
-                    onTap: () {},
+                    onTap: () {
+                      context
+                          .read(peerControllerVM)
+                          ..userModel = null
+                          ..usernameTEC.text = ''
+                          ..reasonTEC.text = ''
+                          ..pushPage(InputIdentifierView(e));
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 18),
                       width: double.infinity,
@@ -203,45 +219,6 @@ class PeerBusinessSearch extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class PeerHeader extends StatelessWidget {
-  const PeerHeader({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Spacer(),
-        Gap(50),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            color: peerPeach,
-            child: Text(
-              'Test',
-              style: TextStyle(
-                fontFamily: 'Gilroy-SemiBold',
-                package: package,
-                color: peerRed,
-              ),
-            ),
-          ),
-        ),
-        Spacer(),
-        IconButton(
-          onPressed: () {},
-          icon: SvgPicture.asset(
-            'assets/images/close.svg',
-            package: package,
-          ),
-        ),
-      ],
     );
   }
 }

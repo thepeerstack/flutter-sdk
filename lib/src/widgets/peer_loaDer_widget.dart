@@ -14,7 +14,7 @@ class PeerLoaderWidget extends StatelessWidget {
       height: 25,
       width: 25,
       child: CircularProgressIndicator(
-        strokeWidth: 2.6,
+        strokeWidth: 2.4,
         valueColor: AlwaysStoppedAnimation(
           color ?? peerBoldTextColor,
         ),
