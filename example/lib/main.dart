@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
         firstName: 'Doreen',
         receiptUrl: 'https://lucas.thepeerstack.com/callback',
         publicKey: 'pspk_test_n4saqlmmjcie4xc1rzl2urpx0fwbwgp5cibnrdvkipl2t',
-        userReference: '73f03de5-1043-4ad1-bc2e-aa4d94ebee4f',
+        userReference: 'ebbc54d4-a127-470b-ba51-765df76cc197',
       ),
       showLogs: true,
       onClosed: () {
