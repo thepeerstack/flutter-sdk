@@ -7,6 +7,7 @@ import 'package:thepeer_flutter/src/consts/consts.dart';
 import 'package:thepeer_flutter/src/core/providers.dart';
 import 'package:thepeer_flutter/src/utils/colors.dart';
 
+/// Peer Header Widget
 class PeerHeader extends HookWidget {
   final bool showClose, showTest;
   const PeerHeader({
@@ -57,7 +58,6 @@ class PeerHeader extends HookWidget {
           padding: EdgeInsets.all(5),
           onPressed: () {
             /// Close all screen of Bottom Sheet
-            context.read(peerControllerVM).popAll();
             Navigator.pop(peerContext);
           },
           icon: SvgPicture.asset(

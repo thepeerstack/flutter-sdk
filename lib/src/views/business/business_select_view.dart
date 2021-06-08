@@ -12,6 +12,7 @@ import 'package:thepeer_flutter/src/views/business/input_identifier_view.dart';
 import 'package:thepeer_flutter/src/widgets/peer_header.dart';
 import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
+/// Select Business Widget
 class BusinessSelectView extends HookWidget {
   const BusinessSelectView({
     Key? key,
@@ -20,7 +21,7 @@ class BusinessSelectView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final amount = useProvider(peerControllerVM.select(
-      (v) => Validator.currency.format(
+      (v) => Validator.noSymbolCurrency.format(
         v.peerViewData.data.amount,
       ),
     ));
@@ -57,13 +58,26 @@ class BusinessSelectView extends HookWidget {
               ),
               Gap(8),
               Center(
-                child: Text(
-                  amount,
-                  style: TextStyle(
-                    fontFamily: 'Gilroy-Bold',
-                    package: package,
-                    fontSize: 32,
-                    color: peerBoldTextColor,
+                child: Text.rich(
+                  TextSpan(
+                    text: '₦ ',
+                    children: [
+                      TextSpan(
+                        text: amount,
+                        style: TextStyle(
+                          fontFamily: 'Gilroy-Bold',
+                          package: package,
+                          fontSize: 32,
+                          color: peerBoldTextColor,
+                        ),
+                      )
+                    ],
+                    style: TextStyle(
+                      package: package,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: peerBoldTextColor,
+                    ),
                   ),
                 ),
               ),
@@ -110,6 +124,7 @@ class BusinessSelectView extends HookWidget {
   }
 }
 
+/// Business List Widget
 class PeerBusinessList extends HookWidget {
   const PeerBusinessList({
     Key? key,
@@ -132,12 +147,11 @@ class PeerBusinessList extends HookWidget {
                 children: [
                   TouchableOpacity(
                     onTap: () {
-                      context
-                          .read(peerControllerVM)
-                          ..userModel = null
-                          ..usernameTEC.text = ''
-                          ..reasonTEC.text = ''
-                          ..pushPage(InputIdentifierView(e));
+                      context.read(peerControllerVM)
+                        ..userModel = null
+                        ..usernameTEC.text = ''
+                        ..reasonTEC.text = ''
+                        ..pushPage(InputIdentifierView(e));
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 18),
@@ -171,6 +185,7 @@ class PeerBusinessList extends HookWidget {
   }
 }
 
+/// Search bar Widget
 class PeerBusinessSearch extends StatelessWidget {
   const PeerBusinessSearch({
     Key? key,
@@ -186,7 +201,6 @@ class PeerBusinessSearch extends StatelessWidget {
           children: [
             Flexible(
               child: TextField(
-                autofocus: false,
                 style: TextStyle(
                   fontFamily: 'Gilroy-Semibold',
                   package: package,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_business_model.dart';
 
+/// Peer Logo Icon Widger
 class PeerLogoIcon extends StatelessWidget {
   const PeerLogoIcon(this.business);
 

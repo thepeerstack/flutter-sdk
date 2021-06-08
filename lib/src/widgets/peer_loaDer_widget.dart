@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:thepeer_flutter/src/utils/colors.dart';
 
+/// Peer Loader Widger
 class PeerLoaderWidget extends StatelessWidget {
   final Color? color;
   const PeerLoaderWidget({

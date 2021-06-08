@@ -3,6 +3,7 @@ import 'package:thepeer_flutter/src/consts/consts.dart';
 import 'package:thepeer_flutter/src/utils/colors.dart';
 import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
+/// Peer Button Widget
 class PeerButton extends StatelessWidget {
   final String title;
   final VoidCallback? onTap;

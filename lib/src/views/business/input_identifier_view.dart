@@ -11,6 +11,7 @@ import 'package:thepeer_flutter/src/widgets/peer_button.dart';
 import 'package:thepeer_flutter/src/widgets/peer_header.dart';
 import 'package:thepeer_flutter/src/widgets/peer_logo_icon.dart';
 
+/// Input User Identifier Widget
 class InputIdentifierView extends HookWidget {
   final ThePeerBusiness business;
   InputIdentifierView(
@@ -105,6 +106,7 @@ class InputIdentifierView extends HookWidget {
               PeerTextField(
                 hintText: 'What is this for ?',
                 controller: provider.reasonTEC,
+                onChanged: (v) => provider.resonChange(),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please input transaction remark';

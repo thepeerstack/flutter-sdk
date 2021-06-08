@@ -13,8 +13,23 @@ import 'package:thepeer_flutter/src/utils/extensions.dart';
 import 'package:thepeer_flutter/src/widgets/internal_page.dart';
 import 'package:thepeer_flutter/src/widgets/peer_loader_widget.dart';
 
+/// ThePeerView SDK Widget
+///
+/// Triggers Thepeer Sheet
+///
+/// [data] (required) is what will be displayed within the touchable highlight on top of the background color.
+///
+/// [onTap] is the callback which will execute when tapped.
+///
+/// [onLongPress] callback executed on long press event.
+///
+/// [width] width supplied to the enclosing container.
+///
+/// [height] height supplied to the enclosing container
+///
+/// [decoration] decoration supplied to the enclosing container.Ï
 class ThePeerView extends StatefulHookWidget {
-  /// Public Key from your https://app.withThePeer.com/apps
+  /// Essential SD
   final ThePeerData data;
 
   /// Success callback
@@ -42,6 +57,7 @@ class ThePeerView extends StatefulHookWidget {
     this.isDismissible = true,
   });
 
+  // Data needed by ThePeerViewController
   ThePeerViewControllerData get thePeerViewControllerData {
     return ThePeerViewControllerData(
       data: data,
@@ -75,24 +91,6 @@ class ThePeerView extends StatefulHookWidget {
   @override
   _ThePeerViewState createState() {
     return _ThePeerViewState(peerViewData: thePeerViewControllerData);
-  }
-}
-
-class PeerViewBuilder extends HookWidget {
-  const PeerViewBuilder({
-    Key? key,
-    required this.thePeerViewControllerData,
-  }) : super(key: key);
-
-  final ThePeerViewControllerData thePeerViewControllerData;
-
-  @override
-  Widget build(BuildContext context) {
-    final provider = useProvider(peerControllerVM);
-    provider.context = context;
-    return PeerViewWrapper(
-      peerViewData: thePeerViewControllerData,
-    );
   }
 }
 
@@ -131,8 +129,6 @@ class _ThePeerViewState extends State<ThePeerView> {
       ),
     );
 
-    print(isLoading);
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
@@ -158,6 +154,32 @@ class _ThePeerViewState extends State<ThePeerView> {
   }
 }
 
+/// Widget wrapper to mix in ThePeerViewControllerData
+class PeerViewBuilder extends HookWidget {
+  const PeerViewBuilder({
+    Key? key,
+    required this.thePeerViewControllerData,
+  }) : super(key: key);
+
+  final ThePeerViewControllerData thePeerViewControllerData;
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = useProvider(peerControllerVM);
+    provider.context = context;
+    return WillPopScope(
+      onWillPop: () async {
+        provider.popPage();
+        return false;
+      },
+      child: PeerViewWrapper(
+        peerViewData: thePeerViewControllerData,
+      ),
+    );
+  }
+}
+
+// PeerView wrapper Widget
 class PeerViewWrapper extends StatelessWidget {
   const PeerViewWrapper({
     Key? key,

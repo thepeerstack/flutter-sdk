@@ -5,7 +5,7 @@ import 'package:thepeer_flutter/src/utils/colors.dart';
 
 const package = 'thepeer_flutter';
 
-String get ngn => Platform.isAndroid ? 'N' : '₦';
+String get ngn => '₦';
 
 var outlineInputBorder = OutlineInputBorder(
   borderRadius: BorderRadius.circular(6),
@@ -24,6 +24,5 @@ final peerErrorStatesMap = {
   'error': {
     'Something went wrong':
         'Something went wrong with our server. Please check back later'
-    
   }
 };

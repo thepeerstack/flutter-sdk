@@ -92,24 +92,21 @@ class ThePeerControllerVM extends ChangeNotifier {
   void loadCurrentBusiness() async {
     final req = await api.getBusiness();
 
-    req.fold((l) {
-      print(l);
-      //return PeerLoaderWidget();
-    }, (r) {
-      currentBusiness = r;
-    });
+    req.fold(
+      (l) => null,
+      (r) => currentBusiness = r,
+    );
   }
 
   void loadAppList() async {
     final req = await api.getApps();
 
-    req.fold((l) {
-      pushPage(ThePeerErrorView(
-        state: ThePeerErrorStates.failed,
-      ));
-    }, (r) {
-      appListModel = r;
-    });
+    req.fold(
+      (l) => pushPage(ThePeerErrorView(
+        state: ThePeerErrorStates.error,
+      )),
+      (r) => appListModel = r,
+    );
   }
 
   void searchUsername({
@@ -117,23 +114,24 @@ class ThePeerControllerVM extends ChangeNotifier {
     required String identifier,
   }) {
     debouncer.run(() async {
+      loader.isLoading = true;
+
       final req = await api.resolveUser(
         businessId: businessId,
         identifier: identifier,
       );
+      loader.isLoading = false;
 
-      req.fold((l) {
-        userModel = null;
-      }, (r) {
-        userModel = r;
-      });
+      req.fold(
+        (l) => userModel = null,
+        (r) => userModel = r,
+      );
     });
   }
 
   void handleInputDetails(ThePeerBusiness business) {
-    if (userModel == null) {
-      return;
-    }
+    if (userModel == null) return;
+
     pushPage(ConfirmView(business));
   }
 
@@ -149,20 +147,19 @@ class ThePeerControllerVM extends ChangeNotifier {
     );
     loader.isLoading = false;
 
-    req.fold((l) {
-      pushPage(
+    req.fold(
+      (l) => pushPage(
         ThePeerErrorView(
           state: ThePeerErrorStates.failed,
         ),
-      );
-    }, (r) {
-      pushPage(
+      ),
+      (r) => pushPage(
         ThePeerSuccessView(
           description:
               'You have successfully sent ${Validator.currency.format(peerViewData.data.amount)} to ${usernameTEC.text}.',
         ),
-      );
-    });
+      ),
+    );
   }
 
   /// If ui can remove current fragment
@@ -170,10 +167,7 @@ class ThePeerControllerVM extends ChangeNotifier {
 
   /// Removes current fragment
   void popPage() {
-    if (canPop) {
-      pageState!.popPage();
-      logger.i('Nav: Popped Current Fragment');
-    }
+    if (canPop) pageState!.popPage();
   }
 
   /// Removes all fragments in page store
@@ -181,20 +175,13 @@ class ThePeerControllerVM extends ChangeNotifier {
     while (canPop) {
       popPage();
     }
-    logger.i('Nav: Popped all Fragments');
   }
 
   /// Push new fragment atop the page stack
-  void pushPage(Widget? page) {
-    logger.i('Nav: Current Fragment -> ${(page.runtimeType)}');
-
-    pageState!.addPage(page);
-  }
+  void pushPage(Widget? page) => pageState!.addPage(page);
 
   /// Replaces current page with a new one
-  void replaceTopPage(Widget page) {
-    logger.i('Nav: Current Fragment -> ${(page.runtimeType)}');
+  void replaceTopPage(Widget page) => pageState!.replaceTopPage(page);
 
-    pageState!.replaceTopPage(page);
-  }
+  void resonChange() => debouncer.run(notifyListeners);
 }

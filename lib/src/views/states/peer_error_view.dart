@@ -10,9 +10,10 @@ import 'package:thepeer_flutter/src/utils/extensions.dart';
 import 'package:thepeer_flutter/src/widgets/peer_button.dart';
 import 'package:thepeer_flutter/src/widgets/peer_header.dart';
 
+
+/// ThePeerErrorView States Widget
 class ThePeerErrorView extends StatelessWidget {
   final ThePeerErrorStates state;
-
   const ThePeerErrorView({Key? key, required this.state});
 
   @override

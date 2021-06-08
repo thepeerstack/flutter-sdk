@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 class ThePeerData with EquatableMixin {
-  /// Your public key an be found on your dashboard settings
+  /// Your public key an be found on your dashboard settings 
   final String publicKey;
 
   /// The user reference returned by the Thepeer API when a user has been indexed

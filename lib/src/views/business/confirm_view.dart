@@ -12,6 +12,7 @@ import 'package:thepeer_flutter/src/widgets/peer_button.dart';
 import 'package:thepeer_flutter/src/widgets/peer_header.dart';
 import 'package:thepeer_flutter/src/widgets/peer_logo_icon.dart';
 
+/// Confirm Transaction Widget
 class ConfirmView extends HookWidget {
   final ThePeerBusiness business;
   const ConfirmView(
@@ -26,7 +27,7 @@ class ConfirmView extends HookWidget {
     ));
 
     final amount = useProvider(peerControllerVM.select(
-      (v) => Validator.currency.format(
+      (v) => Validator.noSymbolCurrency.format(
         v.peerViewData.data.amount,
       ),
     ));
@@ -90,21 +91,47 @@ class ConfirmView extends HookWidget {
             ),
             Gap(14),
             Center(
-              child: Text(
-                'You are about to send $amount to $username on ${business.name}. Do you want to proceed ?',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Gilroy-Medium',
-                  package: package,
-                  fontSize: 15,
-                  color: peerTextColor,
+              child: Text.rich(
+                TextSpan(
+                  text: '',
+                  children: [
+                    TextSpan(
+                      text: 'You are about to send ',
+                      style: TextStyle(
+                        fontFamily: 'Gilroy-Medium',
+                        package: package,
+                        fontSize: 15,
+                        color: peerTextColor,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '$ngn ',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: peerTextColor,
+                      ),
+                    ),
+                    TextSpan(
+                      text:
+                          '$amount to $username on ${business.name}. Do you want to proceed ?',
+                      style: TextStyle(
+                        fontFamily: 'Gilroy-Medium',
+                        package: package,
+                        fontSize: 15,
+                        color: peerTextColor,
+                      ),
+                    ),
+                  ],
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             Gap(56),
             PeerButton(
               title: 'Proceed',
-              onTap: () => context.read(peerControllerVM).handleProcessTransaction(business),
+              onTap: () => context
+                  .read(peerControllerVM)
+                  .handleProcessTransaction(business),
             ),
             Gap(10),
             PeerButton(
