@@ -23,5 +23,5 @@ class PeerApiURL {
   static String resolveUserRef({
     required String ref,
   }) =>
-      '$resolve?reference=$ref';
+      '$resolve/reference?reference=$ref';
 }

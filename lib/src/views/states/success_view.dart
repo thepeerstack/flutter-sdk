@@ -14,7 +14,7 @@ import 'package:thepeer_flutter/src/widgets/peer_header.dart';
 
 /// Successful Transaction View
 class ThePeerSuccessView extends HookWidget {
-  final String description;
+  final List<String> description;
 
   const ThePeerSuccessView({Key? key, required this.description});
 
@@ -34,9 +34,7 @@ class ThePeerSuccessView extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PeerHeader(
-                showTest: false,
-              ),
+              PeerHeader(),
             ],
           ),
         ),
@@ -66,15 +64,38 @@ class ThePeerSuccessView extends HookWidget {
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Text(
-                  description,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Gilroy-Medium',
-                    package: package,
-                    fontSize: 15,
-                    color: peerTextColor,
+                child: Text.rich(
+                  TextSpan(
+                    text: '',
+                    children: [
+                      TextSpan(
+                        text: description[0],
+                        style: TextStyle(
+                          fontFamily: 'Gilroy-Medium',
+                          package: package,
+                          fontSize: 15,
+                          color: peerTextColor,
+                        ),
+                      ),
+                      TextSpan(
+                        text: description[1],
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: peerTextColor,
+                        ),
+                      ),
+                      TextSpan(
+                        text: description[2],
+                        style: TextStyle(
+                          fontFamily: 'Gilroy-Medium',
+                          package: package,
+                          fontSize: 15,
+                          color: peerTextColor,
+                        ),
+                      ),
+                    ],
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -126,7 +147,7 @@ class _CountDownTimerState extends State<CountDownTimer> {
 
   Timer? timer;
 
-  final int timerMaxSeconds = 10;
+  final int timerMaxSeconds = 5;
 
   int currentSeconds = 0;
 

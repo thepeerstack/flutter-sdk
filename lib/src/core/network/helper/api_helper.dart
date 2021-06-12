@@ -33,6 +33,8 @@ class ApiHelper extends AuthenticatedDioClient {
     apiKey = publicKey;
 
     try {
+      // Log data response
+      logger.i(url);
       // Make Request
       final response = await get(
         url,
@@ -43,8 +45,6 @@ class ApiHelper extends AuthenticatedDioClient {
         onReceiveProgress: onReceiveProgress,
       );
 
-      // Log data response
-      logger.i(url);
       logger.d(response.data);
 
       responseJson = _returnResponse(response);
@@ -128,8 +128,6 @@ class ApiHelper extends AuthenticatedDioClient {
       logger.i(url);
       return e.response?.data;
     } catch (e) {
-      print(e.toString());
-
       // Catch Error
       if (e is Response) {
         logger.e(e.data);

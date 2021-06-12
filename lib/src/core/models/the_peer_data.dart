@@ -3,14 +3,11 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 class ThePeerData with EquatableMixin {
-  /// Your public key an be found on your dashboard settings 
+  /// Your public key an be found on your dashboard settings
   final String publicKey;
 
   /// The user reference returned by the Thepeer API when a user has been indexed
   final String userReference;
-
-  /// Your user's first name
-  final String? firstName;
 
   /// This is a callback to your application's backend where we would pass a query string `"?receipt=$receipt_id"` where you are expected to initiate the send endpoint on your backend using your secret key.
   final String? receiptUrl;
@@ -21,10 +18,11 @@ class ThePeerData with EquatableMixin {
   ThePeerData({
     required this.publicKey,
     required this.userReference,
-    required this.firstName,
     required this.receiptUrl,
     required this.amount,
   });
+
+  bool get isTest => publicKey.contains('test');
 
   ThePeerData copyWith({
     String? publicKey,
@@ -36,7 +34,6 @@ class ThePeerData with EquatableMixin {
     return ThePeerData(
       publicKey: publicKey ?? this.publicKey,
       userReference: userReference ?? this.userReference,
-      firstName: firstName ?? this.firstName,
       receiptUrl: receiptUrl ?? this.receiptUrl,
       amount: amount ?? this.amount,
     );
@@ -46,7 +43,6 @@ class ThePeerData with EquatableMixin {
     return {
       'publicKey': publicKey,
       'userReference': userReference,
-      'firstName': firstName,
       'receiptUrl': receiptUrl,
       'amount': amount,
     };
@@ -56,7 +52,6 @@ class ThePeerData with EquatableMixin {
     return ThePeerData(
       publicKey: map['publicKey'],
       userReference: map['userReference'],
-      firstName: map['firstName'],
       receiptUrl: map['receiptUrl'],
       amount: map['amount'],
     );
@@ -75,7 +70,6 @@ class ThePeerData with EquatableMixin {
     return [
       publicKey,
       userReference,
-      firstName ?? '',
       receiptUrl ?? '',
       amount,
     ];

@@ -7,7 +7,6 @@ import 'package:thepeer_flutter/src/core/models/the_peer_view_controller_data.da
 import 'package:thepeer_flutter/src/core/providers.dart';
 import 'package:thepeer_flutter/src/core/viewmodels/the_peer_loader_vm.dart';
 import 'package:thepeer_flutter/src/utils/debouncer.dart';
-import 'package:thepeer_flutter/src/utils/logger.dart';
 import 'package:thepeer_flutter/src/utils/validator.dart';
 import 'package:thepeer_flutter/src/views/business/business_select_view.dart';
 import 'package:thepeer_flutter/src/views/business/confirm_view.dart';
@@ -51,6 +50,13 @@ class ThePeerControllerVM extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<ThePeerBusiness>? _searchBusinessList;
+  List<ThePeerBusiness>? get searchBusinessList => _searchBusinessList;
+  set searchBusinessList(List<ThePeerBusiness>? val) {
+    _searchBusinessList = val;
+    notifyListeners();
+  }
+
   ThePeerAppListModel? _appListModel;
   ThePeerAppListModel? get appListModel => _appListModel;
   set appListModel(ThePeerAppListModel? val) {
@@ -65,6 +71,13 @@ class ThePeerControllerVM extends ChangeNotifier {
     notifyListeners();
   }
 
+  ThePeerUserRefModel? _receiverUserModel;
+  ThePeerUserRefModel? get receiverUserModel => _receiverUserModel;
+  set receiverUserModel(ThePeerUserRefModel? val) {
+    _receiverUserModel = val;
+    notifyListeners();
+  }
+
   Widget? _currentView;
   Widget? get currentView => _currentView;
   set currentView(Widget? val) {
@@ -72,23 +85,51 @@ class ThePeerControllerVM extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  double? _percent;
+  double? get percent => _percent;
+
+  set isLoading(bool val) {
+    _isLoading = val;
+    notifyListeners();
+  }
+
+  /// TextField Controllers
   final usernameTEC = TextEditingController();
   final reasonTEC = TextEditingController();
 
+  /// Debounce timer
   final debouncer = Debouncer(milliseconds: 800);
 
+  /// Initilaize SDK
   void initialize({
     required ThePeerViewControllerData data,
   }) {
     peerViewData = data;
     api = ThePeerApiServices(data.data.publicKey);
-    currentView = BusinessSelectView();
-    loader.runTask(() async {
-      loadCurrentBusiness();
-      loadAppList();
-    });
+    pushPage(BusinessSelectView());
+    loadReceiverUser();
+    loadCurrentBusiness();
+    loadBusinessList();
   }
 
+  /// Load Receiving User Data
+  void loadReceiverUser() async {
+    loader.isLoading = true;
+
+    final req =
+        await api.resolveUserByRef(reference: peerViewData.data.userReference);
+
+    req.fold(
+      (l) => null,
+      (r) => receiverUserModel = r,
+    );
+    loader.isLoading = false;
+  }
+
+  /// Load Current Busineess Data
   void loadCurrentBusiness() async {
     final req = await api.getBusiness();
 
@@ -98,8 +139,9 @@ class ThePeerControllerVM extends ChangeNotifier {
     );
   }
 
-  void loadAppList() async {
-    final req = await api.getApps();
+  /// Load Business List Data
+  void loadBusinessList() async {
+    final req = await api.getBusinesses();
 
     req.fold(
       (l) => pushPage(ThePeerErrorView(
@@ -114,18 +156,43 @@ class ThePeerControllerVM extends ChangeNotifier {
     required String identifier,
   }) {
     debouncer.run(() async {
-      loader.isLoading = true;
+      isLoading = true;
 
       final req = await api.resolveUser(
         businessId: businessId,
         identifier: identifier,
       );
-      loader.isLoading = false;
+      isLoading = false;
 
       req.fold(
-        (l) => userModel = null,
+        (l) {
+          print(identifier);
+          userModel = identifier.isEmpty ? null : ThePeerUserRefModel.empty();
+        },
         (r) => userModel = r,
       );
+    });
+  }
+
+  void searchBusiness(String? name) {
+    Debouncer(milliseconds: 300).run(() async {
+      if (name == null || name.trim().isEmpty) {
+        searchBusinessList = [];
+        notifyListeners();
+        searchBusinessList = appListModel!.businesses;
+        print(searchBusinessList);
+
+        return;
+      }
+      if (appListModel == null || appListModel!.businesses!.isEmpty) {
+        return;
+      }
+
+      searchBusinessList = appListModel!.businesses!
+          .where((e) => e.name.toLowerCase().contains(name.toLowerCase()))
+          .toList();
+
+      notifyListeners();
     });
   }
 
@@ -137,6 +204,7 @@ class ThePeerControllerVM extends ChangeNotifier {
 
   void handleProcessTransaction(ThePeerBusiness business) async {
     loader.isLoading = true;
+
     final req = await api.generateReceipt(
       receipt: ThePeerReceiptModel(
         amount: peerViewData.data.amount,
@@ -145,6 +213,7 @@ class ThePeerControllerVM extends ChangeNotifier {
         remark: reasonTEC.text,
       ),
     );
+
     loader.isLoading = false;
 
     req.fold(
@@ -155,8 +224,11 @@ class ThePeerControllerVM extends ChangeNotifier {
       ),
       (r) => pushPage(
         ThePeerSuccessView(
-          description:
-              'You have successfully sent ${Validator.currency.format(peerViewData.data.amount)} to ${usernameTEC.text}.',
+          description: [
+            'You have successfully sent',
+            '${Validator.currency.format(peerViewData.data.amount)}',
+            ' to ${usernameTEC.text}.',
+          ],
         ),
       ),
     );

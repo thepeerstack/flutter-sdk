@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart' show Either, Right, Left;
+import 'package:dio/dio.dart';
 import 'package:thepeer_flutter/src/core/commons/errors/failure.dart';
-import 'package:thepeer_flutter/src/core/models/the_peer_app_details_model.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_app_list_model.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_business_model.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_receipt_model.dart';
@@ -18,9 +18,9 @@ class ThePeerApiServices {
   ThePeerApiServices(this.publicKey);
 
   /// Gets List of available businesses
-  Future<Either<Failure, ThePeerAppListModel>> getApps() async {
+  Future<Either<Failure, ThePeerAppListModel>> getBusinesses() async {
     try {
-      logger.d('func: getApps() ->');
+      logger.d('func: getBusinesses() ->');
 
       /// Handle Request
       final res = await apiHelper.getReq(
@@ -31,7 +31,7 @@ class ThePeerApiServices {
       if (res.contains('businesses')) {
         return Right(ThePeerAppListModel.fromJson(res));
       } else {
-        return Left(Failure(message: 'Unable to get Apps'));
+        return Left(Failure(message: 'Unable to get Businesses'));
       }
     } catch (e) {
       return Left(Failure(message: "Couldn't connect to Server"));
@@ -58,6 +58,7 @@ class ThePeerApiServices {
       return Left(Failure(message: "Couldn't connect to Server"));
     }
   }
+
   /// Gets User from Business Id & Identifier
   Future<Either<Failure, ThePeerUserRefModel>> resolveUser({
     required String businessId,
@@ -104,6 +105,9 @@ class ThePeerApiServices {
         return Left(Failure(message: 'Unable to get User By Ref'));
       }
     } catch (e) {
+      if (e is DioError) {
+        print(e.message);
+      }
       return Left(Failure(message: "Couldn't connect to Server"));
     }
   }

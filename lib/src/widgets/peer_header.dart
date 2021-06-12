@@ -9,17 +9,19 @@ import 'package:thepeer_flutter/src/utils/colors.dart';
 
 /// Peer Header Widget
 class PeerHeader extends HookWidget {
-  final bool showClose, showTest;
+  final bool showClose;
   const PeerHeader({
     Key? key,
     this.showClose = false,
-    this.showTest = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final peerContext = useProvider(peerControllerVM.select(
       (v) => v.context,
+    ));
+    final isTest = useProvider(peerControllerVM.select(
+      (v) => v.peerViewData.data.isTest,
     ));
     return Row(
       children: [
@@ -33,7 +35,7 @@ class PeerHeader extends HookWidget {
             ),
           ),
         ] else ...[
-          if (showTest == true) ...[
+          if (isTest == true) ...[
             Spacer(),
             Gap(50),
             ClipRRect(

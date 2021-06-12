@@ -10,7 +10,6 @@ import 'package:thepeer_flutter/src/utils/extensions.dart';
 import 'package:thepeer_flutter/src/widgets/peer_button.dart';
 import 'package:thepeer_flutter/src/widgets/peer_header.dart';
 
-
 /// ThePeerErrorView States Widget
 class ThePeerErrorView extends StatelessWidget {
   final ThePeerErrorStates state;
@@ -29,9 +28,7 @@ class ThePeerErrorView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PeerHeader(
-                showTest:false ,
-              ),
+              PeerHeader(),
             ],
           ),
         ),
@@ -60,7 +57,7 @@ class ThePeerErrorView extends StatelessWidget {
             Gap(14),
             Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal:30),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Text(
                   state.description,
                   textAlign: TextAlign.center,
@@ -74,12 +71,11 @@ class ThePeerErrorView extends StatelessWidget {
               ),
             ),
             Gap(32),
-          
             PeerButton(
               title: 'Go back',
               buttonColor: Colors.white,
               textColor: peerBlue,
-              isUnderlined:  true,
+              isUnderlined: true,
               onTap: () => context.read(peerControllerVM).popPage(),
             )
           ],

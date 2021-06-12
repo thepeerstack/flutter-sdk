@@ -22,12 +22,12 @@ dependencies:
   flutter_hooks: ^0.16.0
 
   connectivity: ^3.0.3
-  dio: any
-  intl: any
+  dio: ^4.0.0
+  intl: ^0.17.0
 
   # Others
   logger: ^1.0.0
-  pedantic: any
+  pedantic: ^1.11.0
 
   # UI
   flutter_svg: ^0.22.0

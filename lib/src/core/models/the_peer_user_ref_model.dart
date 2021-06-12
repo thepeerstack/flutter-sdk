@@ -34,6 +34,13 @@ class ThePeerUserRefModel with EquatableMixin {
     );
   }
 
+  factory ThePeerUserRefModel.empty() {
+    return ThePeerUserRefModel(
+      name: '',
+      reference: '',
+    );
+  }
+
   String toJson() => json.encode(toMap());
 
   factory ThePeerUserRefModel.fromJson(String source) =>
