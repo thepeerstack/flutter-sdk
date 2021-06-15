@@ -5,7 +5,7 @@ import 'package:thepeer_flutter/src/consts/consts.dart';
 abstract class Validator {
 
   static NumberFormat get currency =>
-      NumberFormat.currency(decimalDigits: 0, symbol: '$ngn ');
+      NumberFormat.currency(decimalDigits: 0, symbol: '$ngn');
       
   static NumberFormat get noSymbolCurrency =>
       NumberFormat.currency(decimalDigits: 0, symbol: '');

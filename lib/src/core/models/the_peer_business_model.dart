@@ -30,14 +30,14 @@ class ThePeerBusinessModel with EquatableMixin {
 
   String toJson() => json.encode(toMap());
 
-  factory ThePeerBusinessModel.fromJson(String source) => ThePeerBusinessModel.fromMap(json.decode(source));
+  factory ThePeerBusinessModel.fromJson(String source) =>
+      ThePeerBusinessModel.fromMap(json.decode(source));
 
   @override
   String toString() => 'ThePeerBusinessModel(business: $business)';
   @override
   List<Object> get props => [business ?? ''];
 }
-
 
 class ThePeerBusiness with EquatableMixin {
   final String id;
@@ -52,6 +52,8 @@ class ThePeerBusiness with EquatableMixin {
     required this.logo,
     required this.identifier_type,
   });
+
+  bool get isUsernameIdentifier => identifier_type == 'username';
 
   ThePeerBusiness copyWith({
     String? id,

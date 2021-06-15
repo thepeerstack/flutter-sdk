@@ -32,7 +32,7 @@ class ConfirmView extends HookWidget {
       ),
     ));
     final username = useProvider(peerControllerVM.select(
-      (v) => v.usernameTEC.text,
+      (v) => v.usernameTEC.text.replaceAll('@', ''),
     ));
 
     return Column(
@@ -105,7 +105,7 @@ class ConfirmView extends HookWidget {
                       ),
                     ),
                     TextSpan(
-                      text: '$ngn ',
+                      text: '$ngn',
                       style: TextStyle(
                         fontSize: 15,
                         color: peerTextColor,
@@ -113,7 +113,7 @@ class ConfirmView extends HookWidget {
                     ),
                     TextSpan(
                       text:
-                          '$amount to $username on ${business.name}. Do you want to proceed ?',
+                          '$amount to ${business.isUsernameIdentifier? '@' : ''}$username on ${business.name}. Do you want to proceed?',
                       style: TextStyle(
                         fontFamily: 'Gilroy-Medium',
                         package: package,

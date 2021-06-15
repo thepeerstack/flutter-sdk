@@ -117,16 +117,18 @@ class ThePeerControllerVM extends ChangeNotifier {
 
   /// Load Receiving User Data
   void loadReceiverUser() async {
-    loader.isLoading = true;
+    isLoading = true;
 
-    final req =
-        await api.resolveUserByRef(reference: peerViewData.data.userReference);
+    final req = await api.resolveUserByRef(
+      reference: peerViewData.data.userReference,
+    );
 
     req.fold(
       (l) => null,
       (r) => receiverUserModel = r,
     );
-    loader.isLoading = false;
+
+    isLoading = false;
   }
 
   /// Load Current Busineess Data
@@ -225,9 +227,9 @@ class ThePeerControllerVM extends ChangeNotifier {
       (r) => pushPage(
         ThePeerSuccessView(
           description: [
-            'You have successfully sent',
+            'You have successfully sent ',
             '${Validator.currency.format(peerViewData.data.amount)}',
-            ' to ${usernameTEC.text}.',
+            ' to ${business.isUsernameIdentifier ? '@' : ''}${usernameTEC.text.replaceAll('@', '')}.',
           ],
         ),
       ),

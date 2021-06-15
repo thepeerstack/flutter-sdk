@@ -136,7 +136,14 @@ class _ThePeerViewState extends State<ThePeerView> {
           children: [
             InternalPage(
               key: controllerPageKey,
-              child: currentView ?? PeerLoaderWidget(),
+              child: currentView ??
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      PeerLoaderWidget(),
+                    ],
+                  ),
             ),
             if (isLoading == true)
               Container(

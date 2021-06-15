@@ -11,6 +11,7 @@ import 'package:thepeer_flutter/src/utils/extensions.dart';
 import 'package:thepeer_flutter/src/utils/validator.dart';
 import 'package:thepeer_flutter/src/views/business/input_identifier_view.dart';
 import 'package:thepeer_flutter/src/widgets/peer_header.dart';
+import 'package:thepeer_flutter/src/widgets/peer_loader_widget.dart';
 import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
 /// Select Business Widget
@@ -65,6 +66,12 @@ class PeerBusinessList extends HookWidget {
         (v) => (v.receiverUserModel?.name ?? '').split(' ').first,
       ),
     );
+
+    final isLoading = useProvider(
+      peerControllerVM.select(
+        (v) => v.isLoading,
+      ),
+    );
     return Flexible(
       child: ListView(
         padding: const EdgeInsets.only(
@@ -75,21 +82,26 @@ class PeerBusinessList extends HookWidget {
         physics: BouncingScrollPhysics(),
         children: [
           Center(
-            child: Text(
-              'Hi $name, you are about to send',
-              style: TextStyle(
-                fontFamily: 'Gilroy-Medium',
-                package: package,
-                fontSize: 14,
-                color: peerTextColor,
-              ),
-            ),
+            child: isLoading == false
+                ? Text(
+                    'Hi $name, you are about to send',
+                    style: TextStyle(
+                      fontFamily: 'Gilroy-Medium',
+                      package: package,
+                      fontSize: 14,
+                      color: peerTextColor,
+                    ),
+                  )
+                : PeerLoaderWidget(
+                    height: 14,
+                    strokeWidth: 1,
+                  ),
           ),
           Gap(8),
           Center(
             child: Text.rich(
               TextSpan(
-                text: '₦ ',
+                text: '₦',
                 children: [
                   TextSpan(
                     text: amount,
