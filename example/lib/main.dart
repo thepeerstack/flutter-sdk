@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
         publicKey: 'pspk_test_n4saqlmmjcie4xc1rzl2urpx0fwbwgp5cibnrdvkipl2t',
         userReference: 'ebbc54d4-a127-470b-ba51-765df76cc197',
       ),
-      showLogs: true,
+      showLogs: false,
       onClosed: () {
         Navigator.pop(context);
       },
