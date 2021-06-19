@@ -31,6 +31,7 @@ class ConfirmView extends HookWidget {
         v.peerViewData.data.amount,
       ),
     ));
+    
     final username = useProvider(peerControllerVM.select(
       (v) => v.usernameTEC.text.replaceAll('@', ''),
     ));

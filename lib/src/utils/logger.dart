@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:logger/logger.dart';
+import 'package:thepeer_flutter/src/core/viewmodels/the_peer_controller_vm.dart';
 
 var logger = Logger(
   printer: SimpleLogPrinter(className: 'ThePeer'),
@@ -13,6 +14,8 @@ class SimpleLogPrinter extends LogPrinter {
 
   @override
   List<String> log(LogEvent event) {
+    if (ThePeerControllerVM.instance.peerViewData.showLogs == false) return [];
+
     final emoji = PrettyPrinter.levelEmojis[event.level];
     final color = PrettyPrinter.levelColors[event.level];
     final message = stringifyMessage(event.message);

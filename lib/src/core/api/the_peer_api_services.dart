@@ -106,7 +106,7 @@ class ThePeerApiServices {
       }
     } catch (e) {
       if (e is DioError) {
-        print(e.message);
+        logger.e(e.message);
       }
       return Left(Failure(message: "Couldn't connect to Server"));
     }

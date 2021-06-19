@@ -9,6 +9,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_data.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_view_controller_data.dart';
 import 'package:thepeer_flutter/src/core/providers.dart';
+import 'package:thepeer_flutter/src/core/viewmodels/the_peer_controller_vm.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
 import 'package:thepeer_flutter/src/widgets/internal_page.dart';
 import 'package:thepeer_flutter/src/widgets/peer_loader_widget.dart';
@@ -117,12 +118,7 @@ class _ThePeerViewState extends State<ThePeerView> {
       ),
     );
 
-    final controllerPageKey = useProvider(
-      peerControllerVM.select(
-        (v) => v.controllerPageKey,
-      ),
-    );
-
+   
     final isLoading = useProvider(
       peerLoaderVM.select(
         (v) => v.isLoading,

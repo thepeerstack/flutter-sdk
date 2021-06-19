@@ -45,14 +45,24 @@ class _InputIdentifierViewState extends State<InputIdentifierView> {
   @override
   Widget build(BuildContext context) {
     final provider = useProvider(peerControllerVM);
+
     final receivingUsername = useProvider(
       peerControllerVM.select(
         (v) => (v.userModel?.name ?? '').toUpperCase(),
       ),
     );
+
     final receivingUsernameEmpty = useProvider(
       peerControllerVM.select(
         (v) => v.userModel == ThePeerUserRefModel.empty(),
+      ),
+    );
+
+    final userModel = useProvider(
+      peerControllerVM.select(
+        (v) {
+          return v.userModel;
+        },
       ),
     );
 
@@ -130,31 +140,44 @@ class _InputIdentifierViewState extends State<InputIdentifierView> {
                           identifier: username,
                         ),
                       ),
-                      Gap(receivingUsernameEmpty ? 0 : 14),
-                      provider.isLoading
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                PeerLoaderWidget(
-                                  height: 14,
-                                  strokeWidth: 2,
+                      AnimatedPadding(
+                        duration: Duration(
+                          milliseconds: 250,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical:
+                              (receivingUsernameEmpty || userModel == null) &&
+                                      provider.isLoading == false
+                                  ? 0
+                                  : 12,
+                        ),
+                        child: provider.isLoading
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  PeerLoaderWidget(
+                                    height: 14,
+                                    strokeWidth: 2,
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                receivingUsernameEmpty == true
+                                    ? "Cannot resolve user's details"
+                                    : receivingUsername,
+                                style: TextStyle(
+                                  fontFamily: 'Gilroy-SemiBold',
+                                  package: package,
+                                  fontSize: 14,
+                                  color: receivingUsernameEmpty
+                                      ? peerRed
+                                      : peerBoldTextColor,
                                 ),
-                              ],
-                            )
-                          : Text(
-                              receivingUsernameEmpty
-                                  ? "Cannot resolve user's details"
-                                  : receivingUsername,
-                              style: TextStyle(
-                                fontFamily: 'Gilroy-SemiBold',
-                                package: package,
-                                fontSize: 14,
-                                color: receivingUsernameEmpty
-                                    ? peerRed
-                                    : peerBoldTextColor,
                               ),
-                            ),
-                      Gap(14),
+                      ),
+                      if (provider.isLoading == false &&
+                          receivingUsernameEmpty == true)
+                        Gap(18),
                       PeerTextField(
                         labelText: 'What is this for ?',
                         controller: provider.reasonTEC,

@@ -15,13 +15,18 @@ import 'package:thepeer_flutter/src/views/states/success_view.dart';
 import 'package:thepeer_flutter/src/widgets/internal_page.dart';
 import 'package:thepeer_flutter/thepeer_flutter.dart';
 
-class ThePeerControllerVM extends ChangeNotifier {
-  final controllerPageKey = GlobalKey<InternalPageState>();
+final controllerPageKey = GlobalKey<InternalPageState>();
 
+class ThePeerControllerVM extends ChangeNotifier {
   /// Current state of all fragments
   InternalPageState? get pageState => controllerPageKey.currentState;
 
   ThePeerLoaderVM get loader => context.read(peerLoaderVM);
+
+  static ThePeerControllerVM get instance =>
+      controllerPageKey.currentContext != null
+          ? controllerPageKey.currentContext!.read(peerControllerVM)
+          : ThePeerControllerVM();
 
   ThePeerApiServices? _api;
   ThePeerApiServices get api => _api!;
@@ -118,6 +123,7 @@ class ThePeerControllerVM extends ChangeNotifier {
   /// Load Receiving User Data
   void loadReceiverUser() async {
     isLoading = true;
+    await Future.delayed(Duration(seconds: 2));
 
     final req = await api.resolveUserByRef(
       reference: peerViewData.data.userReference,
@@ -168,7 +174,6 @@ class ThePeerControllerVM extends ChangeNotifier {
 
       req.fold(
         (l) {
-          print(identifier);
           userModel = identifier.isEmpty ? null : ThePeerUserRefModel.empty();
         },
         (r) => userModel = r,
@@ -182,8 +187,6 @@ class ThePeerControllerVM extends ChangeNotifier {
         searchBusinessList = [];
         notifyListeners();
         searchBusinessList = appListModel!.businesses;
-        print(searchBusinessList);
-
         return;
       }
       if (appListModel == null || appListModel!.businesses!.isEmpty) {

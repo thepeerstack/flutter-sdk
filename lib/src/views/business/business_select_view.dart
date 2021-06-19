@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
@@ -22,25 +23,35 @@ class BusinessSelectView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 38,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PeerHeader(),
-            ],
-          ),
-        ),
-        Gap(18),
-        PeerBusinessList(),
-      ],
+    final isLoading = useProvider(
+      peerControllerVM.select(
+        (v) => v.isLoading,
+      ),
     );
+    return isLoading == true
+        ? SpinKitPulse(
+            color: peerBlue,
+            size: 50.0,
+          )
+        : Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 38,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PeerHeader(),
+                  ],
+                ),
+              ),
+              Gap(18),
+              PeerBusinessList(),
+            ],
+          );
   }
 }
 
@@ -67,11 +78,6 @@ class PeerBusinessList extends HookWidget {
       ),
     );
 
-    final isLoading = useProvider(
-      peerControllerVM.select(
-        (v) => v.isLoading,
-      ),
-    );
     return Flexible(
       child: ListView(
         padding: const EdgeInsets.only(
@@ -82,21 +88,15 @@ class PeerBusinessList extends HookWidget {
         physics: BouncingScrollPhysics(),
         children: [
           Center(
-            child: isLoading == false
-                ? Text(
-                    'Hi $name, you are about to send',
-                    style: TextStyle(
-                      fontFamily: 'Gilroy-Medium',
-                      package: package,
-                      fontSize: 14,
-                      color: peerTextColor,
-                    ),
-                  )
-                : PeerLoaderWidget(
-                    height: 14,
-                    strokeWidth: 1,
-                  ),
-          ),
+              child: Text(
+            'Hi $name, you are about to send',
+            style: TextStyle(
+              fontFamily: 'Gilroy-Medium',
+              package: package,
+              fontSize: 14,
+              color: peerTextColor,
+            ),
+          )),
           Gap(8),
           Center(
             child: Text.rich(
