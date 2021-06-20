@@ -40,14 +40,13 @@ dev_dependencies:
 
 flutter:
   assets:
+    - packages/thepeer_flutter/assets/images/logo.png
     - packages/thepeer_flutter/assets/images/back.svg
     - packages/thepeer_flutter/assets/images/close.svg
-    - packages/thepeer_flutter/assets/images/back.svg
-    - packages/thepeer_flutter/assets/images/error.svg
-    - packages/thepeer_flutter/assets/images/failed.svg
-    - packages/thepeer_flutter/assets/images/logo.png
     - packages/thepeer_flutter/assets/images/search.svg
-    - packages/thepeer_flutter/assets/images/success.svg
+    - packages/thepeer_flutter/assets/images/close_badge.svg
+    - packages/thepeer_flutter/assets/images/check_badge.svg
+    - packages/thepeer_flutter/assets/images/warning_badge.svg
     - packages/thepeer_flutter/assets/fonts/Gilroy-Bold.ttf
     - packages/thepeer_flutter/assets/fonts/Gilroy-Medium.ttf
     - packages/thepeer_flutter/assets/fonts/Gilroy-SemiBold.ttf

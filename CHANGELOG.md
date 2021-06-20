@@ -1,4 +1,7 @@
 
+## [2.0.0]
+Major refactor
+
 ## [1.0.6]
 fixed home url
 

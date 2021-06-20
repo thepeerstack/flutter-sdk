@@ -12,14 +12,34 @@ var outlineInputBorder = OutlineInputBorder(
   ),
 );
 
-enum ThePeerErrorStates { error, failed }
+enum ThePeerErrorStates {
+  error,
+  failed,
+  server_error,
+  insufficient_funds,
+  invalid_receipt,
+  user_insuffient_funds,
+}
+
 
 final peerErrorStatesMap = {
-  'failed': {
+  'insufficient_funds': {
     'Transcation failed':
-        'Business partner does not have sufficient funds, please try again later'
+        'Business partner can not process this transaction at the momeent, please try again later'
+  },
+  'user_insuffient_funds': {
+    'Transcation failed':
+        'You do not have sufficient funds, please top-up and try again'
   },
   'error': {
+    'Transaction error':
+        'Something went wrong with our server. Please check back later'
+  },
+  'failed': {
+    'Transaction error':
+        'Something went wrong with our server. Please check back later'
+  },
+  'server_error': {
     'Something went wrong':
         'Something went wrong with our server. Please check back later'
   }

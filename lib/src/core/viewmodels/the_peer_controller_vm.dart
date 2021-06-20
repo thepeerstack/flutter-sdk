@@ -222,11 +222,15 @@ class ThePeerControllerVM extends ChangeNotifier {
     loader.isLoading = false;
 
     req.fold(
-      (l) => pushPage(
-        ThePeerErrorView(
-          state: ThePeerErrorStates.failed,
-        ),
-      ),
+      (l) {
+        l.fold((l) => null, (r) {
+          pushPage(
+            ThePeerErrorView(
+              state: r,
+            ),
+          );
+        });
+      },
       (r) => pushPage(
         ThePeerSuccessView(
           description: [

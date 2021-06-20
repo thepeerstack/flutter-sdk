@@ -12,7 +12,6 @@ import 'package:thepeer_flutter/src/utils/extensions.dart';
 import 'package:thepeer_flutter/src/utils/validator.dart';
 import 'package:thepeer_flutter/src/views/business/input_identifier_view.dart';
 import 'package:thepeer_flutter/src/widgets/peer_header.dart';
-import 'package:thepeer_flutter/src/widgets/peer_loader_widget.dart';
 import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
 /// Select Business Widget

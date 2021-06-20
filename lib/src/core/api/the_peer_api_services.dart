@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart' show Either, Right, Left;
 import 'package:dio/dio.dart';
+import 'package:thepeer_flutter/src/consts/consts.dart';
 import 'package:thepeer_flutter/src/core/commons/errors/failure.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_app_list_model.dart';
 import 'package:thepeer_flutter/src/core/models/the_peer_business_model.dart';
@@ -113,7 +114,7 @@ class ThePeerApiServices {
   }
 
   /// Gets User from Reference
-  Future<Either<Failure, String>> generateReceipt({
+  Future<Either<Either<Failure, ThePeerErrorStates>, String>> generateReceipt({
     required ThePeerReceiptModel receipt,
   }) async {
     try {
@@ -124,13 +125,25 @@ class ThePeerApiServices {
           url: PeerApiURL.receipt, body: receipt.toMap());
 
       /// Handle Response
-      if (res.contains('receipt')) {
+      if (res.contains('.error')) {
+        return Left(Right(ThePeerErrorStates.error));
+      } else if (res.contains('.failed')) {
+        return Left(Right(ThePeerErrorStates.failed));
+      } else if (res.contains('.server_error')) {
+        return Left(Right(ThePeerErrorStates.server_error));
+      } else if (res.contains('.invalid_receipt')) {
+        return Left(Right(ThePeerErrorStates.invalid_receipt));
+      } else if (res.contains('.user_insuffient_funds')) {
+        return Left(Right(ThePeerErrorStates.insufficient_funds));
+      } else if (res.contains('.user_insuffient_funds')) {
+        return Left(Right(ThePeerErrorStates.user_insuffient_funds));
+      } else if (res.contains('receipt')) {
         return Right(jsonDecode(res)['receipt']);
       } else {
-        return Left(Failure(message: 'Unable to Generate Receipt'));
+        return Left(Left(Failure(message: 'Unable to Generate Receipt')));
       }
     } catch (e) {
-      return Left(Failure(message: "Couldn't connect to Server"));
+      return Left(Left(Failure(message: "Couldn't connect to Server")));
     }
   }
 }
