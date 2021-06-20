@@ -39,6 +39,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  void initState() {
+    super.initState();
+    
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      load();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -67,6 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 margin: EdgeInsets.symmetric(horizontal: 60),
                 child: CupertinoButton(
                   color: thepeerColor,
+                  onPressed: () async {
+                    load();
+                  },
                   child: Center(
                     child: Text(
                       'Launch thePeer',
@@ -77,28 +89,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
-                  onPressed: () async {
-                    await ThepeerView(
-                      data: ThePeerData(
-                        amount: 4000,
-                        firstName: '',
-                        receiptUrl: '',
-                        publicKey: '',
-                        userReference: '',
-                      ),
-                      showLogs: true,
-                      onClosed: () {
-                        Navigator.pop(context);
-                      },
-                      onSuccess: () {
-                        Navigator.pop(context);
-                        final snackBar = SnackBar(
-                            content: Text("Yay! Your payment was successful"));
-
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      },
-                    ).show(context);
-                  },
                 ),
               ),
             ],
@@ -106,6 +96,28 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       )),
     );
+  }
+
+  void load() async {
+    await ThePeerView(
+      data: ThePeerData(
+        amount: 4000,
+        receiptUrl: 'https://lucas.thepeerstack.com/callback',
+        publicKey: 'pspk_test_n4saqlmmjcie4xc1rzl2urpx0fwbwgp5cibnrdvkipl2t',
+        userReference: 'ebbc54d4-a127-470b-ba51-765df76cc197',
+      ),
+      showLogs: false,
+      onClosed: () {
+        Navigator.pop(context);
+      },
+      onSuccess: () {
+        Navigator.pop(context);
+        final snackBar =
+            SnackBar(content: Text('Yay! Your payment was successful'));
+
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      },
+    ).show(context);
   }
 }
 

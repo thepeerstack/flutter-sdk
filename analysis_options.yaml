@@ -1,0 +1,16 @@
+include: package:pedantic/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - flutter/*
+
+linter:
+  rules:
+    - prefer_single_quotes
+    - avoid_returning_null_for_future
+    - prefer_void_to_null
+    - always_require_non_null_named_parameters
+    - avoid_returning_null
+    - avoid_returning_null_for_void
+    - prefer_initializing_formals
+    - prefer_typing_uninitialized_variables

@@ -1,39 +1,54 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
-import 'package:thepeer_flutter/src/model/thepeer_data.dart';
-import 'package:thepeer_flutter/src/raw/thepeer_html.dart';
+import 'package:thepeer_flutter/src/core/models/the_peer_data.dart';
+import 'package:thepeer_flutter/src/core/models/the_peer_view_controller_data.dart';
+import 'package:thepeer_flutter/src/core/providers.dart';
+import 'package:thepeer_flutter/src/core/viewmodels/the_peer_controller_vm.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
+import 'package:thepeer_flutter/src/widgets/internal_page.dart';
+import 'package:thepeer_flutter/src/widgets/peer_loader_widget.dart';
 
-import 'package:thepeer_flutter/src/views/error_view.dart';
-
-class ThepeerView extends StatefulWidget {
-  /// Public Key from your https://app.withThepeer.com/apps
+/// ThePeerView SDK Widget
+///
+/// Triggers Thepeer Sheet
+///
+/// [data] (required) is what will be displayed within the touchable highlight on top of the background color.
+///
+/// [onTap] is the callback which will execute when tapped.
+///
+/// [onLongPress] callback executed on long press event.
+///
+/// [width] width supplied to the enclosing container.
+///
+/// [height] height supplied to the enclosing container
+///
+/// [decoration] decoration supplied to the enclosing container.Ï
+class ThePeerView extends StatefulHookWidget {
+  /// Essential SD
   final ThePeerData data;
 
   /// Success callback
   final VoidCallback? onSuccess;
 
-  /// Thepeer popup Close callback
+  /// ThePeer popup Close callback
   final VoidCallback? onClosed;
 
   /// Error Widget will show if loading fails
   final Widget? error;
 
-  /// Show ThepeerView Logs
+  /// Show ThePeerView Logs
   final bool showLogs;
 
   /// Toggle dismissible mode
   final bool isDismissible;
 
-  const ThepeerView({
+  const ThePeerView({
     Key? key,
     required this.data,
     this.error,
@@ -43,8 +58,20 @@ class ThepeerView extends StatefulWidget {
     this.isDismissible = true,
   });
 
+  // Data needed by ThePeerViewController
+  ThePeerViewControllerData get thePeerViewControllerData {
+    return ThePeerViewControllerData(
+      data: data,
+      onClosed: onClosed,
+      onSuccess: onSuccess,
+      showLogs: showLogs,
+      error: error,
+      isDismissible: isDismissible,
+    );
+  }
+
   /// Show Dialog with a custom child
-  Future show(BuildContext context) => showMaterialModalBottomSheet(
+  Future show(BuildContext context) => showCupertinoModalBottomSheet(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -53,215 +80,145 @@ class ThepeerView extends StatefulWidget {
           ),
         ),
         isDismissible: isDismissible,
+        enableDrag: false,
         context: context,
-        builder: (context) => ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-          ),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.9,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Container(
-                    height: context.screenHeight(.9),
-                    child: ThepeerView(
-                      data: data,
-                      onClosed: onClosed,
-                      onSuccess: onSuccess,
-                      showLogs: showLogs,
-                      error: error,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+        builder: (context) => ProviderScope(
+          child: PeerViewBuilder(
+            thePeerViewControllerData: thePeerViewControllerData,
           ),
         ),
       );
 
   @override
-  _ThepeerViewState createState() => _ThepeerViewState();
+  _ThePeerViewState createState() {
+    return _ThePeerViewState(peerViewData: thePeerViewControllerData);
+  }
 }
 
-class _ThepeerViewState extends State<ThepeerView> {
+class _ThePeerViewState extends State<ThePeerView> {
+  final ThePeerViewControllerData peerViewData;
+
+  _ThePeerViewState({
+    required this.peerViewData,
+  });
+
   @override
   void initState() {
     super.initState();
-    _handleInit();
-    // Enable hybrid composition.
+    () {
+      context.read(peerControllerVM).initialize(data: peerViewData);
+    }.withPostFrameCallback();
   }
-
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
-  Future<WebViewController> get _webViewController => _controller.future;
-  bool isLoading = false;
-  bool hasError = false;
-
-  String? contentBase64;
 
   @override
   Widget build(BuildContext context) {
+    final currentView = useProvider(
+      peerControllerVM.select(
+        (v) => v.currentView,
+      ),
+    );
+
+   
+    final isLoading = useProvider(
+      peerLoaderVM.select(
+        (v) => v.isLoading,
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: FutureBuilder<String>(
-          future: _getURL(),
-          builder: (context, snapshot) {
-            if (hasError == true) {
-              return Center(
-                child: widget.error ??
-                    ErrorView(reload: () async {
-                      setState(() {});
-                      (await _webViewController).reload();
-                    }),
-              );
-            } else
-              return snapshot.hasData
-                  ? Center(
-                      child: FutureBuilder<WebViewController>(
-                        future: _controller.future,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<WebViewController> controller) {
-                          return WebView(
-                            initialUrl: snapshot.data!,
-                            onWebViewCreated:
-                                (WebViewController webViewController) {
-                              _controller.complete(webViewController);
-                            },
-                            javascriptChannels: {_thepeerJavascriptChannel()},
-                            javascriptMode: JavascriptMode.unrestricted,
-                            onPageStarted: (String url) async {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              await injectPeerStack(controller.data!);
-                            },
-                            onPageFinished: (String url) {
-                              setState(() {
-                                isLoading = false;
-                              });
-                            },
-                            navigationDelegate: (_) =>
-                                _handleNavigationInterceptor(_),
-                          );
-                        },
-                      ),
-                    )
-                  : Center(child: CupertinoActivityIndicator());
-          }),
+      body: Center(
+        child: Stack(
+          children: [
+            InternalPage(
+              key: controllerPageKey,
+              child: currentView ??
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      PeerLoaderWidget(),
+                    ],
+                  ),
+            ),
+            if (isLoading == true)
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.white70,
+                child: Center(
+                  child: PeerLoaderWidget(),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
+}
 
-  Future<String> injectPeerStack(WebViewController controller) {
-    return controller.evaluateJavascript('''
-       window.onload = useThepeer;
-        function useThepeer() {
+/// Widget wrapper to mix in ThePeerViewControllerData
+class PeerViewBuilder extends HookWidget {
+  const PeerViewBuilder({
+    Key? key,
+    required this.thePeerViewControllerData,
+  }) : super(key: key);
 
-            let send = new ThePeer({
-                publicKey: "${widget.data.publicKey}",
-                amount: "${widget.data.amount}",
-                userReference: "${widget.data.userReference}",
-                firstName: "${widget.data.firstName ?? ''}",
-                receiptUrl: "${widget.data.receiptUrl ?? ''}",
-                onSuccess: function (data) {
-                    sendMessage(data)
-                },
-                onClose: function () {
-                    sendMessage("thepeer.dart.closed")
-                }
-            });
+  final ThePeerViewControllerData thePeerViewControllerData;
 
-            send.setup();
-            send.open();
-        }
-
-
-        function sendMessage(message) {
-            if (window.ThepeerClientInterface && window.ThepeerClientInterface.postMessage) {
-                ThepeerClientInterface.postMessage(message);
-            }
-        }
-      ''');
+  @override
+  Widget build(BuildContext context) {
+    final provider = useProvider(peerControllerVM);
+    provider.context = context;
+    return WillPopScope(
+      onWillPop: () async {
+        provider.popPage();
+        return false;
+      },
+      child: PeerViewWrapper(
+        peerViewData: thePeerViewControllerData,
+      ),
+    );
   }
+}
 
-  /// Javascript channel for events sent by Thepeer
-  JavascriptChannel _thepeerJavascriptChannel() {
-    return JavascriptChannel(
-        name: 'ThepeerClientInterface',
-        onMessageReceived: (JavascriptMessage msg) {
-          try {
-            print('ThepeerClientInterface, ${msg.message}');
-            handleResponse(msg.message);
-          } on Exception catch (e) {
-            print(e.toString());
-          }
-        });
-  }
+// PeerView wrapper Widget
+class PeerViewWrapper extends StatelessWidget {
+  const PeerViewWrapper({
+    Key? key,
+    required this.peerViewData,
+  }) : super(key: key);
 
-  /// parse event from javascript channel
-  void handleResponse(String? res) async {
-    try {
-      if (res != null) {
-        switch (res) {
-          case 'send.success':
-            if (widget.onSuccess != null) widget.onSuccess!();
+  final ThePeerViewControllerData peerViewData;
 
-            return;
-          case 'thepeer.dart.closed':
-            if (mounted && widget.onClosed != null) widget.onClosed!();
-
-            return;
-          case 'send.close':
-            if (mounted && widget.onClosed != null) widget.onClosed!();
-
-            return;
-          default:
-        }
-      }
-    } catch (e) {
-      if (widget.showLogs == true) print(e.toString());
-    }
-  }
-
-  Future<String> _getURL() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        setState(() {
-          hasError = false;
-        });
-        return Uri.dataFromString(buildThepeerHtml, mimeType: 'text/html')
-            .toString();
-      } else {
-        return Uri.dataFromString('<html><body>An Error Occurred</body></html>',
-                mimeType: 'text/html')
-            .toString();
-      }
-    } catch (_) {
-      setState(() {
-        isLoading = false;
-        hasError = true;
-      });
-      return Uri.dataFromString('<html><body>An Error Occurred</body></html>',
-              mimeType: 'text/html')
-          .toString();
-    }
-  }
-
-  void _handleInit() async {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-  }
-
-  NavigationDecision _handleNavigationInterceptor(NavigationRequest request) {
-    if (request.url.toLowerCase().contains('peer')) {
-      // Navigate to all urls contianing Thepeer
-      return NavigationDecision.navigate;
-    } else {
-      // Block all navigations outside Thepeer
-      return NavigationDecision.prevent;
-    }
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(10),
+        topRight: Radius.circular(10),
+      ),
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.9,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Container(
+                height: context.screenHeight(.9),
+                child: ThePeerView(
+                  data: peerViewData.data,
+                  onClosed: peerViewData.onClosed,
+                  onSuccess: peerViewData.onSuccess,
+                  showLogs: peerViewData.showLogs,
+                  error: peerViewData.error,
+                  isDismissible: peerViewData.isDismissible,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

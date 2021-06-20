@@ -10,9 +10,60 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # UI
   webview_flutter: ^2.0.4
   modal_bottom_sheet: ^2.0.0
+  flutter_spinkit: ^5.0.0
+
+  dartz: ^0.10.0-nullsafety.1
+  equatable: ^2.0.2
+
+  hooks_riverpod: ^0.14.0+2
+  flutter_hooks: ^0.16.0
+
+  connectivity: ^3.0.3
+  dio: ^4.0.0
+  intl: ^0.17.0
+
+  # Others
+  logger: ^1.0.0
+  pedantic: ^1.11.0
+
+  # UI
+  flutter_svg: ^0.22.0
+  gap: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter:
+  assets:
+    - packages/thepeer_flutter/assets/images/back.svg
+    - packages/thepeer_flutter/assets/images/close.svg
+    - packages/thepeer_flutter/assets/images/back.svg
+    - packages/thepeer_flutter/assets/images/error.svg
+    - packages/thepeer_flutter/assets/images/failed.svg
+    - packages/thepeer_flutter/assets/images/logo.png
+    - packages/thepeer_flutter/assets/images/search.svg
+    - packages/thepeer_flutter/assets/images/success.svg
+    - packages/thepeer_flutter/assets/fonts/Gilroy-Bold.ttf
+    - packages/thepeer_flutter/assets/fonts/Gilroy-Medium.ttf
+    - packages/thepeer_flutter/assets/fonts/Gilroy-SemiBold.ttf
+    
+  fonts:
+    - family: Gilroy-Bold
+      fonts:
+        - asset: packages/thepeer_flutter/assets/fonts/Gilroy-Bold.ttf
+          weight: 700
+
+    - family: Gilroy-SemiBold
+      fonts:
+        - asset: packages/thepeer_flutter/assets/fonts/Gilroy-SemiBold.ttf
+          weight: 600
+
+    - family: Gilroy-Medium
+      fonts:
+        - asset: packages/thepeer_flutter/assets/fonts/Gilroy-Medium.ttf
+          weight: 500

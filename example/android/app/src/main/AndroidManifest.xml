@@ -1,7 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chizi.thepeer_flutter_example">
+   <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="example"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -1,14 +1,13 @@
 import 'dart:convert';
 
-class ThePeerData {
+import 'package:equatable/equatable.dart';
+
+class ThePeerData with EquatableMixin {
   /// Your public key an be found on your dashboard settings
   final String publicKey;
 
   /// The user reference returned by the Thepeer API when a user has been indexed
   final String userReference;
-
-  /// Your user's first name
-  final String? firstName;
 
   /// This is a callback to your application's backend where we would pass a query string `"?receipt=$receipt_id"` where you are expected to initiate the send endpoint on your backend using your secret key.
   final String? receiptUrl;
@@ -19,10 +18,11 @@ class ThePeerData {
   ThePeerData({
     required this.publicKey,
     required this.userReference,
-    required this.firstName,
     required this.receiptUrl,
     required this.amount,
   });
+
+  bool get isTest => publicKey.contains('test');
 
   ThePeerData copyWith({
     String? publicKey,
@@ -34,7 +34,6 @@ class ThePeerData {
     return ThePeerData(
       publicKey: publicKey ?? this.publicKey,
       userReference: userReference ?? this.userReference,
-      firstName: firstName ?? this.firstName,
       receiptUrl: receiptUrl ?? this.receiptUrl,
       amount: amount ?? this.amount,
     );
@@ -44,7 +43,6 @@ class ThePeerData {
     return {
       'publicKey': publicKey,
       'userReference': userReference,
-      'firstName': firstName,
       'receiptUrl': receiptUrl,
       'amount': amount,
     };
@@ -54,7 +52,6 @@ class ThePeerData {
     return ThePeerData(
       publicKey: map['publicKey'],
       userReference: map['userReference'],
-      firstName: map['firstName'],
       receiptUrl: map['receiptUrl'],
       amount: map['amount'],
     );
@@ -66,28 +63,15 @@ class ThePeerData {
       ThePeerData.fromMap(json.decode(source));
 
   @override
-  String toString() {
-    return 'ThePeerData(publicKey: $publicKey, userReference: $userReference, firstName: $firstName, receiptUrl: $receiptUrl, amount: $amount)';
-  }
+  bool get stringify => true;
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is ThePeerData &&
-        other.publicKey == publicKey &&
-        other.userReference == userReference &&
-        other.firstName == firstName &&
-        other.receiptUrl == receiptUrl &&
-        other.amount == amount;
-  }
-
-  @override
-  int get hashCode {
-    return publicKey.hashCode ^
-        userReference.hashCode ^
-        firstName.hashCode ^
-        receiptUrl.hashCode ^
-        amount.hashCode;
+  List<Object> get props {
+    return [
+      publicKey,
+      userReference,
+      receiptUrl ?? '',
+      amount,
+    ];
   }
 }
