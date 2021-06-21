@@ -102,6 +102,12 @@ class ThePeerSuccessView extends HookWidget {
             Gap(60),
             CountDownTimer(
               onTimeEnd: () {
+                final data = context.read(peerControllerVM).peerViewData;
+
+                if (data.onSuccess != null) {
+                  data.onSuccess!();
+                }
+
                 /// Close all screen of Bottom Sheet
                 Navigator.pop(peerContext);
               },

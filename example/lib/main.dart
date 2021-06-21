@@ -103,15 +103,14 @@ class _MyHomePageState extends State<MyHomePage> {
       data: ThePeerData(
         amount: 4000,
         receiptUrl: 'https://lucas.thepeerstack.com/callback',
-        publicKey: 'pspk_test_n4saqlmmjcie4xc1rzl2urpx0fwbwgp5cibnrdvkipl2t',
-        userReference: 'ebbc54d4-a127-470b-ba51-765df76cc197',
+        publicKey: '',
+        userReference: '',
       ),
       showLogs: false,
       onClosed: () {
-        Navigator.pop(context);
+        print('onClosed');
       },
       onSuccess: () {
-        Navigator.pop(context);
         final snackBar =
             SnackBar(content: Text('Yay! Your payment was successful'));
 

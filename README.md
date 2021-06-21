@@ -25,42 +25,15 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
             ),
             showLogs: true,
             onClosed: () {
-               Navigator.pop(context);
+               print('onClosed');
             },
             onSuccess: () {
-               Navigator.pop(context);
+               final snackBar =
+              SnackBar(content: Text('Yay! Your payment was successful'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             },
       ).show(context);
   }
-```
-
-
-- Use ThepeerView widget
-
-```dart
-import 'package:thepeer_flutter/thepeer_flutter.dart';
-    
-     ...
-
-     ThepeerView(
-         data: ThePeerData(
-               amount: 10000,
-               receiptUrl: '$receiptUrl',
-               publicKey: '$publicKey',
-               userReference: '$userReference',
-         ),
-         onClosed: () {
-            Navigator.pop(context);
-            print('Widget closed')
-         },
-         onSuccess: () {
-            Navigator.pop(context);
-         },
-        error: Text('Error'),
-      )
-
-      ...
-  
 ```
 
 ## ✨ Contribution

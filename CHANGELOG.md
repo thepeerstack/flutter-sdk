@@ -1,5 +1,8 @@
 
-## [2.0.0]
+## [2.0.0-beta.2]
+Major fixes
+
+## [2.0.0-beta.1]
 Major refactor
 
 ## [1.0.6]

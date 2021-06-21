@@ -59,6 +59,12 @@ class PeerHeader extends HookWidget {
         IconButton(
           padding: EdgeInsets.all(5),
           onPressed: () {
+            final data = context.read(peerControllerVM).peerViewData;
+
+            if (data.onClosed != null) {
+              data.onClosed!();
+            }
+
             /// Close all screen of Bottom Sheet
             Navigator.pop(peerContext);
           },
