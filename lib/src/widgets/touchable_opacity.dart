@@ -5,15 +5,15 @@ import 'package:flutter/widgets.dart';
 /// tap events.
 ///
 /// [child] (required) is what will be displayed within the touchable highlight on top of the background color.
-/// 
+///
 /// [onTap] is the callback which will execute when tapped.
-/// 
+///
 /// [onLongPress] callback executed on long press event.
-/// 
+///
 /// [width] width supplied to the enclosing container.
-/// 
+///
 /// [height] height supplied to the enclosing container
-/// 
+///
 /// [decoration] decoration supplied to the enclosing container.
 class TouchableOpacity extends StatefulWidget {
   TouchableOpacity({

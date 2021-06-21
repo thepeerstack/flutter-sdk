@@ -23,7 +23,7 @@ extension PeerStates on ThePeerErrorStates {
   String get title => peerErrorStatesMap[describeEnum(this)]!.keys.first;
   String get description =>
       peerErrorStatesMap[describeEnum(this)]!.values.first;
- 
+
   String get image {
     var temp = 'assets/images/';
     var temp2 = (() {
@@ -36,7 +36,7 @@ extension PeerStates on ThePeerErrorStates {
           return 'close_badge';
       }
     })();
-    
+
     return '$temp$temp2.svg';
   }
 }

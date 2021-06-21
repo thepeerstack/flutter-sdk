@@ -118,7 +118,6 @@ class _ThePeerViewState extends State<ThePeerView> {
       ),
     );
 
-   
     final isLoading = useProvider(
       peerLoaderVM.select(
         (v) => v.isLoading,

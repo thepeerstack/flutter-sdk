@@ -21,7 +21,6 @@ enum ThePeerErrorStates {
   user_insuffient_funds,
 }
 
-
 final peerErrorStatesMap = {
   'insufficient_funds': {
     'Transcation failed':

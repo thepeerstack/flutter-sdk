@@ -13,12 +13,9 @@ class Failure extends Equatable {
   List<Object> get props => [];
 }
 
-
-
 class DeviceOfflineFailure extends Failure {
   DeviceOfflineFailure({
     String message = 'Please, check your connection',
     int code = -1,
   }) : super(code: code, message: message);
 }
-

@@ -45,7 +45,6 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
      ThepeerView(
          data: ThePeerData(
                amount: 10000,
-               firstName: '$firstName',
                receiptUrl: '$receiptUrl',
                publicKey: '$publicKey',
                userReference: '$userReference',

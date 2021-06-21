@@ -31,7 +31,7 @@ class ConfirmView extends HookWidget {
         v.peerViewData.data.amount,
       ),
     ));
-    
+
     final username = useProvider(peerControllerVM.select(
       (v) => v.usernameTEC.text.replaceAll('@', ''),
     ));
@@ -114,7 +114,7 @@ class ConfirmView extends HookWidget {
                     ),
                     TextSpan(
                       text:
-                          '$amount to ${business.isUsernameIdentifier? '@' : ''}$username on ${business.name}. Do you want to proceed?',
+                          '$amount to ${business.isUsernameIdentifier ? '@' : ''}$username on ${business.name}. Do you want to proceed?',
                       style: TextStyle(
                         fontFamily: 'Gilroy-Medium',
                         package: package,

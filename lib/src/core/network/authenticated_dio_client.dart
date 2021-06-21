@@ -79,7 +79,7 @@ class AuthenticatedDioClient {
     RequestInterceptorHandler handler,
   ) async {
     if (apiKey.isNotEmpty) {
-       options.headers.putIfAbsent(
+      options.headers.putIfAbsent(
         'x-api-key',
         () => '$apiKey',
       );
