@@ -152,6 +152,7 @@ class PeerBusinessList extends HookWidget {
                             e.logo ?? '',
                             width: 38,
                             height: 38,
+                            fit: BoxFit.contain,
                           ),
                           Gap(21),
                           Text(

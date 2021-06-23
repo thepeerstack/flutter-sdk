@@ -17,7 +17,7 @@ class PeerLogoIcon extends StatelessWidget {
             business!.logo!,
             width: 40,
             height: 40,
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
           )
         : ClipRRect(
             borderRadius: BorderRadius.circular(8),

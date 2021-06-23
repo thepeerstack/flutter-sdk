@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void load() async {
     await ThePeerView(
       data: ThePeerData(
-        amount: 20000,
+        amount: 200000000,
         receiptUrl: 'https://lucas.thepeerstack.com/thepeer-callback',
         publicKey: 'pspk_live_nwrnf2bsfdtykxhtqhyvjlco3lxzxdkhbduv2cajrtsci',
         userReference: '0acb944e-1f2b-4eaa-bec8-7511279d1629',

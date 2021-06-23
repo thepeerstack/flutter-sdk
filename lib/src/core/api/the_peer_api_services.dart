@@ -114,7 +114,7 @@ class ThePeerApiServices {
   }
 
   /// Gets User from Reference
-  Future<Either<Either<Failure, ThePeerErrorStates>, String>> generateReceipt({
+  Future<Either<Failure, String>> generateReceipt({
     required ThePeerReceiptModel receipt,
   }) async {
     try {
@@ -122,7 +122,33 @@ class ThePeerApiServices {
 
       /// Handle Request
       final res = await apiHelper.postReq(
-          url: PeerApiURL.receipt, body: receipt.toMap());
+        url: PeerApiURL.receipt,
+        body: receipt.toMap(),
+      );
+
+      /// Handle Response
+      if (res.contains('receipt')) {
+        return Right(jsonDecode(res)['receipt']);
+      } else {
+        return Left(Failure(message: 'Unable to Generate Receipt'));
+      }
+    } catch (e) {
+      return Left(Failure(message: "Couldn't connect to Server"));
+    }
+  }
+
+  /// Gets User from Reference
+  Future<Either<Either<Failure, ThePeerErrorStates>, String>> verifyReceipt({
+    required String receiptID,
+    required String callbackUrl,
+  }) async {
+    try {
+      logger.d('func: generateReceipt() ->');
+
+      /// Handle Request
+      final res = await apiHelper.getReq(
+        url: '$callbackUrl?receipt=$receiptID',
+      );
 
       /// Handle Response
       if (res.contains('.error')) {
@@ -133,12 +159,12 @@ class ThePeerApiServices {
         return Left(Right(ThePeerErrorStates.server_error));
       } else if (res.contains('.invalid_receipt')) {
         return Left(Right(ThePeerErrorStates.invalid_receipt));
-      } else if (res.contains('.user_insuffient_funds')) {
+      } else if (res.contains('.insufficient_funds')) {
         return Left(Right(ThePeerErrorStates.insufficient_funds));
       } else if (res.contains('.user_insuffient_funds')) {
         return Left(Right(ThePeerErrorStates.user_insuffient_funds));
-      } else if (res.contains('receipt')) {
-        return Right(jsonDecode(res)['receipt']);
+      } else if (res.contains('success')) {
+        return Right('');
       } else {
         return Left(Left(Failure(message: 'Unable to Generate Receipt')));
       }

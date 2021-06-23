@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:thepeer_flutter/src/consts/consts.dart';
 import 'package:thepeer_flutter/src/core/providers.dart';
 import 'package:thepeer_flutter/src/utils/colors.dart';
+import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
 /// Peer Header Widget
 class PeerHeader extends HookWidget {
@@ -26,10 +27,9 @@ class PeerHeader extends HookWidget {
     return Row(
       children: [
         if (showClose == true) ...[
-          IconButton(
-            padding: EdgeInsets.all(5),
-            onPressed: () => context.read(peerControllerVM).popPage(),
-            icon: SvgPicture.asset(
+          TouchableOpacity(
+            onTap: () => context.read(peerControllerVM).popPage(),
+            child: SvgPicture.asset(
               'assets/images/back.svg',
               package: package,
             ),
@@ -57,7 +57,6 @@ class PeerHeader extends HookWidget {
         ],
         Spacer(),
         IconButton(
-          padding: EdgeInsets.all(5),
           onPressed: () {
             final data = context.read(peerControllerVM).peerViewData;
 

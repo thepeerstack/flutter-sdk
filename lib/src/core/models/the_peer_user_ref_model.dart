@@ -4,18 +4,22 @@ import 'package:equatable/equatable.dart';
 
 class ThePeerUserRefModel with EquatableMixin {
   final String name;
-  final String reference;
+  final String? reference;
+  final String? hash;
   ThePeerUserRefModel({
     required this.name,
+    required this.hash,
     required this.reference,
   });
 
   ThePeerUserRefModel copyWith({
     String? name,
+    String? hash,
     String? reference,
   }) {
     return ThePeerUserRefModel(
       name: name ?? this.name,
+      hash: hash ?? this.hash,
       reference: reference ?? this.reference,
     );
   }
@@ -23,6 +27,7 @@ class ThePeerUserRefModel with EquatableMixin {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'hash': hash,
       'reference': reference,
     };
   }
@@ -30,6 +35,7 @@ class ThePeerUserRefModel with EquatableMixin {
   factory ThePeerUserRefModel.fromMap(Map<String, dynamic> map) {
     return ThePeerUserRefModel(
       name: map['name'],
+      hash: map['hash'],
       reference: map['reference'],
     );
   }
@@ -37,6 +43,7 @@ class ThePeerUserRefModel with EquatableMixin {
   factory ThePeerUserRefModel.empty() {
     return ThePeerUserRefModel(
       name: '',
+      hash: '',
       reference: '',
     );
   }
@@ -53,5 +60,5 @@ class ThePeerUserRefModel with EquatableMixin {
   bool get stringify => true;
 
   @override
-  List<Object> get props => [name, reference];
+  List<Object> get props => [name, reference??  '', hash ?? ''];
 }

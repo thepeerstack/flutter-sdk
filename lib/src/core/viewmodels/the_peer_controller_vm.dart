@@ -214,7 +214,7 @@ class ThePeerControllerVM extends ChangeNotifier {
       receipt: ThePeerReceiptModel(
         amount: peerViewData.data.amount,
         from: peerViewData.data.userReference,
-        to: userModel!.reference,
+        to: userModel!.reference!,
         remark: reasonTEC.text,
       ),
     );
@@ -223,13 +223,44 @@ class ThePeerControllerVM extends ChangeNotifier {
 
     req.fold(
       (l) {
-        l.fold((l) => null, (r) {
-          pushPage(
+        pushPage(
+          ThePeerErrorView(
+            state: ThePeerErrorStates.server_error,
+          ),
+        );
+      },
+      (id) => handleVerifyReceipt(
+        business: business,
+        receiptID: id,
+      ),
+    );
+  }
+
+  void handleVerifyReceipt({
+    required ThePeerBusiness business,
+    required String receiptID,
+  }) async {
+    loader.isLoading = true;
+
+    final req = await api.verifyReceipt(
+      receiptID: receiptID,
+      callbackUrl: peerViewData.data.receiptUrl!,
+    );
+
+    loader.isLoading = false;
+
+    req.fold(
+      (l) {
+        l.fold(
+          (l) => ThePeerErrorView(
+            state: ThePeerErrorStates.server_error,
+          ),
+          (r) => pushPage(
             ThePeerErrorView(
               state: r,
             ),
-          );
-        });
+          ),
+        );
       },
       (r) => pushPage(
         ThePeerSuccessView(

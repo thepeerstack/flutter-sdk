@@ -51,6 +51,10 @@ class ApiHelper extends AuthenticatedDioClient {
     } on SocketException {
       // Handle Exceptions
       throw ServerException(message: 'No Internet connection');
+    } on DioError catch (e) {
+      // Log data response
+      logger.i(url);
+      return e.response?.data;
     } catch (e) {
       // Catch Error
       if (e is Response) {
@@ -65,6 +69,7 @@ class ApiHelper extends AuthenticatedDioClient {
         rethrow;
       }
     }
+
     return responseJson;
   }
 

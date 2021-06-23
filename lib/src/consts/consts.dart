@@ -24,7 +24,7 @@ enum ThePeerErrorStates {
 final peerErrorStatesMap = {
   'insufficient_funds': {
     'Transcation failed':
-        'Business partner can not process this transaction at the momeent, please try again later'
+        'Business partner can not process this transaction at the moment, please try again later'
   },
   'user_insuffient_funds': {
     'Transcation failed':

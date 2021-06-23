@@ -45,7 +45,7 @@ class ThePeerSuccessView extends HookWidget {
           children: [
             Gap(80),
             SvgPicture.asset(
-              'assets/images/success.svg',
+              'assets/images/check_badge.svg',
               package: package,
             ),
             Gap(45),

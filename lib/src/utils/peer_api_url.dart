@@ -1,6 +1,6 @@
 class PeerApiURL {
   //Base URL
-  static const String base = 'https://send.api.thepeer.co';
+  static const String base = 'https://chain.api.thepeer.co';
 
   // Send
   static const String send = '$base/send';
