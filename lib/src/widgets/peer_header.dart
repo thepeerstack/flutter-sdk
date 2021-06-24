@@ -29,9 +29,19 @@ class PeerHeader extends HookWidget {
         if (showClose == true) ...[
           TouchableOpacity(
             onTap: () => context.read(peerControllerVM).popPage(),
-            child: SvgPicture.asset(
-              'assets/images/back.svg',
-              package: package,
+            child: Container(
+              height: 40,
+              width: 40,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/back.svg',
+                    package: package,
+                    height: 20,
+                  ),
+                ],
+              ),
             ),
           ),
         ] else ...[
@@ -56,8 +66,8 @@ class PeerHeader extends HookWidget {
           ]
         ],
         Spacer(),
-        IconButton(
-          onPressed: () {
+        TouchableOpacity(
+          onTap: () {
             final data = context.read(peerControllerVM).peerViewData;
 
             if (data.onClosed != null) {
@@ -67,9 +77,18 @@ class PeerHeader extends HookWidget {
             /// Close all screen of Bottom Sheet
             Navigator.pop(peerContext);
           },
-          icon: SvgPicture.asset(
-            'assets/images/close.svg',
-            package: package,
+          child: Container(
+            height: 40,
+            width: 40,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SvgPicture.asset(
+                  'assets/images/close.svg',
+                  package: package,
+                ),
+              ],
+            ),
           ),
         ),
       ],

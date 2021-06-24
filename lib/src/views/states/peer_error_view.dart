@@ -21,8 +21,8 @@ class ThePeerErrorView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.only(
-            left: 16,
-            right: 16,
+            left: 20,
+            right: 20,
             top: 38,
           ),
           child: Column(

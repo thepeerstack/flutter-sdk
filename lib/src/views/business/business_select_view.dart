@@ -15,10 +15,26 @@ import 'package:thepeer_flutter/src/widgets/peer_header.dart';
 import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
 /// Select Business Widget
-class BusinessSelectView extends HookWidget {
+class BusinessSelectView extends StatefulHookWidget {
   const BusinessSelectView({
     Key? key,
   }) : super(key: key);
+
+  @override
+  _BusinessSelectViewState createState() => _BusinessSelectViewState();
+}
+
+class _BusinessSelectViewState extends State<BusinessSelectView> {
+  /// Focus nodes
+  final focus1 = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// Start focus listeners
+    focus1.addListener(() => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +52,8 @@ class BusinessSelectView extends HookWidget {
             children: [
               Container(
                 padding: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
+                  left: 20,
+                  right: 20,
                   top: 38,
                 ),
                 child: Column(
@@ -48,7 +64,30 @@ class BusinessSelectView extends HookWidget {
                 ),
               ),
               Gap(18),
-              PeerBusinessList(),
+              PeerBusinessList(focus1),
+              if (focus1.hasFocus == false) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Powered by',
+                      style: TextStyle(
+                        fontFamily: 'Gilroy-Medium',
+                        package: package,
+                        fontSize: 14,
+                        color: peerLightTextColor,
+                      ),
+                    ),
+                    Gap(4),
+                    Image.asset(
+                      'assets/images/logo.png',
+                      package: package,
+                      height: 18,
+                    ),
+                  ],
+                ),
+                Gap(18),
+              ]
             ],
           );
   }
@@ -56,7 +95,9 @@ class BusinessSelectView extends HookWidget {
 
 /// Business List Widget
 class PeerBusinessList extends HookWidget {
-  const PeerBusinessList({
+  final FocusNode focus;
+  const PeerBusinessList(
+    this.focus, {
     Key? key,
   }) : super(key: key);
 
@@ -80,8 +121,8 @@ class PeerBusinessList extends HookWidget {
     return Flexible(
       child: ListView(
         padding: const EdgeInsets.only(
-          left: 16,
-          right: 16,
+          left: 20,
+          right: 20,
           top: 38,
         ),
         physics: BouncingScrollPhysics(),
@@ -132,14 +173,14 @@ class PeerBusinessList extends HookWidget {
             ),
           ),
           Gap(13),
-          PeerBusinessSearch(),
+          PeerBusinessSearch(focus),
           ...businesses.map((e) => Column(
                 children: [
                   TouchableOpacity(
                     onTap: () {
                       context.read(peerControllerVM)
                         ..userModel = null
-                        ..usernameTEC.text = ''
+                        ..identifierTEC.text = ''
                         ..reasonTEC.text = ''
                         ..pushPage(InputIdentifierView(e));
                     },
@@ -171,27 +212,6 @@ class PeerBusinessList extends HookWidget {
                 ],
               )),
           Gap(context.screenHeight(.3)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Powered by',
-                style: TextStyle(
-                  fontFamily: 'Gilroy-Medium',
-                  package: package,
-                  fontSize: 14,
-                  color: peerLightTextColor,
-                ),
-              ),
-              Gap(4),
-              Image.asset(
-                'assets/images/logo.png',
-                package: package,
-                height: 18,
-              ),
-            ],
-          ),
-          Gap(32),
         ],
       ),
     );
@@ -200,7 +220,9 @@ class PeerBusinessList extends HookWidget {
 
 /// Search bar Widget
 class PeerBusinessSearch extends HookWidget {
-  const PeerBusinessSearch({
+  final FocusNode focusNode;
+  const PeerBusinessSearch(
+    this.focusNode, {
     Key? key,
   }) : super(key: key);
 
@@ -214,6 +236,7 @@ class PeerBusinessSearch extends HookWidget {
           children: [
             Flexible(
               child: TextField(
+                focusNode: focusNode,
                 style: TextStyle(
                   fontFamily: 'Gilroy-Semibold',
                   package: package,

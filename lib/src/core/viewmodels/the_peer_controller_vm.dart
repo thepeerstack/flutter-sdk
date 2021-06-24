@@ -102,7 +102,7 @@ class ThePeerControllerVM extends ChangeNotifier {
   }
 
   /// TextField Controllers
-  final usernameTEC = TextEditingController();
+  final identifierTEC = TextEditingController();
   final reasonTEC = TextEditingController();
 
   /// Debounce timer
@@ -123,7 +123,7 @@ class ThePeerControllerVM extends ChangeNotifier {
   /// Load Receiving User Data
   void loadReceiverUser() async {
     isLoading = true;
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 400));
 
     final req = await api.resolveUserByRef(
       reference: peerViewData.data.userReference,
@@ -159,9 +159,10 @@ class ThePeerControllerVM extends ChangeNotifier {
     );
   }
 
-  void searchUsername({
+  void searchIdentifier({
     required String businessId,
     required String identifier,
+    required ThePeerIdentifierType identifier_type,
   }) {
     debouncer.run(() async {
       isLoading = true;
@@ -169,6 +170,7 @@ class ThePeerControllerVM extends ChangeNotifier {
       final req = await api.resolveUser(
         businessId: businessId,
         identifier: identifier,
+        identifier_type:  identifier_type,
       );
       isLoading = false;
 
@@ -267,7 +269,7 @@ class ThePeerControllerVM extends ChangeNotifier {
           description: [
             'You have successfully sent ',
             '${Validator.currency.format(peerViewData.data.amount)}',
-            ' to ${business.isUsernameIdentifier ? '@' : ''}${usernameTEC.text.replaceAll('@', '')}.',
+            ' to ${business.isUsernameIdentifier ? '@' : ''}${business.isUsernameIdentifier ? identifierTEC.text.replaceAll('@', '') : identifierTEC.text}.',
           ],
         ),
       ),

@@ -52,7 +52,7 @@ class _InputIdentifierViewState extends State<InputIdentifierView> {
       ),
     );
 
-    final receivingUsernameEmpty = useProvider(
+    final receivingIdentifierEmpty = useProvider(
       peerControllerVM.select(
         (v) => v.userModel == ThePeerUserRefModel.empty(),
       ),
@@ -72,8 +72,8 @@ class _InputIdentifierViewState extends State<InputIdentifierView> {
         children: [
           Container(
             padding: const EdgeInsets.only(
-              left: 16,
-              right: 16,
+              left: 20,
+              right: 20,
               top: 38,
             ),
             child: PeerHeader(
@@ -86,8 +86,8 @@ class _InputIdentifierViewState extends State<InputIdentifierView> {
               children: [
                 Container(
                   padding: const EdgeInsets.only(
-                    left: 16,
-                    right: 16,
+                    left: 20,
+                    right: 20,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,14 +130,16 @@ class _InputIdentifierViewState extends State<InputIdentifierView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PeerTextField(
-                        labelText: 'Enter username',
-                        controller: provider.usernameTEC,
-                        isError: receivingUsernameEmpty,
+                        labelText: 'Enter ${widget.business.identifier_type}',
+                        controller: provider.identifierTEC,
+                        hintText: widget.business.hintText,
+                        isError: receivingIdentifierEmpty,
                         focusNode: focus1,
-                        errorText: receivingUsernameEmpty ? '' : null,
-                        onChanged: (username) => provider.searchUsername(
+                        errorText: receivingIdentifierEmpty ? '' : null,
+                        onChanged: (username) => provider.searchIdentifier(
                           businessId: widget.business.id,
                           identifier: username,
+                          identifier_type: widget.business.identifierType,
                         ),
                       ),
                       AnimatedPadding(
@@ -146,7 +148,7 @@ class _InputIdentifierViewState extends State<InputIdentifierView> {
                         ),
                         padding: EdgeInsets.symmetric(
                           vertical:
-                              (receivingUsernameEmpty || userModel == null) &&
+                              (receivingIdentifierEmpty || userModel == null) &&
                                       provider.isLoading == false
                                   ? 0
                                   : 12,
@@ -162,21 +164,21 @@ class _InputIdentifierViewState extends State<InputIdentifierView> {
                                 ],
                               )
                             : Text(
-                                receivingUsernameEmpty == true
+                                receivingIdentifierEmpty == true
                                     ? "Cannot resolve user's details"
                                     : receivingUsername,
                                 style: TextStyle(
                                   fontFamily: 'Gilroy-SemiBold',
                                   package: package,
                                   fontSize: 14,
-                                  color: receivingUsernameEmpty
+                                  color: receivingIdentifierEmpty
                                       ? peerRed
                                       : peerBoldTextColor,
                                 ),
                               ),
                       ),
                       if (provider.isLoading == false &&
-                          receivingUsernameEmpty == true)
+                          receivingIdentifierEmpty == true)
                         Gap(18),
                       PeerTextField(
                         labelText: 'What is this for ?',
@@ -300,8 +302,8 @@ class PeerTextField extends StatelessWidget {
         hintStyle: TextStyle(
           fontFamily: 'Gilroy-Medium',
           package: package,
-          fontSize: 16,
-          color: peerBoldTextColor,
+          fontSize: 15,
+          color: peerBoldTextColor.withOpacity(.8),
         ),
         focusedBorder: outlineInputBorder.copyWith(
           borderSide: BorderSide(

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
+enum ThePeerIdentifierType { email, username }
+
 class ThePeerBusinessModel with EquatableMixin {
   final ThePeerBusiness? business;
   ThePeerBusinessModel({
@@ -54,6 +56,18 @@ class ThePeerBusiness with EquatableMixin {
   });
 
   bool get isUsernameIdentifier => identifier_type == 'username';
+
+  ThePeerIdentifierType get identifierType => () {
+        switch (identifier_type) {
+          case 'email':
+            return ThePeerIdentifierType.email;
+          default:
+            return ThePeerIdentifierType.username;
+        }
+      }();
+
+  String get hintText =>
+      isUsernameIdentifier == true ? '@valkyrie' : 'heimdall@asgard.com';
 
   ThePeerBusiness copyWith({
     String? id,

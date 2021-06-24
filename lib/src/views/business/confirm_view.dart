@@ -33,15 +33,17 @@ class ConfirmView extends HookWidget {
     ));
 
     final username = useProvider(peerControllerVM.select(
-      (v) => v.usernameTEC.text.replaceAll('@', ''),
+      (v) => business.isUsernameIdentifier
+          ? v.identifierTEC.text.replaceAll('@', '')
+          : v.identifierTEC.text,
     ));
 
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.only(
-            left: 16,
-            right: 16,
+            left: 20,
+            right: 20,
             top: 38,
           ),
           child: Column(

@@ -64,6 +64,7 @@ class ThePeerApiServices {
   Future<Either<Failure, ThePeerUserRefModel>> resolveUser({
     required String businessId,
     required String identifier,
+    required ThePeerIdentifierType identifier_type,
   }) async {
     try {
       logger.d('func: resolveUser() ->');
@@ -72,7 +73,9 @@ class ThePeerApiServices {
       final res = await apiHelper.getReq(
         url: PeerApiURL.resolveUser(
           businessId: businessId,
-          identifier: identifier.replaceAll('@', ''),
+          identifier: identifier_type == ThePeerIdentifierType.username
+              ? identifier.replaceAll('@', '')
+              : identifier,
         ),
       );
 
