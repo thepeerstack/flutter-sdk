@@ -1,4 +1,7 @@
 
+## [2.0.0-beta.5]
+Fixed kobo conversion bugs
+
 ## [2.0.0-beta.4]
 Fixed all major bugs
 

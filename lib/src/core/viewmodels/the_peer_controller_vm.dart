@@ -215,7 +215,7 @@ class ThePeerControllerVM extends ChangeNotifier {
 
     final req = await api.generateReceipt(
       receipt: ThePeerReceiptModel(
-        amount: peerViewData.data.amount,
+        amount: peerViewData.data.amount * 100, // convert to kobo
         from: peerViewData.data.userReference,
         to: userModel!.reference!,
         remark: reasonTEC.text,

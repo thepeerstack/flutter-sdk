@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void load() async {
     await ThePeerView(
       data: ThePeerData(
-        amount: 200000000,
+        amount: 20000,
         receiptUrl: '',
         publicKey: '',
         userReference: '',
