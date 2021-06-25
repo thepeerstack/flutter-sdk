@@ -22,7 +22,11 @@ class ThePeerData with EquatableMixin {
     required this.amount,
   });
 
+  /// Is test mode
   bool get isTest => publicKey.contains('test');
+
+  /// Formatted Amount
+  int? get formattedAmount => amount ~/ 100;
 
   ThePeerData copyWith({
     String? publicKey,

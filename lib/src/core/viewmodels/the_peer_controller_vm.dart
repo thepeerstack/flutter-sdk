@@ -215,7 +215,7 @@ class ThePeerControllerVM extends ChangeNotifier {
 
     final req = await api.generateReceipt(
       receipt: ThePeerReceiptModel(
-        amount: peerViewData.data.amount * 100, // convert to kobo
+        amount: peerViewData.data.amount, // convert to kobo
         from: peerViewData.data.userReference,
         to: userModel!.reference!,
         remark: reasonTEC.text,
@@ -269,7 +269,7 @@ class ThePeerControllerVM extends ChangeNotifier {
         ThePeerSuccessView(
           description: [
             'You have successfully sent ',
-            '${Validator.currency.format(peerViewData.data.amount)}',
+            '${Validator.currency.format(peerViewData.data.formattedAmount)}',
             ' to ${business.isUsernameIdentifier ? '@' : ''}${business.isUsernameIdentifier ? identifierTEC.text.replaceAll('@', '') : identifierTEC.text}.',
           ],
         ),

@@ -1,5 +1,5 @@
 
-## [2.0.0-beta.5]
+## [2.0.0-beta.6]
 Fixed kobo conversion bugs
 
 ## [2.0.0-beta.4]

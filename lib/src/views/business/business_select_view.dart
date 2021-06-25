@@ -105,7 +105,7 @@ class PeerBusinessHeader extends HookWidget {
   Widget build(BuildContext context) {
     final amount = useProvider(peerControllerVM.select(
       (v) => Validator.noSymbolCurrency.format(
-        v.peerViewData.data.amount,
+        v.peerViewData.data.formattedAmount,
       ),
     ));
 

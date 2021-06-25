@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 
 /// The Peer Receipt model
 class ThePeerReceiptModel with EquatableMixin {
-  /// Transaction Amount
+  /// Transaction Amount in kobo
   final int amount;
 
   /// Transaction remark
@@ -22,6 +22,7 @@ class ThePeerReceiptModel with EquatableMixin {
     required this.to,
     required this.from,
   });
+
 
   ThePeerReceiptModel copyWith({
     /// Transaction Amount
