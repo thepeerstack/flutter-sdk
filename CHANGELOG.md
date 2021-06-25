@@ -1,4 +1,7 @@
 
+## [2.0.0-beta.3]
+Fixed all major bugs
+
 ## [2.0.0-beta.2]
 Major fixes
 

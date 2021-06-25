@@ -172,6 +172,7 @@ class ThePeerControllerVM extends ChangeNotifier {
         identifier: identifier,
         identifier_type:  identifier_type,
       );
+      
       isLoading = false;
 
       req.fold(

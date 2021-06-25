@@ -64,7 +64,8 @@ class _BusinessSelectViewState extends State<BusinessSelectView> {
                 ),
               ),
               Gap(18),
-              PeerBusinessList(focus1),
+              PeerBusinessHeader(focus1),
+              PeerBusinessList(),
               if (focus1.hasFocus == false) ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -93,19 +94,15 @@ class _BusinessSelectViewState extends State<BusinessSelectView> {
   }
 }
 
-/// Business List Widget
-class PeerBusinessList extends HookWidget {
+class PeerBusinessHeader extends HookWidget {
   final FocusNode focus;
-  const PeerBusinessList(
+  const PeerBusinessHeader(
     this.focus, {
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final businesses = useProvider(peerControllerVM.select(
-        (v) => v.searchBusinessList ?? v.appListModel?.businesses ?? []));
-
     final amount = useProvider(peerControllerVM.select(
       (v) => Validator.noSymbolCurrency.format(
         v.peerViewData.data.amount,
@@ -117,15 +114,13 @@ class PeerBusinessList extends HookWidget {
         (v) => (v.receiverUserModel?.name ?? '').split(' ').first,
       ),
     );
-
-    return Flexible(
-      child: ListView(
-        padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 38,
-        ),
-        physics: BouncingScrollPhysics(),
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 20,
+        right: 20,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
               child: Text(
@@ -174,6 +169,29 @@ class PeerBusinessList extends HookWidget {
           ),
           Gap(13),
           PeerBusinessSearch(focus),
+          Gap(13),
+        ],
+      ),
+    );
+  }
+}
+
+/// Business List Widget
+class PeerBusinessList extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final businesses = useProvider(peerControllerVM.select(
+        (v) => v.searchBusinessList ?? v.appListModel?.businesses ?? []));
+
+    return Flexible(
+      child: ListView(
+        padding: const EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 0,
+        ),
+        physics: BouncingScrollPhysics(),
+        children: [
           ...businesses.map((e) => Column(
                 children: [
                   TouchableOpacity(
@@ -189,11 +207,16 @@ class PeerBusinessList extends HookWidget {
                       width: double.infinity,
                       child: Row(
                         children: [
-                          Image.network(
-                            e.logo ?? '',
-                            width: 38,
-                            height: 38,
-                            fit: BoxFit.contain,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Image.network(
+                                e.logo ?? '',
+                                width: 38,
+                                height: 38,
+                                fit: BoxFit.contain,
+                              ),
+                            ],
                           ),
                           Gap(21),
                           Text(
@@ -211,7 +234,7 @@ class PeerBusinessList extends HookWidget {
                   )
                 ],
               )),
-          Gap(context.screenHeight(.3)),
+          Gap(context.screenHeight(.11)),
         ],
       ),
     );

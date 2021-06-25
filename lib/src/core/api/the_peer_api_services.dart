@@ -35,6 +35,7 @@ class ThePeerApiServices {
         return Left(Failure(message: 'Unable to get Businesses'));
       }
     } catch (e) {
+      print(e.toString());
       return Left(Failure(message: "Couldn't connect to Server"));
     }
   }
