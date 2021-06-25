@@ -1,4 +1,7 @@
 
+## [2.0.0-beta.7]
+Fixed image cache bugs
+
 ## [2.0.0-beta.6]
 Fixed kobo conversion bugs
 

@@ -1,6 +1,6 @@
 name: thepeer_flutter
 description: Official plugin for using Thepeer SDK with flutter https://thepeer.co
-version: 2.0.0-beta.6
+version: 2.0.0-beta.7
 homepage: https://github.com/thepeerstack/flutter_sdk
 
 environment:
@@ -30,6 +30,7 @@ dependencies:
 
   # UI
   flutter_svg: ^0.22.0
+  cached_network_image: ^3.0.0
   gap: ^2.0.0
 
 dev_dependencies:

@@ -107,7 +107,7 @@ class _InputIdentifierViewState extends State<InputIdentifierView> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          PeerLogoIcon(widget.business),
+                          PeerLogoIcon(business: widget.business),
                           Gap(8),
                           Text(
                             widget.business.name,

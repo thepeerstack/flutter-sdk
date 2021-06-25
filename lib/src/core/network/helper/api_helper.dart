@@ -56,6 +56,7 @@ class ApiHelper extends AuthenticatedDioClient {
       logger.i(url);
       return e.response?.data;
     } catch (e) {
+      print(e.toString());
       // Catch Error
       if (e is Response) {
         logger.e(e.data);

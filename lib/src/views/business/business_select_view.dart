@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -12,6 +13,7 @@ import 'package:thepeer_flutter/src/utils/extensions.dart';
 import 'package:thepeer_flutter/src/utils/validator.dart';
 import 'package:thepeer_flutter/src/views/business/input_identifier_view.dart';
 import 'package:thepeer_flutter/src/widgets/peer_header.dart';
+import 'package:thepeer_flutter/src/widgets/peer_logo_icon.dart';
 import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
 /// Select Business Widget
@@ -210,11 +212,9 @@ class PeerBusinessList extends HookWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image.network(
-                                e.logo ?? '',
-                                width: 38,
-                                height: 38,
-                                fit: BoxFit.contain,
+                              PeerLogoIcon(
+                                business: e,
+                                size: 38,
                               ),
                             ],
                           ),

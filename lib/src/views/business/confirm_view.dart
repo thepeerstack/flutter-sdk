@@ -57,7 +57,7 @@ class ConfirmView extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  PeerLogoIcon(currentBusiness?.business),
+                  PeerLogoIcon(business: currentBusiness?.business),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: RotatedBox(
@@ -68,7 +68,7 @@ class ConfirmView extends HookWidget {
                       ),
                     ),
                   ),
-                  PeerLogoIcon(business),
+                  PeerLogoIcon(business: business),
                 ],
               ),
               Gap(47),
