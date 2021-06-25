@@ -1,5 +1,5 @@
 
-## [2.0.0-beta.3]
+## [2.0.0-beta.4]
 Fixed all major bugs
 
 ## [2.0.0-beta.2]
