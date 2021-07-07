@@ -1,3 +1,23 @@
+## [2.0.0-beta.8]
+Revert to depend on web
+
+## [2.0.0-beta.7]
+Fixed image cache bugs
+
+## [2.0.0-beta.6]
+Fixed kobo conversion bugs
+
+## [2.0.0-beta.4]
+Fixed all major bugs
+
+## [2.0.0-beta.2]
+Major fixes
+
+## [2.0.0-beta.1]
+Major refactor
+
+## [1.0.6]
+fixed home url
 
 ## [1.0.5]
 refactor to thepeer

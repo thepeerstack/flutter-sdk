@@ -12,7 +12,7 @@ import 'package:thepeer_flutter/src/model/thepeer_data.dart';
 import 'package:thepeer_flutter/src/raw/thepeer_html.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
 
-import 'package:thepeer_flutter/src/views/error_view.dart';
+import 'package:thepeer_flutter/src/views/the_peer_error_view.dart';
 
 class ThepeerView extends StatefulWidget {
   /// Public Key from your https://app.withThepeer.com/apps
@@ -21,11 +21,14 @@ class ThepeerView extends StatefulWidget {
   /// Success callback
   final VoidCallback? onSuccess;
 
+  /// Error callback
+  final Function(dynamic)? onError;
+
   /// Thepeer popup Close callback
   final VoidCallback? onClosed;
 
   /// Error Widget will show if loading fails
-  final Widget? error;
+  final Widget? errorWidget;
 
   /// Show ThepeerView Logs
   final bool showLogs;
@@ -36,9 +39,10 @@ class ThepeerView extends StatefulWidget {
   const ThepeerView({
     Key? key,
     required this.data,
-    this.error,
+    this.errorWidget,
     this.onSuccess,
     this.onClosed,
+    this.onError,
     this.showLogs = false,
     this.isDismissible = true,
   });
@@ -71,8 +75,9 @@ class ThepeerView extends StatefulWidget {
                       data: data,
                       onClosed: onClosed,
                       onSuccess: onSuccess,
+                      onError: onError,
                       showLogs: showLogs,
-                      error: error,
+                      errorWidget: errorWidget,
                     ),
                   ),
                 ),
@@ -111,45 +116,48 @@ class _ThepeerViewState extends State<ThepeerView> {
           builder: (context, snapshot) {
             if (hasError == true) {
               return Center(
-                child: widget.error ??
-                    ErrorView(reload: () async {
-                      setState(() {});
-                      (await _webViewController).reload();
-                    }),
+                child: widget.errorWidget ??
+                    ThePeerErrorView(
+                      onClosed: widget.onClosed,
+                      reload: () async {
+                        setState(() {});
+                        (await _webViewController).reload();
+                      },
+                    ),
               );
-            } else
-              return snapshot.hasData
-                  ? Center(
-                      child: FutureBuilder<WebViewController>(
-                        future: _controller.future,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<WebViewController> controller) {
-                          return WebView(
-                            initialUrl: snapshot.data!,
-                            onWebViewCreated:
-                                (WebViewController webViewController) {
-                              _controller.complete(webViewController);
-                            },
-                            javascriptChannels: {_thepeerJavascriptChannel()},
-                            javascriptMode: JavascriptMode.unrestricted,
-                            onPageStarted: (String url) async {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              await injectPeerStack(controller.data!);
-                            },
-                            onPageFinished: (String url) {
-                              setState(() {
-                                isLoading = false;
-                              });
-                            },
-                            navigationDelegate: (_) =>
-                                _handleNavigationInterceptor(_),
-                          );
-                        },
-                      ),
-                    )
-                  : Center(child: CupertinoActivityIndicator());
+            } else if (snapshot.hasData == true) {
+              return Center(
+                child: FutureBuilder<WebViewController>(
+                  future: _controller.future,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<WebViewController> controller) {
+                    return WebView(
+                      initialUrl: snapshot.data!,
+                      onWebViewCreated: (WebViewController webViewController) {
+                        _controller.complete(webViewController);
+                      },
+                      javascriptChannels: {_thepeerJavascriptChannel()},
+                      javascriptMode: JavascriptMode.unrestricted,
+                      onPageStarted: (String url) async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await injectPeerStack(controller.data!);
+                      },
+                      onPageFinished: (String url) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      },
+                      navigationDelegate: (_) =>
+                          _handleNavigationInterceptor(_),
+                    );
+                  },
+                ),
+              );
+            } else {
+              return Center(child: CupertinoActivityIndicator());
+            }
           }),
     );
   }
@@ -163,10 +171,12 @@ class _ThepeerViewState extends State<ThepeerView> {
                 publicKey: "${widget.data.publicKey}",
                 amount: "${widget.data.amount}",
                 userReference: "${widget.data.userReference}",
-                firstName: "${widget.data.firstName ?? ''}",
                 receiptUrl: "${widget.data.receiptUrl ?? ''}",
                 onSuccess: function (data) {
                     sendMessage(data)
+                },
+                 onError: function (error) {
+                   sendMessage(error)
                 },
                 onClose: function () {
                     sendMessage("thepeer.dart.closed")
@@ -210,14 +220,13 @@ class _ThepeerViewState extends State<ThepeerView> {
 
             return;
           case 'thepeer.dart.closed':
-            if (mounted && widget.onClosed != null) widget.onClosed!();
-
-            return;
           case 'send.close':
             if (mounted && widget.onClosed != null) widget.onClosed!();
 
             return;
           default:
+            if (mounted && widget.onError != null) widget.onError!(res);
+            return;
         }
       }
     } catch (e) {
