@@ -80,10 +80,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () async {
                     await ThepeerView(
                       data: ThePeerData(
-                        amount: 4000,
-                        receiptUrl: '',
-                        publicKey: '',
-                        userReference: '',
+                        amount: 400000,
+                        userReference: "b557c7a0-f343-43a4-acf1-4885eb049c3d",
+                        receiptUrl:
+                            "https://sushi.thepeer.co/api/receipt?business=cashApp",
+                        publicKey: "pspk_test_zqlrmuadqxuqrhdoyhzq1b8wdgsozbwmqkmxccmymrmcy",
                       ),
                       showLogs: true,
                       onClosed: () {
