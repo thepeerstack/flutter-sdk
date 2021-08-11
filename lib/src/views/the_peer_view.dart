@@ -163,11 +163,12 @@ class _ThepeerViewState extends State<ThepeerView> {
   }
 
   Future<String> injectPeerStack(WebViewController controller) {
+    print(widget.data);
     return controller.evaluateJavascript('''
        window.onload = useThepeer;
         function useThepeer() {
 
-            let send = new ThePeer({
+            let send = new ThePeer.send({
                 publicKey: "${widget.data.publicKey}",
                 amount: "${widget.data.amount}",
                 userReference: "${widget.data.userReference}",

@@ -45,13 +45,13 @@ class ThePeerErrorView extends StatelessWidget {
           children: [
             Gap(80),
             SvgPicture.asset(
-              ' state.image',
+              'assets/images/warning_badge.svg',
               package: package,
             ),
             Gap(45),
             Center(
               child: Text(
-                'state.title',
+                'Something went wrong',
                 style: TextStyle(
                   fontFamily: 'Gilroy-Bold',
                   package: package,
@@ -65,7 +65,7 @@ class ThePeerErrorView extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Text(
-                  'state.description',
+                  'Please check your internet connection',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Gilroy-Medium',
