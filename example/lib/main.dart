@@ -61,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           const SizedBox(height: 60),
           Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 height: 60,
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: thepeerColor,
                   child: Center(
                     child: Text(
-                      'Launch thePeer',
+                      'Launch thePeer Send',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 13,
@@ -78,24 +79,56 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   onPressed: () async {
-                    await ThepeerView(
+                    await ThepeerSendView(
                       data: ThePeerData(
                         amount: 400000,
                         userReference: "b557c7a0-f343-43a4-acf1-4885eb049c3d",
                         receiptUrl:
                             "https://sushi.thepeer.co/api/receipt?business=cashApp",
-                        publicKey: "pspk_test_zqlrmuadqxuqrhdoyhzq1b8wdgsozbwmqkmxccmymrmcy",
+                        publicKey:
+                            "pspk_test_zqlrmuadqxuqrhdoyhzq1b8wdgsozbwmqkmxccmymrmcy",
                       ),
                       showLogs: true,
                       onClosed: () {
                         Navigator.pop(context);
                       },
                       onSuccess: () {
+                        onSuccess(context);
+                      },
+                    ).show(context);
+                  },
+                ),
+              ),
+              const SizedBox(height: 60),
+              Container(
+                height: 60,
+                margin: EdgeInsets.symmetric(horizontal: 60),
+                child: CupertinoButton(
+                  color: thepeerColor,
+                  child: Center(
+                    child: Text(
+                      'Launch Direct Charge',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  onPressed: () async {
+                    await ThepeerDirectChargeView(
+                      data: ThePeerData(
+                        amount: 400000,
+                        userReference: "b557c7a0-f343-43a4-acf1-4885eb049c3d",
+                        publicKey:
+                            "pspk_test_zqlrmuadqxuqrhdoyhzq1b8wdgsozbwmqkmxccmymrmcy",
+                      ),
+                      showLogs: true,
+                      onClosed: () {
                         Navigator.pop(context);
-                        final snackBar = SnackBar(
-                            content: Text("Yay! Your payment was successful"));
-
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      },
+                      onSuccess: () {
+                        onSuccess(context);
                       },
                     ).show(context);
                   },
@@ -106,6 +139,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       )),
     );
+  }
+
+  void onSuccess(BuildContext context) {
+    Navigator.pop(context);
+    final snackBar =
+        SnackBar(content: Text("Yay! Your payment was successful"));
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
