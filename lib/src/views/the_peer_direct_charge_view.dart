@@ -88,7 +88,8 @@ class ThepeerDirectChargeView extends StatefulWidget {
       );
 
   @override
-  _ThepeerDirectChargeViewState createState() => _ThepeerDirectChargeViewState();
+  _ThepeerDirectChargeViewState createState() =>
+      _ThepeerDirectChargeViewState();
 }
 
 class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
@@ -163,7 +164,6 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
   }
 
   Future<String> injectPeerStack(WebViewController controller) {
-  
     return controller.evaluateJavascript('''
        window.onload = useThepeer;
 
@@ -195,8 +195,6 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
             }
         }
       ''');
-  
-  
   }
 
   /// Javascript channel for events sent by Thepeer
