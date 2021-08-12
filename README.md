@@ -10,13 +10,16 @@ This package makes it easy to use the Thepeer in a flutter project.
 
 ### 🚀 How to Use plugin
 
-- Launch ThepeerView in a bottom_sheet
+
+### ThePeer Send
+
+- Launch ThepeerSendView in a bottom_sheet
 
 ```dart
 import 'package:thepeer_flutter/thepeer_flutter.dart';
     
   void launch() async {
-    await ThepeerView(
+    await ThepeerSendView(
             data: ThePeerData(
                amount: 10000,
                firstName: '$firstName',
@@ -43,11 +46,67 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
     
      ...
 
-     ThepeerView(
+     ThepeerSendView(
          data: ThePeerData(
                amount: 10000,
                firstName: '$firstName',
                receiptUrl: '$receiptUrl',
+               publicKey: '$publicKey',
+               userReference: '$userReference',
+         ),
+         onClosed: () {
+            Navigator.pop(context);
+            print('Widget closed')
+         },
+         onSuccess: () {
+            Navigator.pop(context);
+         },
+        error: Text('Error'),
+      )
+
+      ...
+  
+```
+--- 
+
+### ThePeer DirectCharge
+
+- Launch ThepeerDirectChargeView in a bottom_sheet
+
+```dart
+import 'package:thepeer_flutter/thepeer_flutter.dart';
+    
+  void launch() async {
+    await ThepeerDirectChargeView(
+            data: ThePeerData(
+               amount: 10000,
+               firstName: '$firstName',
+               publicKey: '$publicKey',
+               userReference: '$userReference',
+            ),
+            showLogs: true,
+            onClosed: () {
+               Navigator.pop(context);
+            },
+            onSuccess: () {
+               Navigator.pop(context);
+            },
+      ).show(context);
+  }
+```
+
+
+- Use ThepeerView widget
+
+```dart
+import 'package:thepeer_flutter/thepeer_flutter.dart';
+    
+     ...
+
+     ThepeerDirectChargeView(
+         data: ThePeerData(
+               amount: 10000,
+               firstName: '$firstName',
                publicKey: '$publicKey',
                userReference: '$userReference',
          ),

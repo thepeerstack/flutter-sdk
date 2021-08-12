@@ -82,11 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     await ThepeerSendView(
                       data: ThePeerData(
                         amount: 400000,
-                        userReference: "b557c7a0-f343-43a4-acf1-4885eb049c3d",
-                        receiptUrl:
-                            "https://sushi.thepeer.co/api/receipt?business=cashApp",
-                        publicKey:
-                            "pspk_test_zqlrmuadqxuqrhdoyhzq1b8wdgsozbwmqkmxccmymrmcy",
+                        userReference: "",
+                        receiptUrl: "",
+                        publicKey: "",
                       ),
                       showLogs: true,
                       onClosed: () {
@@ -119,9 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     await ThepeerDirectChargeView(
                       data: ThePeerData(
                         amount: 400000,
-                        userReference: "b557c7a0-f343-43a4-acf1-4885eb049c3d",
-                        publicKey:
-                            "pspk_test_zqlrmuadqxuqrhdoyhzq1b8wdgsozbwmqkmxccmymrmcy",
+                        userReference: "",
+                        publicKey: "",
                       ),
                       showLogs: true,
                       onClosed: () {

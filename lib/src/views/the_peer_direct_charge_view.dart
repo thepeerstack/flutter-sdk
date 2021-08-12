@@ -14,7 +14,7 @@ import 'package:thepeer_flutter/src/utils/extensions.dart';
 
 import 'package:thepeer_flutter/src/views/the_peer_error_view.dart';
 
-class ThepeerSendView extends StatefulWidget {
+class ThepeerDirectChargeView extends StatefulWidget {
   /// Public Key from your https://app.withThepeer.com/apps
   final ThePeerData data;
 
@@ -30,13 +30,13 @@ class ThepeerSendView extends StatefulWidget {
   /// Error Widget will show if loading fails
   final Widget? errorWidget;
 
-  /// Show ThepeerSendView Logs
+  /// Show ThepeerDirectChargeView Logs
   final bool showLogs;
 
   /// Toggle dismissible mode
   final bool isDismissible;
 
-  const ThepeerSendView({
+  const ThepeerDirectChargeView({
     Key? key,
     required this.data,
     this.errorWidget,
@@ -71,7 +71,7 @@ class ThepeerSendView extends StatefulWidget {
                 Center(
                   child: Container(
                     height: context.screenHeight(.9),
-                    child: ThepeerSendView(
+                    child: ThepeerDirectChargeView(
                       data: data,
                       onClosed: onClosed,
                       onSuccess: onSuccess,
@@ -88,10 +88,10 @@ class ThepeerSendView extends StatefulWidget {
       );
 
   @override
-  _ThepeerSendViewState createState() => _ThepeerSendViewState();
+  _ThepeerDirectChargeViewState createState() => _ThepeerDirectChargeViewState();
 }
 
-class _ThepeerSendViewState extends State<ThepeerSendView> {
+class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
   @override
   void initState() {
     super.initState();
@@ -163,28 +163,29 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
   }
 
   Future<String> injectPeerStack(WebViewController controller) {
+  
     return controller.evaluateJavascript('''
        window.onload = useThepeer;
-        function useThepeer() {
 
-            let send = new ThePeer.send({
-                publicKey: "${widget.data.publicKey}",
-                amount: "${widget.data.amount}",
-                userReference: "${widget.data.userReference}",
-                receiptUrl: "${widget.data.receiptUrl ?? ''}",
-                onSuccess: function (data) {
-                    sendMessage(data)
-                },
-                 onError: function (error) {
-                   sendMessage(error)
-                },
-                onClose: function () {
-                    sendMessage("thepeer.dart.closed")
-                }
-            });
+      function useThepeer() {
 
-            send.setup();
-            send.open();
+        const directCharge = new ThePeer.directCharge({
+              publicKey: "${widget.data.publicKey}",
+              amount: "${widget.data.amount}",
+              userReference:  "${widget.data.userReference}",
+              onSuccess: function (response) {
+                  sendMessage(data)
+              },
+              onError: function (error) {
+                  sendMessage(error)
+              },
+              onClose: function () {
+                  sendMessage("thepeer.dart.closed")
+              }
+          });
+
+            directCharge.setup();
+            directCharge.open();
         }
 
 
@@ -194,6 +195,8 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
             }
         }
       ''');
+  
+  
   }
 
   /// Javascript channel for events sent by Thepeer

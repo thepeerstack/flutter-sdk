@@ -18,8 +18,8 @@ class ThePeerData with EquatableMixin {
   ThePeerData({
     required this.publicKey,
     required this.userReference,
-    required this.receiptUrl,
     required this.amount,
+    this.receiptUrl,
   });
 
   ThePeerData copyWith({

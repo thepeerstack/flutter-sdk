@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thepeer_flutter/src/const/const.dart';
 import 'package:thepeer_flutter/src/utils/colors.dart';
-import 'package:thepeer_flutter/src/views/the_peer_error_view.dart';
 
 import 'touchable_opacity.dart';
 
