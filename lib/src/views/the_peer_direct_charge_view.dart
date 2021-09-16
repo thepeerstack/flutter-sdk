@@ -173,14 +173,14 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
               publicKey: "${widget.data.publicKey}",
               amount: "${widget.data.amount}",
               userReference:  "${widget.data.userReference}",
-              onSuccess: function (response) {
+              onSuccess: function (data) {
                   sendMessage(data)
               },
               onError: function (error) {
                   sendMessage(error)
               },
-              onClose: function () {
-                  sendMessage("thepeer.dart.closed")
+              onClose: function (event) {
+                  sendMessage(event)
               }
           });
 
@@ -190,8 +190,8 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
 
 
         function sendMessage(message) {
-            if (window.ThepeerClientInterface && window.ThepeerClientInterface.postMessage) {
-                ThepeerClientInterface.postMessage(message);
+            if (window.ThepeerDirectchargeClientInterface && window.ThepeerDirectchargeClientInterface.postMessage) {
+                ThepeerDirectchargeClientInterface.postMessage(message);
             }
         }
       ''');
@@ -200,13 +200,13 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
   /// Javascript channel for events sent by Thepeer
   JavascriptChannel _thepeerJavascriptChannel() {
     return JavascriptChannel(
-        name: 'ThepeerClientInterface',
+        name: 'ThepeerDirectchargeClientInterface',
         onMessageReceived: (JavascriptMessage msg) {
           try {
-            print('ThepeerClientInterface, ${msg.message}');
+            print('ThepeerDirectchargeClientInterface, ${msg.message}');
             handleResponse(msg.message);
-          } on Exception catch (e) {
-            print(e.toString());
+          } on Exception {
+            if (mounted && widget.onClosed != null) widget.onClosed!();
           }
         });
   }
@@ -242,7 +242,8 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
         setState(() {
           hasError = false;
         });
-        return Uri.dataFromString(buildThepeerHtml, mimeType: 'text/html')
+        return Uri.dataFromString(buildThepeerHtml(widget.data.isProd),
+                mimeType: 'text/html')
             .toString();
       } else {
         return Uri.dataFromString('<html><body>An Error Occurred</body></html>',

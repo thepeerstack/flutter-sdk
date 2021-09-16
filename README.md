@@ -8,6 +8,12 @@ This package makes it easy to use the Thepeer in a flutter project.
 ![thepeer-two](https://user-images.githubusercontent.com/5338836/116476590-57a3f380-a873-11eb-8353-be6f8b95185c.png)
 ![thepeer-three](https://user-images.githubusercontent.com/5338836/116476596-5a064d80-a873-11eb-8cd4-dc7e7bbe1211.png)
 
+<p float="left">
+<img src="https://github.com/thepeerstack/flutter-sdk/blob/main/1.png?raw=true" width="200">
+<img src="https://github.com/thepeerstack/flutter-sdk/blob/main/2.png?raw=true" width="200">
+<img src="https://github.com/thepeerstack/flutter-sdk/blob/main/3.png?raw=true" width="200">
+</p>
+
 ### 🚀 How to Use plugin
 
 
@@ -39,7 +45,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
 ```
 
 
-- Use ThepeerView widget
+- Use ThepeerSendView widget
 
 ```dart
 import 'package:thepeer_flutter/thepeer_flutter.dart';
@@ -96,7 +102,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
 ```
 
 
-- Use ThepeerView widget
+- Use ThepeerDirectChargeView widget
 
 ```dart
 import 'package:thepeer_flutter/thepeer_flutter.dart';

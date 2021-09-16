@@ -15,6 +15,8 @@ class ThePeerData with EquatableMixin {
   /// The amount you intend to send and must be pass as an integer in kobo
   final int amount;
 
+  bool get isProd => publicKey.contains('test') == false;
+
   ThePeerData({
     required this.publicKey,
     required this.userReference,

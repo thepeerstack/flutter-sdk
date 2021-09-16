@@ -1,5 +1,10 @@
 /// Raw Thepeer html formation
-String get buildThepeerHtml => '''
+String buildThepeerHtml(bool isProd) {
+  final url = isProd
+      ? 'https://cdn.thepeer.co/v1/chain.js'
+      : 'https://vision.thepeer.co/v1/chain.js';
+
+  return '''
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,10 +13,11 @@ String get buildThepeerHtml => '''
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ThePeer Dart</title>
-    <script src="https://vision.thepeer.co/v1/chain.js"></script>
+    <script src="$url"></script>
 </head>
 
 <body style="border-radius: 20px; background-color:#fff;height:100vh;overflow: hidden; "> </body>
 
 </html>
 ''';
+}

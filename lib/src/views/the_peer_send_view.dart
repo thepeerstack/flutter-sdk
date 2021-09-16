@@ -178,7 +178,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
                  onError: function (error) {
                    sendMessage(error)
                 },
-                onClose: function () {
+                onClose: function (event) {
                     sendMessage("thepeer.dart.closed")
                 }
             });
@@ -189,8 +189,8 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
 
 
         function sendMessage(message) {
-            if (window.ThepeerClientInterface && window.ThepeerClientInterface.postMessage) {
-                ThepeerClientInterface.postMessage(message);
+            if (window.ThepeerSendClientInterface && window.ThepeerSendClientInterface.postMessage) {
+                ThepeerSendClientInterface.postMessage(message);
             }
         }
       ''');
@@ -199,10 +199,10 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
   /// Javascript channel for events sent by Thepeer
   JavascriptChannel _thepeerJavascriptChannel() {
     return JavascriptChannel(
-        name: 'ThepeerClientInterface',
+        name: 'ThepeerSendClientInterface',
         onMessageReceived: (JavascriptMessage msg) {
           try {
-            print('ThepeerClientInterface, ${msg.message}');
+            print('ThepeerSendClientInterface, ${msg.message}');
             handleResponse(msg.message);
           } on Exception catch (e) {
             print(e.toString());
@@ -241,7 +241,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
         setState(() {
           hasError = false;
         });
-        return Uri.dataFromString(buildThepeerHtml, mimeType: 'text/html')
+        return Uri.dataFromString(buildThepeerHtml(widget.data.isProd), mimeType: 'text/html')
             .toString();
       } else {
         return Uri.dataFromString('<html><body>An Error Occurred</body></html>',

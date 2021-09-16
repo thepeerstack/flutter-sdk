@@ -1,3 +1,6 @@
+## [2.0.2]
+Add direct charge
+
 ## [2.0.0-beta.9]
 Add direct charge
 
