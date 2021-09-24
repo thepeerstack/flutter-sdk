@@ -6,6 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:thepeer_flutter/src/const/const.dart';
+import 'package:thepeer_flutter/src/model/the_peer_event_model.dart';
+import 'package:thepeer_flutter/src/model/thepeer_success_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
@@ -19,7 +22,7 @@ class ThepeerDirectChargeView extends StatefulWidget {
   final ThePeerData data;
 
   /// Success callback
-  final VoidCallback? onSuccess;
+  final ValueChanged<ThepeerSuccessModel>? onSuccess;
 
   /// Error callback
   final Function(dynamic)? onError;
@@ -97,7 +100,6 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
   void initState() {
     super.initState();
     _handleInit();
-    // Enable hybrid composition.
   }
 
   final Completer<WebViewController> _controller =
@@ -163,6 +165,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
     );
   }
 
+  /// Inject JS code to be run in webview
   Future<String> injectPeerStack(WebViewController controller) {
     return controller.evaluateJavascript('''
        window.onload = useThepeer;
@@ -173,14 +176,14 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
               publicKey: "${widget.data.publicKey}",
               amount: "${widget.data.amount}",
               userReference:  "${widget.data.userReference}",
-              onSuccess: function (data) {
-                  sendMessage(data)
+              onSuccess: function (success) {
+                  sendMessage(success)
               },
               onError: function (error) {
                   sendMessage(error)
               },
-              onClose: function (event) {
-                  sendMessage(event)
+              onClose: function (close) {
+                 sendMessage(close)
               }
           });
 
@@ -188,10 +191,9 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
             directCharge.open();
         }
 
-
         function sendMessage(message) {
-            if (window.ThepeerDirectchargeClientInterface && window.ThepeerDirectchargeClientInterface.postMessage) {
-                ThepeerDirectchargeClientInterface.postMessage(message);
+            if (window.ThepeerDirectChargeClientInterface && window.ThepeerDirectChargeClientInterface.postMessage) {
+                ThepeerDirectChargeClientInterface.postMessage(JSON.stringify(message));
             }
         }
       ''');
@@ -200,41 +202,44 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
   /// Javascript channel for events sent by Thepeer
   JavascriptChannel _thepeerJavascriptChannel() {
     return JavascriptChannel(
-        name: 'ThepeerDirectchargeClientInterface',
+        name: 'ThepeerDirectChargeClientInterface',
         onMessageReceived: (JavascriptMessage msg) {
           try {
-            print('ThepeerDirectchargeClientInterface, ${msg.message}');
             handleResponse(msg.message);
           } on Exception {
             if (mounted && widget.onClosed != null) widget.onClosed!();
+          } catch (e) {
+            print(e.toString());
           }
         });
   }
 
-  /// parse event from javascript channel
-  void handleResponse(String? res) async {
+  /// Parse event from javascript channel
+  void handleResponse(String res) async {
     try {
-      if (res != null) {
-        switch (res) {
-          case 'send.success':
-            if (widget.onSuccess != null) widget.onSuccess!();
+      final data = ThepeerEventModel.fromJson(res);
+      switch (data.type) {
+        case DIRECT_DEBIT_SUCCESS:
+          if (widget.onSuccess != null)
+            widget.onSuccess!(
+              ThepeerSuccessModel.fromJson(res),
+            );
 
-            return;
-          case 'thepeer.dart.closed':
-          case 'send.close':
-            if (mounted && widget.onClosed != null) widget.onClosed!();
+          return;
+        case DIRECT_DEBIT_CLOSE:
+          if (mounted && widget.onClosed != null) widget.onClosed!();
 
-            return;
-          default:
-            if (mounted && widget.onError != null) widget.onError!(res);
-            return;
-        }
+          return;
+        default:
+          if (mounted && widget.onError != null) widget.onError!(res);
+          return;
       }
     } catch (e) {
       if (widget.showLogs == true) print(e.toString());
     }
   }
 
+  /// Generate Url from string
   Future<String> _getURL() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -242,25 +247,27 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
         setState(() {
           hasError = false;
         });
-        return Uri.dataFromString(buildThepeerHtml(widget.data.isProd),
-                mimeType: 'text/html')
-            .toString();
+        return Uri.dataFromString(
+          buildThepeerHtml(widget.data),
+          mimeType: 'text/html',
+        ).toString();
       } else {
-        return Uri.dataFromString('<html><body>An Error Occurred</body></html>',
-                mimeType: 'text/html')
-            .toString();
+        return Uri.dataFromString(
+          '<html><body>An Error Occurred</body></html>',
+          mimeType: 'text/html',
+        ).toString();
       }
     } catch (_) {
-      setState(() {
-        isLoading = false;
-        hasError = true;
-      });
-      return Uri.dataFromString('<html><body>An Error Occurred</body></html>',
-              mimeType: 'text/html')
-          .toString();
+      isLoading = false;
+      hasError = true;
+      return Uri.dataFromString(
+        '<html><body>An Error Occurred</body></html>',
+        mimeType: 'text/html',
+      ).toString();
     }
   }
 
+  /// Handle WebView initialization
   void _handleInit() async {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();

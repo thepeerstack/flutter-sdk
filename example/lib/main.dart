@@ -40,110 +40,103 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(
           widget.title ?? '',
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
           ),
         ),
-        centerTitle: true,
-        elevation: 1,
-        brightness: Brightness.light,
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
-      body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 60),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 60,
-                margin: EdgeInsets.symmetric(horizontal: 60),
-                child: CupertinoButton(
-                  color: thepeerColor,
-                  child: Center(
-                    child: Text(
-                      'Launch thePeer Send',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 60),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 60,
+                  margin: EdgeInsets.symmetric(horizontal: 60),
+                  child: CupertinoButton(
+                    color: thepeerColor,
+                    child: Center(
+                      child: Text(
+                        'Launch Send',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
+                    onPressed: () async {
+                      await ThepeerSendView(
+                        data: ThePeerData(
+                          amount: 400000,
+                          userReference: "",
+                          receiptUrl: "",
+                          publicKey: "",
+                        ),
+                        showLogs: true,
+                        onClosed: () {
+                          print('closed');
+                          Navigator.pop(context);
+                        },
+                        onSuccess: (v) {
+                          print(v.toString());
+                          Navigator.pop(context);
+                        },
+                      ).show(context);
+                    },
                   ),
-                  onPressed: () async {
-                    await ThepeerSendView(
-                      data: ThePeerData(
-                        amount: 400000,
-                        userReference: "b557c7a0-f343-43a4-acf1-4885eb049c3d",
-                        receiptUrl: "https://sushi.thepeer.co/api/receipt?business=cashApp",
-                        publicKey: "pspk_test_zqlrmuadqxuqrhdoyhzq1b8wdgsozbwmqkmxccmymrmcy",
-                      ),
-                      showLogs: true,
-                      onClosed: () {
-                        Navigator.pop(context);
-                      },
-                      onSuccess: () {
-                        onSuccess(context);
-                      },
-                    ).show(context);
-                  },
                 ),
-              ),
-              const SizedBox(height: 60),
-              Container(
-                height: 60,
-                margin: EdgeInsets.symmetric(horizontal: 60),
-                child: CupertinoButton(
-                  color: thepeerColor,
-                  child: Center(
-                    child: Text(
-                      'Launch Direct Charge',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
+                const SizedBox(height: 60),
+                Container(
+                  height: 60,
+                  margin: EdgeInsets.symmetric(horizontal: 60),
+                  child: CupertinoButton(
+                    color: Colors.black,
+                    child: Center(
+                      child: Text(
+                        'Launch Direct Charge',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
+                    onPressed: () async {
+                      await ThepeerDirectChargeView(
+                        data: ThePeerData(
+                          amount: 500000,
+                          userReference: "",
+                          publicKey: "",
+                        ),
+                        showLogs: true,
+                        onClosed: () {
+                          Navigator.pop(context);
+                        },
+                        onSuccess: (v) {
+                          print(v.toString());
+                          Navigator.pop(context);
+                        },
+                      ).show(context);
+                    },
                   ),
-                  onPressed: () async {
-                    await ThepeerDirectChargeView(
-                      data: ThePeerData(
-                        amount: 500000,
-                        userReference: "fd92e93b-8907-4429-86e5-9cf2fea2a9d8",
-                        publicKey: "pspk_test_m7pbk9fbjaofi92shcgxq8is4pfgxl0t0bq3g3bmrp7iq",
-                      ),
-                      showLogs: true,
-                      onClosed: () {
-                        Navigator.pop(context);
-                      },
-                      onSuccess: () {
-                        onSuccess(context);
-                      },
-                    ).show(context);
-                  },
                 ),
-              ),
-            ],
-          ),
-        ],
-      )),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
-  }
-
-  void onSuccess(BuildContext context) {
-    Navigator.pop(context);
-    final snackBar =
-        SnackBar(content: Text("Yay! Your payment was successful"));
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 

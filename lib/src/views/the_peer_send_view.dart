@@ -6,6 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:thepeer_flutter/src/const/const.dart';
+import 'package:thepeer_flutter/src/model/the_peer_event_model.dart';
+import 'package:thepeer_flutter/src/model/thepeer_success_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
@@ -19,7 +22,7 @@ class ThepeerSendView extends StatefulWidget {
   final ThePeerData data;
 
   /// Success callback
-  final VoidCallback? onSuccess;
+  final ValueChanged<ThepeerSuccessModel>? onSuccess;
 
   /// Error callback
   final Function(dynamic)? onError;
@@ -96,7 +99,6 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
   void initState() {
     super.initState();
     _handleInit();
-    // Enable hybrid composition.
   }
 
   final Completer<WebViewController> _controller =
@@ -162,6 +164,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
     );
   }
 
+  /// Inject JS code to be run in webview
   Future<String> injectPeerStack(WebViewController controller) {
     return controller.evaluateJavascript('''
        window.onload = useThepeer;
@@ -172,14 +175,14 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
                 amount: "${widget.data.amount}",
                 userReference: "${widget.data.userReference}",
                 receiptUrl: "${widget.data.receiptUrl ?? ''}",
-                onSuccess: function (data) {
-                    sendMessage(data)
+                onSuccess: function (success) {
+                    sendMessage(success)
                 },
                  onError: function (error) {
-                   sendMessage(error)
+                    sendMessage(error)
                 },
-                onClose: function (event) {
-                    sendMessage("thepeer.dart.closed")
+                onClose: function (close) {
+                    sendMessage(close)
                 }
             });
 
@@ -190,7 +193,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
 
         function sendMessage(message) {
             if (window.ThepeerSendClientInterface && window.ThepeerSendClientInterface.postMessage) {
-                ThepeerSendClientInterface.postMessage(message);
+                ThepeerSendClientInterface.postMessage(JSON.stringify(message));
             }
         }
       ''');
@@ -202,7 +205,6 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
         name: 'ThepeerSendClientInterface',
         onMessageReceived: (JavascriptMessage msg) {
           try {
-            print('ThepeerSendClientInterface, ${msg.message}');
             handleResponse(msg.message);
           } on Exception catch (e) {
             print(e.toString());
@@ -210,30 +212,30 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
         });
   }
 
-  /// parse event from javascript channel
-  void handleResponse(String? res) async {
+  /// Parse event from javascript channel
+  void handleResponse(String res) async {
     try {
-      if (res != null) {
-        switch (res) {
-          case 'send.success':
-            if (widget.onSuccess != null) widget.onSuccess!();
-
-            return;
-          case 'thepeer.dart.closed':
-          case 'send.close':
-            if (mounted && widget.onClosed != null) widget.onClosed!();
-
-            return;
-          default:
-            if (mounted && widget.onError != null) widget.onError!(res);
-            return;
-        }
+      final data = ThepeerEventModel.fromJson(res);
+      switch (data.type) {
+        case SEND_SUCCESS:
+          if (widget.onSuccess != null)
+            widget.onSuccess!(
+              ThepeerSuccessModel.fromJson(res),
+            );
+          return;
+        case SEND_CLOSE:
+          if (mounted && widget.onClosed != null) widget.onClosed!();
+          return;
+        default:
+          if (mounted && widget.onError != null) widget.onError!(res);
+          return;
       }
     } catch (e) {
       if (widget.showLogs == true) print(e.toString());
     }
   }
 
+  /// Generate Url from string
   Future<String> _getURL() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -241,24 +243,30 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
         setState(() {
           hasError = false;
         });
-        return Uri.dataFromString(buildThepeerHtml(widget.data.isProd), mimeType: 'text/html')
-            .toString();
+
+        return Uri.dataFromString(
+          buildThepeerHtml(widget.data),
+          mimeType: 'text/html',
+        ).toString();
       } else {
-        return Uri.dataFromString('<html><body>An Error Occurred</body></html>',
-                mimeType: 'text/html')
-            .toString();
+        return Uri.dataFromString(
+          '<html><body>An Error Occurred</body></html>',
+          mimeType: 'text/html',
+        ).toString();
       }
     } catch (_) {
       setState(() {
         isLoading = false;
         hasError = true;
       });
-      return Uri.dataFromString('<html><body>An Error Occurred</body></html>',
-              mimeType: 'text/html')
-          .toString();
+      return Uri.dataFromString(
+        '<html><body>An Error Occurred</body></html>',
+        mimeType: 'text/html',
+      ).toString();
     }
   }
 
+  /// Handle WebView initialization
   void _handleInit() async {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();

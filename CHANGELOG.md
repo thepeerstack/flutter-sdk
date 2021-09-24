@@ -1,3 +1,6 @@
+## [2.0.3]
+Add direct charge + bug fixes
+
 ## [2.0.2]
 Add direct charge
 

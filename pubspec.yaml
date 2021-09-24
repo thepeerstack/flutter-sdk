@@ -1,6 +1,6 @@
 name: thepeer_flutter
 description: Official plugin for using Thepeer SDK with flutter https://thepeer.co
-version: 2.0.2
+version: 2.0.3
 homepage: https://github.com/thepeerstack/flutter-sdk
 
 environment:
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  webview_flutter: ^2.0.4
+  webview_flutter: ^2.0.13
   modal_bottom_sheet: ^2.0.0
   equatable: ^2.0.3
   flutter_svg: ^0.22.0
