@@ -1,4 +1,4 @@
-## [2.0.3]
+## [2.0.4]
 Add direct charge + bug fixes
 
 ## [2.0.2]
