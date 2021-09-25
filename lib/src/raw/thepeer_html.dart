@@ -2,9 +2,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
 
 /// Raw Thepeer html formation
 String buildThepeerHtml(ThePeerData data) {
-  final url = data.isProd
-      ? 'https://cdn.thepeer.co/v1/chain.js'
-      : 'https://vision.thepeer.co/v1/chain.js';
+  final url = 'https://chain.thepeer.co/v1/chain.js';
 
   return '''
 <!DOCTYPE html>
