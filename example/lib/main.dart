@@ -79,9 +79,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       await ThepeerSendView(
                         data: ThePeerData(
                           amount: 400000,
-                          userReference: "",
-                          receiptUrl: "",
-                          publicKey: "",
+                          userReference: "stay-foolish-stay-hungry-forever",
+                          receiptUrl: "https://apple.com/thepeer",
+                          publicKey: "pspk_one_more_thing",
                         ),
                         showLogs: true,
                         onClosed: () {
@@ -92,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           print(v.toString());
                           Navigator.pop(context);
                         },
+                        onError: print,
                       ).show(context);
                     },
                   ),
@@ -115,18 +116,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () async {
                       await ThepeerDirectChargeView(
                         data: ThePeerData(
-                          amount: 500000,
-                          userReference: "",
-                          publicKey: "",
-                        ),
+                            amount: 500000,
+                            userReference: "stay-foolish-stay-hungry-forever",
+                            publicKey: "pspk_one_more_thing",
+                            meta: {}),
                         showLogs: true,
-                        onClosed: () {
-                          Navigator.pop(context);
-                        },
+                        onClosed: () => Navigator.pop(context),
                         onSuccess: (v) {
                           print(v.toString());
                           Navigator.pop(context);
                         },
+                        onError: print,
                       ).show(context);
                     },
                   ),

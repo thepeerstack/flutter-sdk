@@ -25,21 +25,27 @@ This package makes it easy to use the Thepeer in a flutter project.
 import 'package:thepeer_flutter/thepeer_flutter.dart';
     
   void launch() async {
-    await ThepeerSendView(
-            data: ThePeerData(
-               amount: 10000,
-               firstName: '$firstName',
-               receiptUrl: '$receiptUrl',
-               publicKey: '$publicKey',
-               userReference: '$userReference',
-            ),
+      await ThepeerSendView(
+               data: ThePeerData(
+                  amount: 400000,
+                  publicKey: "pspk_one_more_thing",
+                  userReference: "stay-foolish-stay-hungry-forever",
+                  receiptUrl: "https://apple.com/thepeer",
+                  meta: {
+                    "city": "San Fransisco",
+                    "state": "california"
+                  }
+               ),
             showLogs: true,
             onClosed: () {
+               print('closed');
                Navigator.pop(context);
             },
-            onSuccess: () {
+            onSuccess: (data) {
+               print(data); // ThepeerSuccessModel
                Navigator.pop(context);
             },
+            onError: print,
       ).show(context);
   }
 ```
@@ -54,19 +60,24 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
 
      ThepeerSendView(
          data: ThePeerData(
-               amount: 10000,
-               firstName: '$firstName',
-               receiptUrl: '$receiptUrl',
-               publicKey: '$publicKey',
-               userReference: '$userReference',
+                amount: 10000,
+                publicKey: "pspk_one_more_thing",
+                userReference: "stay-foolish-stay-hungry-forever",
+                receiptUrl: "https://apple.com/thepeer",
+                  meta: {
+                    "city": "San Fransisco",
+                    "state": "california"
+                  }
          ),
          onClosed: () {
             Navigator.pop(context);
             print('Widget closed')
          },
-         onSuccess: () {
+         onSuccess: (data) {
+            print(data); // ThepeerSuccessModel
             Navigator.pop(context);
          },
+         onError: print,
         error: Text('Error'),
       )
 
@@ -85,18 +96,24 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
   void launch() async {
     await ThepeerDirectChargeView(
             data: ThePeerData(
-               amount: 10000,
-               firstName: '$firstName',
-               publicKey: '$publicKey',
-               userReference: '$userReference',
+              amount: 10000,
+              publicKey: "pspk_one_more_thing",
+              userReference: "stay-foolish-stay-hungry-forever",
+              meta: {
+                  "city": "San Fransisco",
+                  "state": "california"
+               }
             ),
             showLogs: true,
-            onClosed: () {
-               Navigator.pop(context);
-            },
-            onSuccess: () {
-               Navigator.pop(context);
-            },
+             onClosed: () {
+            Navigator.pop(context);
+            print('Widget closed')
+         },
+         onSuccess: () {
+            print(data); // ThepeerSuccessModel
+            Navigator.pop(context);
+         },
+         onError: print,
       ).show(context);
   }
 ```
@@ -109,26 +126,96 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
     
      ...
 
-     ThepeerDirectChargeView(
-         data: ThePeerData(
-               amount: 10000,
-               firstName: '$firstName',
-               publicKey: '$publicKey',
-               userReference: '$userReference',
-         ),
-         onClosed: () {
+      await ThepeerDirectChargeView(
+            data: ThePeerData(
+              amount: 10000,
+              publicKey: "pspk_one_more_thing",
+              userReference: "stay-foolish-stay-hungry-forever",
+              meta: {
+                  "city": "San Fransisco",
+                  "state": "california"
+               }
+            ),
+            showLogs: true,
+            onClosed: () {
             Navigator.pop(context);
             print('Widget closed')
          },
-         onSuccess: () {
+         onSuccess: (data) {
+            print(data); // ThepeerSuccessModel
             Navigator.pop(context);
          },
-        error: Text('Error'),
+         onError: print,
       )
 
       ...
   
 ```
+
+## Configuration Options
+
+- [`publicKey`](#publicKey)
+- [`userReference`](#userReference)
+- [`amount`](#amount)
+- [`onSuccess`](#onSuccess)
+- [`onError`](#onError)
+- [`onClose`](#onClose)
+- [`meta`](#meta)
+
+### <a name="publicKey"></a> `publicKey`
+
+**String: required**
+Your public key can be found on your [dashboard](https://dashboard.thepeer.co) settings.
+
+### <a name="userReference"></a> `userReference`
+
+**String: required**
+The user reference returned by Thepeer API when a user has been indexed
+
+### <a name="amount"></a> `amount`
+
+**String: required**
+The amount you intend to send in kobo
+
+### <a name="onSuccess"></a> `onSuccess`
+
+**return ThepeerSuccessModel**
+This is called when a transaction is successfully. It returns a response with event type and transaction details.
+
+See the [event details](#thepeerEvent) below.
+
+### <a name="onError"></a> `onError `
+
+**return dynamic**
+This is called when a transaction fails. It returns a response with event type
+
+See the [event details](#thepeerEvent) below.
+
+### <a name="onClose"></a> `onClose `
+
+This is called when a user clicks on the close button.
+
+### <a name="meta"></a> `meta`
+
+**Map<String, Object>: optional**
+This object should contain additional/optional attributes you would like to have on your transaction response
+
+### <a name="thepeerEvent"></a> Events Details (optional)
+
+#### <a name="event"></a> `event: String`
+
+Event names correspond to the type of event that occurred. Possible options are in the table below.
+
+| Event Name                                                           | Description                                  |
+| -------------------------------------------------------------------- | -------------------------------------------- |
+| send.success or direct_debit.success                                 | successful transaction.                      |
+| send.insufficient_funds or direct_debit.insufficient_funds           | business has no money to process transaction |
+| send.user_insufficient_funds or direct_debit.user_insufficient_funds | user has no money to process transaction     |
+| send.server_error or direct_debit.server_error                       | something went wrong                         |
+
+#### <a name="transactionObject"></a> `transaction: ThepeerSuccessModel`
+The transaction ThepeerSuccessModel object returned from the success events.
+
 
 ## ✨ Contribution
  Lots of PR's would be needed to improve this plugin. So lots of suggestions and PRs are welcome.

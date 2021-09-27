@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -175,7 +176,9 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
         const directCharge = new ThePeer.directCharge({
               publicKey: "${widget.data.publicKey}",
               amount: "${widget.data.amount}",
-              userReference:  "${widget.data.userReference}",
+              userReference: "${widget.data.userReference}",
+              meta: JSON.parse('${json.encode(widget.data.meta)}'),
+
               onSuccess: function (success) {
                   sendMessage(success)
               },

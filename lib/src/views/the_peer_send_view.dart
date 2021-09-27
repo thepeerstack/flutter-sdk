@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -175,6 +176,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
                 amount: "${widget.data.amount}",
                 userReference: "${widget.data.userReference}",
                 receiptUrl: "${widget.data.receiptUrl ?? ''}",
+                meta: JSON.parse('${json.encode(widget.data.meta)}'),
                 onSuccess: function (success) {
                     sendMessage(success)
                 },

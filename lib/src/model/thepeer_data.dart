@@ -15,12 +15,16 @@ class ThePeerData with EquatableMixin {
   /// The amount you intend to send and must be pass as an integer in kobo
   final int amount;
 
+  /// Optional Medata data needed
+  final Map<String, Object> meta;
+
   bool get isProd => publicKey.contains('test') == false;
 
   ThePeerData({
     required this.publicKey,
     required this.userReference,
     required this.amount,
+    this.meta = const {},
     this.receiptUrl,
   });
 
@@ -29,6 +33,7 @@ class ThePeerData with EquatableMixin {
     String? userReference,
     String? firstName,
     String? receiptUrl,
+    Map<String, Object>? meta,
     int? amount,
   }) {
     return ThePeerData(
@@ -36,6 +41,7 @@ class ThePeerData with EquatableMixin {
       userReference: userReference ?? this.userReference,
       receiptUrl: receiptUrl ?? this.receiptUrl,
       amount: amount ?? this.amount,
+      meta: meta ?? this.meta,
     );
   }
 
@@ -45,6 +51,7 @@ class ThePeerData with EquatableMixin {
       'userReference': userReference,
       'receiptUrl': receiptUrl,
       'amount': amount,
+      'meta': meta,
     };
   }
 
@@ -54,6 +61,7 @@ class ThePeerData with EquatableMixin {
       userReference: map['userReference'],
       receiptUrl: map['receiptUrl'],
       amount: map['amount'],
+      meta: map['meta'],
     );
   }
 
@@ -71,5 +79,6 @@ class ThePeerData with EquatableMixin {
         userReference,
         receiptUrl ?? '',
         amount,
+        meta,
       ];
 }

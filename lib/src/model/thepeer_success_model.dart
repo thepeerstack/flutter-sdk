@@ -56,6 +56,7 @@ class ThepeerSuccessData with EquatableMixin {
   final User user;
   final String mode;
   final String reference;
+  final Map<String, Object?>? meta;
   final Peer peer;
   final String createdAt;
   final String updatedAt;
@@ -71,6 +72,7 @@ class ThepeerSuccessData with EquatableMixin {
     required this.mode,
     required this.reference,
     required this.peer,
+    required this.meta,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -86,6 +88,7 @@ class ThepeerSuccessData with EquatableMixin {
     String? mode,
     String? reference,
     Peer? peer,
+    Map<String, Object?>? meta,
     String? createdAt,
     String? updatedAt,
   }) {
@@ -100,6 +103,7 @@ class ThepeerSuccessData with EquatableMixin {
       mode: mode ?? this.mode,
       reference: reference ?? this.reference,
       peer: peer ?? this.peer,
+      meta: meta ?? this.meta,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -114,6 +118,7 @@ class ThepeerSuccessData with EquatableMixin {
       'direct_debit': directDebit,
       'status': status,
       'user': user.toMap(),
+      'meta': meta,
       'mode': mode,
       'reference': reference,
       'peer': peer.toMap(),
@@ -134,6 +139,7 @@ class ThepeerSuccessData with EquatableMixin {
       mode: map['mode'],
       reference: map['reference'],
       peer: Peer.fromMap(map['peer']),
+      meta: map['meta'],
       createdAt: map['created_at'],
       updatedAt: map['updated_at'],
     );
