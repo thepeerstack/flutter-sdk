@@ -146,7 +146,11 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
                         setState(() {
                           isLoading = true;
                         });
-                        await injectPeerStack(controller.data!);
+                        try {
+                          await injectPeerStack(controller.data!);
+                        } catch (e) {
+                          ///
+                        }
                       },
                       onPageFinished: (String url) {
                         setState(() {
@@ -169,14 +173,14 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
   /// Inject JS code to be run in webview
   Future<String> injectPeerStack(WebViewController controller) {
     return controller.evaluateJavascript('''
-       window.onload = useThepeer;
+      window.onload = useThepeer;
 
       function useThepeer() {
 
         const directCharge = new ThePeer.directCharge({
-              publicKey: "${widget.data.publicKey}",
-              amount: "${widget.data.amount}",
-              userReference: "${widget.data.userReference}",
+              publicKey: '${widget.data.publicKey}',
+              amount: '${widget.data.amount}',
+              userReference: '${widget.data.userReference}',
               meta: JSON.parse('${json.encode(widget.data.meta)}'),
 
               onSuccess: function (success) {
@@ -273,7 +277,6 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
   /// Handle WebView initialization
   void _handleInit() async {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   NavigationDecision _handleNavigationInterceptor(NavigationRequest request) {

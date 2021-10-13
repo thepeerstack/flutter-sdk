@@ -13,6 +13,18 @@ This package makes it easy to use the Thepeer in a flutter project.
 
 ### 🚀 How to Use plugin
 
+### Adding MaterialSupport
+Add the dependency on Android’s Material in <my-app>/android/app/build.gradle:
+
+```
+dependencies {
+    // ...
+    implementation 'com.google.android.material:material:<version>'
+    // ...
+}
+```
+
+
 
 ### ThePeer Send
 

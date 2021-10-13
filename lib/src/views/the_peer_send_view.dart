@@ -141,11 +141,16 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
                       },
                       javascriptChannels: {_thepeerJavascriptChannel()},
                       javascriptMode: JavascriptMode.unrestricted,
+                 
                       onPageStarted: (String url) async {
                         setState(() {
                           isLoading = true;
                         });
-                        await injectPeerStack(controller.data!);
+                        try {
+                          await injectPeerStack(controller.data!);
+                        } catch (e) {
+                          ///
+                        }
                       },
                       onPageFinished: (String url) {
                         setState(() {
@@ -271,7 +276,6 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
   /// Handle WebView initialization
   void _handleInit() async {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   NavigationDecision _handleNavigationInterceptor(NavigationRequest request) {

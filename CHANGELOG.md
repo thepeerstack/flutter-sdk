@@ -1,5 +1,6 @@
-## [2.0.6+1]
+## [2.0.6+2]
 update readme
+minor bug fixes
 
 ## [2.0.4]
 Add direct charge + bug fixes
