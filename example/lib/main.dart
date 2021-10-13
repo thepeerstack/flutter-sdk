@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Container(
                   height: 60,
-                  margin: EdgeInsets.symmetric(horizontal: 60),
+                  margin: EdgeInsets.symmetric(horizontal: 30),
                   child: CupertinoButton(
                     color: thepeerColor,
                     child: Center(
@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(height: 60),
                 Container(
                   height: 60,
-                  margin: EdgeInsets.symmetric(horizontal: 60),
+                  margin: EdgeInsets.symmetric(horizontal: 30),
                   child: CupertinoButton(
                     color: Colors.black,
                     child: Center(
