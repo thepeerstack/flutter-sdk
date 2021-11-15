@@ -155,9 +155,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
               alignment: Alignment.center,
               children: [
                 if (isLoading == true) ...[
-                  PeerLoader(
-                    percent: loadingPercent,
-                  ),
+                  CircularProgressIndicator(),
                 ],
 
                 /// Thepeer Webview
@@ -192,7 +190,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
               ],
             );
           } else {
-            return const Center(child: CupertinoActivityIndicator());
+            return CupertinoActivityIndicator();
           }
         },
       ),

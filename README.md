@@ -24,8 +24,6 @@ dependencies {
 }
 ```
 
-
-
 ### ThePeer Send
 
 - Launch ThepeerSendView in a bottom_sheet
