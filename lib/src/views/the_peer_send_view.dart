@@ -154,7 +154,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
               alignment: Alignment.center,
               children: [
                 if (isLoading == true) ...[
-                  CircularProgressIndicator(),
+                  const PeerLoader(),
                 ],
 
                 /// Thepeer Webview

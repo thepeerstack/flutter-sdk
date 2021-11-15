@@ -155,7 +155,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
               alignment: Alignment.center,
               children: [
                 if (isLoading == true) ...[
-                  CircularProgressIndicator(),
+                  const PeerLoader(),
                 ],
 
                 /// Thepeer Webview

@@ -1,41 +1,34 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:thepeer_flutter/src/const/const.dart';
-import 'package:thepeer_flutter/src/utils/colors.dart';
-import 'package:thepeer_flutter/src/utils/extensions.dart';
 
+
+/// Platform-aware activity indicator
 class PeerLoader extends StatelessWidget {
   const PeerLoader({
     Key? key,
-    required this.percent,
+    this.materialStrokeWidth = 1.5,
+    this.height,
   }) : super(key: key);
 
-  final int? percent;
+  final double? height;
+  final double materialStrokeWidth;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(
-          'assets/images/logo.png',
-          package: package,
-          height: 30,
-        ),
-        const Gap(20),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            height: 3,
-            width: context.screenWidth(0.2),
-            child: LinearProgressIndicator(
-              value: percent != null ? (percent! / 100) : null,
-              valueColor: const AlwaysStoppedAnimation(peerBlue),
-              backgroundColor: Colors.black12.withOpacity(.09),
-            ),
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return SizedBox(
+        height: height ?? 20,
+        width: height ?? 20,
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: 1.0,
+            child: CircularProgressIndicator(strokeWidth: materialStrokeWidth),
           ),
         ),
-      ],
-    );
+      );
+    }
+
+    return const CupertinoActivityIndicator();
   }
 }
