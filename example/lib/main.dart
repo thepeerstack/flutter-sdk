@@ -78,10 +78,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () async {
                       await ThepeerSendView(
                         data: ThePeerData(
-                          amount: 400000,
-                          userReference: "stay-foolish-stay-hungry-forever",
-                          receiptUrl: "https://apple.com/thepeer",
-                          publicKey: "pspk_one_more_thing",
+                          publicKey:
+                              "pspk_test_2aj8xasztf4domzd2nphinvzkvecpbuyxldkvr3pkuvko",
+                          amount: 4000000,
+                          userReference: "73f03de5-1043-4ad1-bc2e-aa4d94ebee4f",
+                          receiptUrl:
+                              "https://sushi.thepeer.co/api/receipt?business=cowrywise",
+                          meta: {},
                         ),
                         showLogs: true,
                         onClosed: () {
@@ -116,12 +119,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () async {
                       await ThepeerDirectChargeView(
                         data: ThePeerData(
-                            amount: 500000,
-                            userReference: "stay-foolish-stay-hungry-forever",
-                            publicKey: "pspk_one_more_thing",
-                            meta: {}),
+                          publicKey:
+                              "pspk_test_2aj8xasztf4domzd2nphinvzkvecpbuyxldkvr3pkuvko",
+                          amount: 4000000,
+                          userReference: "73f03de5-1043-4ad1-bc2e-aa4d94ebee4f",
+                          receiptUrl:
+                              "https://sushi.thepeer.co/api/receipt?business=cowrywise",
+                          meta: {},
+                        ),
                         showLogs: true,
-                        onClosed: () => Navigator.pop(context),
+                        onClosed: () {
+                          print('closed');
+                          Navigator.pop(context);
+                        },
                         onSuccess: (v) {
                           print(v.toString());
                           Navigator.pop(context);
