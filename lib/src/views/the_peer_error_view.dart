@@ -16,7 +16,7 @@ class ThePeerErrorView extends StatelessWidget {
     Key? key,
     this.onClosed,
     required this.reload,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,57 +39,58 @@ class ThePeerErrorView extends StatelessWidget {
           ),
         ),
         Flexible(
-            child: ListView(
-          padding: EdgeInsets.all(16),
-          physics: BouncingScrollPhysics(),
-          children: [
-            Gap(80),
-            SvgPicture.asset(
-              'assets/images/warning_badge.svg',
-              package: package,
-            ),
-            Gap(45),
-            Center(
-              child: Text(
-                'Something went wrong',
-                style: TextStyle(
-                  fontFamily: 'Gilroy-Bold',
-                  package: package,
-                  fontSize: 24,
-                  color: peerBoldTextColor,
-                ),
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            physics: const BouncingScrollPhysics(),
+            children: [
+              const Gap(80),
+              SvgPicture.asset(
+                'assets/images/warning_badge.svg',
+                package: package,
               ),
-            ),
-            Gap(14),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
+              const Gap(45),
+              const Center(
                 child: Text(
-                  'Please check your internet connection',
-                  textAlign: TextAlign.center,
+                  'Something went wrong',
                   style: TextStyle(
-                    fontFamily: 'Gilroy-Medium',
+                    fontFamily: 'Gilroy-Bold',
                     package: package,
-                    fontSize: 15,
-                    color: peerTextColor,
+                    fontSize: 24,
+                    color: peerBoldTextColor,
                   ),
                 ),
               ),
-            ),
-            Gap(32),
-            PeerButton(
-              title: 'Reload',
-              buttonColor: Colors.white,
-              textColor: peerBlue,
-              isUnderlined: true,
-              onTap: reload,
-            )
-          ],
-        )),
+              const Gap(14),
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
+                    'Please check your internet connection',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Gilroy-Medium',
+                      package: package,
+                      fontSize: 15,
+                      color: peerTextColor,
+                    ),
+                  ),
+                ),
+              ),
+              const Gap(32),
+              PeerButton(
+                title: 'Reload',
+                buttonColor: Colors.white,
+                textColor: peerBlue,
+                isUnderlined: true,
+                onTap: reload,
+              )
+            ],
+          ),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Powered by',
               style: TextStyle(
                 fontFamily: 'Gilroy-Medium',
@@ -98,7 +99,7 @@ class ThePeerErrorView extends StatelessWidget {
                 color: peerLightTextColor,
               ),
             ),
-            Gap(4),
+            const Gap(4),
             Image.asset(
               'assets/images/logo.png',
               package: package,
@@ -106,7 +107,7 @@ class ThePeerErrorView extends StatelessWidget {
             ),
           ],
         ),
-        Gap(32),
+        const Gap(32),
       ],
     );
   }
@@ -127,10 +128,10 @@ class PeerHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Spacer(),
+        const Spacer(),
         TouchableOpacity(
           onTap: onClosed ?? () {},
-          child: Container(
+          child: SizedBox(
             height: 40,
             width: 40,
             child: Column(

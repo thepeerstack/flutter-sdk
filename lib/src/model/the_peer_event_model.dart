@@ -16,7 +16,7 @@ class ThepeerEventModel with EquatableMixin {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, Object> toMap() {
     return {
       'type': type,
     };
@@ -24,7 +24,7 @@ class ThepeerEventModel with EquatableMixin {
 
   factory ThepeerEventModel.fromMap(Map<String, dynamic> map) {
     return ThepeerEventModel(
-      type: map['type'],
+      type: map['type'] as String,
     );
   }
 

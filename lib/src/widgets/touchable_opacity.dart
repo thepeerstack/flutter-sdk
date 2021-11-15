@@ -16,7 +16,7 @@ import 'package:flutter/widgets.dart';
 ///
 /// [decoration] decoration supplied to the enclosing container.
 class TouchableOpacity extends StatefulWidget {
-  TouchableOpacity({
+  const TouchableOpacity({
     required this.child,
     this.onTap,
     this.onLongPress,
@@ -43,10 +43,10 @@ class TouchableOpacity extends StatefulWidget {
   final VoidCallback? onTapCancel;
 
   @override
-  _TouchableOpacity createState() => _TouchableOpacity();
+  _TouchableOpacityState createState() => _TouchableOpacityState();
 }
 
-class _TouchableOpacity extends State<TouchableOpacity> {
+class _TouchableOpacityState extends State<TouchableOpacity> {
   bool isTappedDown = false;
 
   @override
@@ -89,7 +89,7 @@ class _TouchableOpacity extends State<TouchableOpacity> {
         onLongPress: widget.disabled ? null : widget.onLongPress,
         child: AnimatedOpacity(
           opacity: isTappedDown ? 0.6 : 1.0,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           child: Container(
             width: widget.width,
             height: widget.height,

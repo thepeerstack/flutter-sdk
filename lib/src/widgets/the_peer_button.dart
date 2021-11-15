@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:thepeer_flutter/src/const/const.dart';
 import 'package:thepeer_flutter/src/utils/colors.dart';
 
-import 'touchable_opacity.dart';
+import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
 /// Peer Button Widget
 class PeerButton extends StatelessWidget {
@@ -11,7 +11,7 @@ class PeerButton extends StatelessWidget {
   final bool enabled, isUnderlined;
   final Color? textColor, buttonColor;
 
-  PeerButton({
+  const PeerButton({
     required this.title,
     Key? key,
     this.enabled = true,
@@ -31,7 +31,7 @@ class PeerButton extends StatelessWidget {
         child: Container(
           color:
               (buttonColor ?? peerBlue).withOpacity(enabled == true ? 1 : 0.3),
-          padding: EdgeInsets.all(18),
+          padding: const EdgeInsets.all(18),
           child: Center(
             child: Text(
               title,
