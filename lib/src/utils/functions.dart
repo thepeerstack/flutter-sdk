@@ -21,6 +21,19 @@ class ThePeerFunctions {
         sendMessage(event.data)
       });
       
+      // Override default JS Console function
+      console._log_old = console.log
+      console.log = function(msg) {
+          sendMessageRaw(msg);
+          console._log_old(msg);
+      }
+
+      console._error_old = console.error
+      console.error = function(msg) {
+          sendMessageRaw(msg);
+          console._error_old(msg);
+      }
+      
       window.addEventListener("long-press", function(e) {
          e.preventDefault();
       }, false);
@@ -29,6 +42,13 @@ class ThePeerFunctions {
       function sendMessage(message) {
           if (window.$clientName && window.$clientName.postMessage) {
               $clientName.postMessage(JSON.stringify(message));
+          }
+      } 
+
+      // Send raw callback to dart JSMessageClient
+      function sendMessageRaw(message) {
+          if (window.$clientName && window.$clientName.postMessage) {
+              $clientName.postMessage(message);
           }
       } 
 ''';

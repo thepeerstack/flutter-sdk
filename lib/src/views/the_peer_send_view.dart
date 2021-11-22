@@ -170,10 +170,12 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
                     javascriptChannels: _thepeerJavascriptChannel,
                     javascriptMode: JavascriptMode.unrestricted,
                     zoomEnabled: false,
+                    debuggingEnabled: true,
                     onPageStarted: (_) async {
                       isLoading = true;
                     },
                     onWebResourceError: (e) {
+                      print(e.toString());
                       if (widget.showLogs) ThePeerFunctions.log(e.toString());
                     },
                     onProgress: (v) {
