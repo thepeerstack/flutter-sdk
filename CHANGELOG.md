@@ -1,6 +1,7 @@
-## [2.0.7+1]
+## [2.0.7+2]
 
 Added JS Log override for package
+Minor Uri bug fix
 
 ## [2.0.7]
 

@@ -150,6 +150,10 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
 
           if (snapshot.hasData == true &&
               snapshot.data != ConnectivityResult.none) {
+            final createUrl = ThePeerFunctions.createUrl(
+              data: widget.data,
+              sdkType: 'send',
+            );
             return Stack(
               alignment: Alignment.center,
               children: [
@@ -162,10 +166,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
                   duration: const Duration(milliseconds: 400),
                   opacity: isLoading == true && _loadingPercent != 100 ? 0 : 1,
                   child: WebView(
-                    initialUrl: ThePeerFunctions.createUrl(
-                      data: widget.data,
-                      sdkType: 'send',
-                    ),
+                    initialUrl: Uri.tryParse(createUrl).toString(),
                     onWebViewCreated: _controller.complete,
                     javascriptChannels: _thepeerJavascriptChannel,
                     javascriptMode: JavascriptMode.unrestricted,
