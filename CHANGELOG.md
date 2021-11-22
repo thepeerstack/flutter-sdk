@@ -1,3 +1,7 @@
+## [2.0.7+1]
+
+Added JS Log override for package
+
 ## [2.0.7]
 
 Major refactor and fixes for JSCLientinterface and more
