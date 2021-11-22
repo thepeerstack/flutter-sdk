@@ -212,9 +212,11 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
   Set<JavascriptChannel> get _thepeerJavascriptChannel => {
         JavascriptChannel(
           name: 'ThepeerSendClientInterface',
-          onMessageReceived: (JavascriptMessage msg) {
+          onMessageReceived: (JavascriptMessage data) {
             try {
-              _handleResponse(msg.message);
+              if (widget.showLogs)
+                ThePeerFunctions.log('Event: -> ${data.message}');
+              _handleResponse(data.message);
             } on Exception {
               if (mounted && widget.onClosed != null) widget.onClosed!();
             } catch (e) {

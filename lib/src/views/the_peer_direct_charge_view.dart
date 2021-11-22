@@ -151,6 +151,10 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
 
           if (snapshot.hasData == true &&
               snapshot.data != ConnectivityResult.none) {
+            final createUrl = ThePeerFunctions.createUrl(
+              data: widget.data,
+              sdkType: 'directCharge',
+            );
             return Stack(
               alignment: Alignment.center,
               children: [
@@ -163,10 +167,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
                   duration: const Duration(milliseconds: 400),
                   opacity: isLoading == true ? 0 : 1,
                   child: WebView(
-                    initialUrl: ThePeerFunctions.createUrl(
-                      data: widget.data,
-                      sdkType: 'directCharge',
-                    ),
+                    initialUrl: Uri.parse(createUrl).toString(),
                     onWebViewCreated: _controller.complete,
                     javascriptChannels: _thepeerJavascriptChannel,
                     javascriptMode: JavascriptMode.unrestricted,
@@ -211,9 +212,11 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
     return {
       JavascriptChannel(
         name: 'ThepeerDirectChargeClientInterface',
-        onMessageReceived: (JavascriptMessage msg) {
+        onMessageReceived: (JavascriptMessage data) {
           try {
-            _handleResponse(msg.message);
+            if (widget.showLogs)
+              ThePeerFunctions.log('Event: -> ${data.message}');
+            _handleResponse(data.message);
           } on Exception {
             if (mounted && widget.onClosed != null) widget.onClosed!();
           } catch (e) {

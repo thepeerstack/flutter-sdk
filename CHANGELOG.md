@@ -1,4 +1,4 @@
-## [2.0.7+2]
+## [2.0.7+3]
 
 Added JS Log override for package
 Minor Uri bug fix
