@@ -53,7 +53,7 @@ class ThePeerFunctions {
   static void log(String data) => print('ThePeerLog: $data');
 
   /// Create peer url
-  static String createUrl({
+  static Uri createUrl({
     required ThePeerData data,
     required String sdkType,
   }) {
@@ -64,17 +64,31 @@ class ThePeerFunctions {
       'amount': '${data.amount}',
       'receiptUrl': '${data.receiptUrl}',
       'userReference': data.userReference,
-      if (data.meta.isNotEmpty) 'meta': json.encode(data.meta),
       'sdkType': sdkType,
     };
 
     for (final k in params.keys) {
       if (params[k] != null && params[k] is String) {
-        final value = k == 'meta' ? json.encode(params[k]) : params[k];
+        final value = params[k];
         base = '$base$k=$value&';
       }
     }
+    
+    final tempUri = Uri.parse(base.slice(0, -1));
 
-    return base.slice(0, -1);
+    return Uri(
+      scheme: tempUri.scheme,
+      host: tempUri.host,
+      path: tempUri.path,
+      queryParameters: {
+        ...tempUri.queryParameters,
+        'meta': jsonEncode({
+          'slug': 'F1rstm3ssag!ngSl0g',
+          'type': 'chat',
+          'paymentType': 'subscription',
+          'channel': 'thePeer',
+        }),
+      },
+    );
   }
 }

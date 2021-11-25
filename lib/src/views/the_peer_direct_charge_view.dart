@@ -167,7 +167,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
                   duration: const Duration(milliseconds: 400),
                   opacity: isLoading == true ? 0 : 1,
                   child: WebView(
-                    initialUrl: Uri.parse(createUrl).toString(),
+                    initialUrl: createUrl.toString(),
                     onWebViewCreated: _controller.complete,
                     javascriptChannels: _thepeerJavascriptChannel,
                     javascriptMode: JavascriptMode.unrestricted,

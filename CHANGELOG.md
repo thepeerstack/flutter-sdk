@@ -1,8 +1,9 @@
-## [2.0.7+4]
+## [2.0.7+5]
 
 Added JS Log override for package
 Minor Uri bug fix
 Long press bug fix
+Metadata bug fix
 
 ## [2.0.7]
 

@@ -166,7 +166,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
                   duration: const Duration(milliseconds: 400),
                   opacity: isLoading == true && _loadingPercent != 100 ? 0 : 1,
                   child: WebView(
-                    initialUrl: Uri.tryParse(createUrl).toString(),
+                    initialUrl: createUrl.toString(),
                     onWebViewCreated: _controller.complete,
                     javascriptChannels: _thepeerJavascriptChannel,
                     javascriptMode: JavascriptMode.unrestricted,
@@ -176,7 +176,6 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
                       isLoading = true;
                     },
                     onWebResourceError: (e) {
-                      print(e.toString());
                       if (widget.showLogs) ThePeerFunctions.log(e.toString());
                     },
                     onProgress: (v) {
