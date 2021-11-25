@@ -34,10 +34,6 @@ class ThePeerFunctions {
           console._error_old(msg);
       }
       
-      window.addEventListener("long-press", function(e) {
-         e.preventDefault();
-      }, false);
-
       // Send callback to dart JSMessageClient
       function sendMessage(message) {
           if (window.$clientName && window.$clientName.postMessage) {
