@@ -82,12 +82,7 @@ class ThePeerFunctions {
       path: tempUri.path,
       queryParameters: {
         ...tempUri.queryParameters,
-        'meta': jsonEncode({
-          'slug': 'F1rstm3ssag!ngSl0g',
-          'type': 'chat',
-          'paymentType': 'subscription',
-          'channel': 'thePeer',
-        }),
+        'meta': jsonEncode(data.meta),
       },
     );
   }
