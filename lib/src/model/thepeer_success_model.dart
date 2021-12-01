@@ -56,7 +56,7 @@ class ThepeerSuccessData with EquatableMixin {
   final User user;
   final String mode;
   final String reference;
-  final Map<String, Object?>? meta;
+  final dynamic meta;
   final Peer peer;
   final String createdAt;
   final String updatedAt;
@@ -88,7 +88,7 @@ class ThepeerSuccessData with EquatableMixin {
     String? mode,
     String? reference,
     Peer? peer,
-    Map<String, Object?>? meta,
+    dynamic meta,
     String? createdAt,
     String? updatedAt,
   }) {
