@@ -49,7 +49,7 @@ class ThepeerSendView extends StatefulWidget {
     this.onClosed,
     this.onError,
     this.showLogs = false,
-    this.isDismissible = true,
+    this.isDismissible = false,
   }) : super(key: key);
 
   /// Show Dialog with a custom child

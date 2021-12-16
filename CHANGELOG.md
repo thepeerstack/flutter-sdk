@@ -1,9 +1,10 @@
-## [2.0.7+7]
+## [2.0.7+8]
 
 Added JS Log override for package
 Minor Uri bug fix
 Long press bug fix
 Metadata bug fix
+Dismissible by default
 
 ## [2.0.7]
 

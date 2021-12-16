@@ -286,7 +286,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "2.0.7+6"
+    version: "2.0.7+8"
   typed_data:
     dependency: transitive
     description:
@@ -342,7 +342,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   webview_flutter:
     dependency: transitive
     description:
