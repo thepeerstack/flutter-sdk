@@ -81,10 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         data: ThePeerData(
                           publicKey:
                               "pspk_test_2aj8xasztf4domzd2nphinvzkvecpbuyxldkvr3pkuvko",
-                          amount: 4000000,
+                          amount: 400000,
                           userReference: "73f03de5-1043-4ad1-bc2e-aa4d94ebee4f",
-                          receiptUrl:
-                              "https://sushi.thepeer.co/api/receipt?business=cowrywise",
                           meta: {
                             'slug': 'F1rstm3ssag!ngSl0g',
                             'type': 'chat',
@@ -127,10 +125,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         data: ThePeerData(
                           publicKey:
                               "pspk_test_2aj8xasztf4domzd2nphinvzkvecpbuyxldkvr3pkuvko",
-                          amount: 4000000,
+                          amount: 400000,
                           userReference: "73f03de5-1043-4ad1-bc2e-aa4d94ebee4f",
-                          receiptUrl:
-                              "https://sushi.thepeer.co/api/receipt?business=cowrywise",
                           meta: {
                             'slug': 'F1rstm3ssag!ngSl0g',
                             'type': 'chat',

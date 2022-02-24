@@ -1,3 +1,8 @@
+## [2.0.8]
+
+Non Dismissible by default
+Fixed Scroll bug
+
 ## [2.0.7+8]
 
 Added JS Log override for package

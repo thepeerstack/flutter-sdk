@@ -3,15 +3,16 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:thepeer_flutter/src/const/const.dart';
 import 'package:thepeer_flutter/src/model/the_peer_event_model.dart';
 import 'package:thepeer_flutter/src/model/thepeer_success_model.dart';
 import 'package:thepeer_flutter/src/utils/functions.dart';
 import 'package:thepeer_flutter/src/widgets/the_peer_loader.dart';
+import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
@@ -53,7 +54,7 @@ class ThepeerSendView extends StatefulWidget {
   }) : super(key: key);
 
   /// Show Dialog with a custom child
-  Future show(BuildContext context) => showMaterialModalBottomSheet<void>(
+  Future show(BuildContext context) => showCupertinoModalBottomSheet<void>(
         backgroundColor: Colors.white,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -62,6 +63,7 @@ class ThepeerSendView extends StatefulWidget {
           ),
         ),
         isDismissible: isDismissible,
+        enableDrag: isDismissible,
         context: context,
         builder: (context) => ClipRRect(
           borderRadius: const BorderRadius.only(
@@ -103,22 +105,17 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
   bool _isLoading = true;
   bool get isLoading => _isLoading;
   set isLoading(bool val) {
-    _isLoading = val;
-    setState(() {});
+    setState(() {
+      _isLoading = val;
+    });
   }
 
   bool _hasError = false;
   bool get hasError => _hasError;
   set hasError(bool val) {
-    _hasError = val;
-    setState(() {});
-  }
-
-  int? _loadingPercent;
-  int? get loadingPercent => _loadingPercent;
-  set loadingPercent(int? val) {
-    _loadingPercent = val;
-    setState(() {});
+    setState(() {
+      _hasError = val;
+    });
   }
 
   @override
@@ -126,6 +123,11 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
     super.initState();
     _handleInit();
   }
+
+  String get createUrl => ThePeerFunctions.createUrl(
+        data: widget.data,
+        sdkType: 'send',
+      ).toString();
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +143,6 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
                   ThePeerErrorView(
                     onClosed: widget.onClosed,
                     reload: () async {
-                      setState(() {});
                       await (await _webViewController).reload();
                     },
                   ),
@@ -150,45 +151,35 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
 
           if (snapshot.hasData == true &&
               snapshot.data != ConnectivityResult.none) {
-            final createUrl = ThePeerFunctions.createUrl(
-              data: widget.data,
-              sdkType: 'send',
-            );
             return Stack(
               alignment: Alignment.center,
               children: [
-                if (isLoading == true) ...[
+                if (isLoading == true && hasError == false) ...[
                   const PeerLoader(),
                 ],
 
                 /// Thepeer Webview
-                AnimatedOpacity(
-                  duration: const Duration(milliseconds: 400),
-                  opacity: isLoading == true && _loadingPercent != 100 ? 0 : 1,
-                  child: WebView(
-                    initialUrl: createUrl.toString(),
-                    onWebViewCreated: _controller.complete,
-                    javascriptChannels: _thepeerJavascriptChannel,
-                    javascriptMode: JavascriptMode.unrestricted,
-                    zoomEnabled: false,
-                    debuggingEnabled: true,
-                    onPageStarted: (_) async {
-                      isLoading = true;
-                    },
-                    onWebResourceError: (e) {
-                      if (widget.showLogs) ThePeerFunctions.log(e.toString());
-                    },
-                    onProgress: (v) {
-                      loadingPercent = v;
-                    },
-                    onPageFinished: (_) async {
-                      isLoading = false;
-                      await _injectPeerStack(await _controller.future);
-                    },
-                    navigationDelegate: _handleNavigationInterceptor,
-                  ),
+                WebView(
+                  initialUrl: '$createUrl',
+                  onWebViewCreated: _controller.complete,
+                  javascriptChannels: _thepeerJavascriptChannel,
+                  javascriptMode: JavascriptMode.unrestricted,
+                  zoomEnabled: false,
+                  debuggingEnabled: true,
+                  onPageStarted: (_) async {
+                    isLoading = true;
+                  },
+                  onWebResourceError: (e) {
+                    hasError = true;
+                    if (widget.showLogs) ThePeerFunctions.log(e.toString());
+                  },
+                  onPageFinished: (_) async {
+                    isLoading = false;
+                    await _injectPeerStack(await _controller.future);
+                  },
+                  navigationDelegate: _handleNavigationInterceptor,
                 ),
-              ],
+               ],
             );
           } else {
             return const Center(child: CupertinoActivityIndicator());
@@ -256,7 +247,9 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
   }
 
   NavigationDecision _handleNavigationInterceptor(NavigationRequest request) {
-    if (request.url.toLowerCase().contains('chain.thepeer.co')) {
+    final url = request.url.toLowerCase();
+
+    if (url.contains('groot.thepeer.co') || url.contains('chain.thepeer.co')) {
       // Navigate to all urls contianing Thepeer
       return NavigationDecision.navigate;
     } else {

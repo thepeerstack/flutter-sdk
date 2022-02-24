@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
-import 'package:thepeer_flutter/src/utils/css.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
 
 class ThePeerFunctions {
@@ -12,10 +12,6 @@ class ThePeerFunctions {
      // Create our shared stylesheet:
      var style = document.createElement("style");
       
-     // Apply the stylesheet to a document:
-     style.sheet = `$noSelectCssSheet`;
-     document.body.appendChild(style);
-
       // Add EventListener for onMessage Event
       window.addEventListener('message', (event) => {
         sendMessage(event.data)
@@ -50,19 +46,18 @@ class ThePeerFunctions {
 ''';
 
   /// Log data from thepeer sdk
-  static void log(String data) => print('ThePeerLog: $data');
+  static void log(String data) => debugPrint('ThePeerLog: $data');
 
   /// Create peer url
   static Uri createUrl({
     required ThePeerData data,
     required String sdkType,
   }) {
-    var base = 'https://chain.thepeer.co?';
+    var base =  'https://chain.thepeer.co?';
 
     final params = {
       'publicKey': data.publicKey,
       'amount': '${data.amount}',
-      'receiptUrl': '${data.receiptUrl}',
       'userReference': data.userReference,
       'sdkType': sdkType,
     };

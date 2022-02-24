@@ -37,7 +37,6 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
                   amount: 400000,
                   publicKey: "pspk_one_more_thing",
                   userReference: "stay-foolish-stay-hungry-forever",
-                  receiptUrl: "https://apple.com/thepeer",
                   meta: {
                     "city": "San Fransisco",
                     "state": "california"
@@ -70,7 +69,6 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
             amount: 10000,
             publicKey: "pspk_one_more_thing",
             userReference: "stay-foolish-stay-hungry-forever",
-            receiptUrl: "https://apple.com/thepeer",
             meta: {
                "city": "San Fransisco",
                "state": "california"
