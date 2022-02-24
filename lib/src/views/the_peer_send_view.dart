@@ -179,7 +179,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
                   },
                   navigationDelegate: _handleNavigationInterceptor,
                 ),
-               ],
+              ],
             );
           } else {
             return const Center(child: CupertinoActivityIndicator());

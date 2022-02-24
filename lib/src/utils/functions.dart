@@ -53,7 +53,7 @@ class ThePeerFunctions {
     required ThePeerData data,
     required String sdkType,
   }) {
-    var base =  'https://chain.thepeer.co?';
+    var base = 'https://chain.thepeer.co?';
 
     final params = {
       'publicKey': data.publicKey,
@@ -68,7 +68,7 @@ class ThePeerFunctions {
         base = '$base$k=$value&';
       }
     }
-    
+
     final tempUri = Uri.parse(base.slice(0, -1));
 
     return Uri(

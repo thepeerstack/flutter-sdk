@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-
 /// Platform-aware activity indicator
 class PeerLoader extends StatelessWidget {
   const PeerLoader({
