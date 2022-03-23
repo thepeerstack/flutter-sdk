@@ -12,6 +12,9 @@ class ThePeerData with EquatableMixin {
   /// The amount you intend to send and must be pass as an integer in kobo
   final int amount;
 
+  /// The currency of the `amount` to be paid
+  final String currency;
+
   /// Optional Medata data needed
   final Map<String, Object> meta;
 
@@ -20,6 +23,7 @@ class ThePeerData with EquatableMixin {
   ThePeerData({
     required this.publicKey,
     required this.userReference,
+    required this.currency,
     required this.amount,
     this.meta = const {},
   });
@@ -27,7 +31,7 @@ class ThePeerData with EquatableMixin {
   ThePeerData copyWith({
     String? publicKey,
     String? userReference,
-    String? firstName,
+    String? currency,
     String? receiptUrl,
     Map<String, Object>? meta,
     int? amount,
@@ -36,6 +40,7 @@ class ThePeerData with EquatableMixin {
       publicKey: publicKey ?? this.publicKey,
       userReference: userReference ?? this.userReference,
       amount: amount ?? this.amount,
+      currency: currency ?? this.currency,
       meta: meta ?? this.meta,
     );
   }
@@ -54,6 +59,7 @@ class ThePeerData with EquatableMixin {
       publicKey: map['publicKey'],
       userReference: map['userReference'],
       amount: map['amount'],
+      currency: map['currency'],
       meta: map['meta'],
     );
   }
@@ -71,6 +77,7 @@ class ThePeerData with EquatableMixin {
         publicKey,
         userReference,
         amount,
+        currency,
         meta,
       ];
 }

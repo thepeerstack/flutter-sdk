@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -7,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:thepeer_flutter/src/const/const.dart';
-import 'package:thepeer_flutter/src/model/the_peer_event_model.dart';
-import 'package:thepeer_flutter/src/model/thepeer_success_model.dart';
 import 'package:thepeer_flutter/src/utils/functions.dart';
 import 'package:thepeer_flutter/src/widgets/the_peer_loader.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -18,12 +17,15 @@ import 'package:thepeer_flutter/src/utils/extensions.dart';
 
 import 'package:thepeer_flutter/src/views/the_peer_error_view.dart';
 
-class ThepeerSendView extends StatefulWidget {
+class ThepeerCheckoutView extends StatefulWidget {
   /// Public Key from your https://app.withThepeer.com/apps
   final ThePeerData data;
 
+  /// User email
+  final String email;
+
   /// Success callback
-  final ValueChanged<ThepeerSuccessModel>? onSuccess;
+  final ValueChanged<Map<String, dynamic>>? onSuccess;
 
   /// Error callback
   final Function(dynamic)? onError;
@@ -34,15 +36,16 @@ class ThepeerSendView extends StatefulWidget {
   /// Error Widget will show if loading fails
   final Widget? errorWidget;
 
-  /// Show [ThepeerSendView] Logs
+  /// Show [ThepeerCheckoutView] Logs
   final bool showLogs;
 
   /// Toggle dismissible mode
   final bool isDismissible;
 
-  const ThepeerSendView({
+  const ThepeerCheckoutView({
     Key? key,
     required this.data,
+    required this.email,
     this.errorWidget,
     this.onSuccess,
     this.onClosed,
@@ -76,9 +79,10 @@ class ThepeerSendView extends StatefulWidget {
                 Center(
                   child: SizedBox(
                     height: context.screenHeight(.9),
-                    child: ThepeerSendView(
+                    child: ThepeerCheckoutView(
                       data: data,
                       onClosed: onClosed,
+                      email: email,
                       onSuccess: onSuccess,
                       onError: onError,
                       showLogs: showLogs,
@@ -93,10 +97,10 @@ class ThepeerSendView extends StatefulWidget {
       );
 
   @override
-  _ThepeerSendViewState createState() => _ThepeerSendViewState();
+  _ThepeerCheckoutViewState createState() => _ThepeerCheckoutViewState();
 }
 
-class _ThepeerSendViewState extends State<ThepeerSendView> {
+class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
   final _controller = Completer<WebViewController>();
   Future<WebViewController> get _webViewController => _controller.future;
 
@@ -124,7 +128,8 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
 
   String get createUrl => ThePeerFunctions.createUrl(
         data: widget.data,
-        sdkType: 'send',
+        email: widget.email,
+        sdkType: 'checkout',
       ).toString();
 
   @override
@@ -217,16 +222,16 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
   /// Parse event from javascript channel
   void _handleResponse(String res) async {
     try {
-      final data = ThepeerEventModel.fromJson(res);
-      switch (data.type) {
-        case SEND_SUCCESS:
+      final data = jsonDecode(res);
+      switch (data['type']) {
+        case CHECKOUT_SUCCESS:
           if (widget.onSuccess != null) {
             widget.onSuccess!(
-              ThepeerSuccessModel.fromJson(res),
+              data,
             );
           }
           return;
-        case SEND_CLOSE:
+        case CHECKOUT_CLOSE:
           if (mounted && widget.onClosed != null) widget.onClosed!();
           return;
         default:

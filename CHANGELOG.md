@@ -1,3 +1,6 @@
+## [2.0.9]
+Added Checkout
+
 ## [2.0.8]
 
 Non Dismissible by default

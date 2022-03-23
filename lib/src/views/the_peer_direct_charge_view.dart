@@ -5,14 +5,12 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:thepeer_flutter/src/const/const.dart';
 import 'package:thepeer_flutter/src/model/the_peer_event_model.dart';
 import 'package:thepeer_flutter/src/model/thepeer_success_model.dart';
 import 'package:thepeer_flutter/src/utils/functions.dart';
 import 'package:thepeer_flutter/src/widgets/the_peer_loader.dart';
-import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
@@ -36,7 +34,7 @@ class ThepeerDirectChargeView extends StatefulWidget {
   /// Error Widget will show if loading fails
   final Widget? errorWidget;
 
-  /// Show ThepeerDirectChargeView Logs
+  /// Show [ThepeerDirectChargeView] Logs
   final bool showLogs;
 
   /// Toggle dismissible mode

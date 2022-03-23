@@ -51,6 +51,7 @@ class ThePeerFunctions {
   /// Create peer url
   static Uri createUrl({
     required ThePeerData data,
+    String? email,
     required String sdkType,
   }) {
     var base = 'https://chain.thepeer.co?';
@@ -58,6 +59,8 @@ class ThePeerFunctions {
     final params = {
       'publicKey': data.publicKey,
       'amount': '${data.amount}',
+      'currency': data.currency,
+      if (email != null) 'email': email,
       'userReference': data.userReference,
       'sdkType': sdkType,
     };

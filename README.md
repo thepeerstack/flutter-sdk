@@ -14,6 +14,7 @@ This package makes it easy to use the Thepeer in a flutter project.
 ### 🚀 How to Use plugin
 
 ### Adding MaterialSupport
+
 Add the dependency on Android’s Material in <my-app>/android/app/build.gradle:
 
 ```
@@ -30,38 +31,38 @@ dependencies {
 
 ```dart
 import 'package:thepeer_flutter/thepeer_flutter.dart';
-    
+
   void launch() async {
       await ThepeerSendView(
                data: ThePeerData(
                   amount: 400000,
                   publicKey: "pspk_one_more_thing",
                   userReference: "stay-foolish-stay-hungry-forever",
+                  currency: 'NGN',
                   meta: {
                     "city": "San Fransisco",
                     "state": "california"
                   }
                ),
-            showLogs: true,
-            onClosed: () {
-               print('closed');
-               Navigator.pop(context);
-            },
-            onSuccess: (data) {
-               print(data); // ThepeerSuccessModel
-               Navigator.pop(context);
-            },
-            onError: print,
+               showLogs: true,
+               onClosed: () {
+                  print('closed');
+                  Navigator.pop(context);
+               },
+               onSuccess: (data) {
+                  print(data); // ThepeerSuccessModel
+                  Navigator.pop(context);
+               },
+               onError: print,
       ).show(context);
   }
 ```
-
 
 - Use ThepeerSendView widget
 
 ```dart
 import 'package:thepeer_flutter/thepeer_flutter.dart';
-    
+
      ...
 
      ThepeerSendView(
@@ -69,6 +70,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
             amount: 10000,
             publicKey: "pspk_one_more_thing",
             userReference: "stay-foolish-stay-hungry-forever",
+            currency: 'NGN',
             meta: {
                "city": "San Fransisco",
                "state": "california"
@@ -87,9 +89,10 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
       )
 
       ...
-  
+
 ```
---- 
+
+---
 
 ### ThePeer DirectCharge
 
@@ -97,13 +100,14 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
 
 ```dart
 import 'package:thepeer_flutter/thepeer_flutter.dart';
-    
+
   void launch() async {
     await ThepeerDirectChargeView(
             data: ThePeerData(
               amount: 10000,
               publicKey: "pspk_one_more_thing",
               userReference: "stay-foolish-stay-hungry-forever",
+              currency: 'NGN',
               meta: {
                   "city": "San Fransisco",
                   "state": "california"
@@ -111,24 +115,23 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
             ),
             showLogs: true,
              onClosed: () {
-            Navigator.pop(context);
-            print('Widget closed')
-         },
-         onSuccess: () {
-            print(data); // ThepeerSuccessModel
-            Navigator.pop(context);
-         },
-         onError: print,
+               Navigator.pop(context);
+               print('Widget closed');
+            },
+            onSuccess: () {
+               print(data);
+               Navigator.pop(context);
+            },
+            onError: print,
       ).show(context);
   }
 ```
-
 
 - Use ThepeerDirectChargeView widget
 
 ```dart
 import 'package:thepeer_flutter/thepeer_flutter.dart';
-    
+
      ...
 
       await ThepeerDirectChargeView(
@@ -136,6 +139,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
               amount: 10000,
               publicKey: "pspk_one_more_thing",
               userReference: "stay-foolish-stay-hungry-forever",
+              currency: 'NGN'
               meta: {
                   "city": "San Fransisco",
                   "state": "california"
@@ -154,7 +158,76 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
       )
 
       ...
-  
+
+```
+
+---
+
+### ThePeer Checkout
+
+- Launch ThepeerCheckoutView in a bottom_sheet
+
+```dart
+import 'package:thepeer_flutter/thepeer_flutter.dart';
+
+  void launch() async {
+    await ThepeerCheckoutView(
+            data: ThePeerData(
+              amount: 10000,
+              publicKey: "pspk_one_more_thing",
+              userReference: "stay-foolish-stay-hungry-forever",
+              currency: 'NGN',
+              meta: {
+                  "city": "San Fransisco",
+                  "state": "california"
+               }
+            ),
+            showLogs: true,
+            onClosed: () {
+               Navigator.pop(context);
+               print('Widget closed')
+            },
+            onSuccess: () {
+               print(data); // ThepeerSuccessModel
+               Navigator.pop(context);
+            },
+            onError: print,
+      ).show(context);
+  }
+```
+
+- Use ThepeerCheckoutView widget
+
+```dart
+import 'package:thepeer_flutter/thepeer_flutter.dart';
+
+     ...
+
+      await ThepeerCheckoutView(
+            data: ThePeerData(
+              amount: 10000,
+              publicKey: "pspk_one_more_thing",
+              userReference: "stay-foolish-stay-hungry-forever",
+              currency: 'NGN'
+              meta: {
+                  "city": "San Fransisco",
+                  "state": "california"
+               }
+            ),
+            showLogs: true,
+            onClosed: () {
+               Navigator.pop(context);
+               print('Widget closed')
+            },
+            onSuccess: (data) {
+               print(data); // ThepeerSuccessModel
+               Navigator.pop(context);
+            },
+            onError: print,
+      )
+
+      ...
+
 ```
 
 ## Configuration Options
@@ -184,6 +257,12 @@ The user reference returned by Thepeer API when a user has been indexed
 **String: required**
 
 The amount you intend to send in kobo
+
+### <a name="currency"></a> `currency`
+
+**String: required**
+
+The currency of the `amount` to be paid
 
 ### <a name="onSuccess"></a> `onSuccess`
 
@@ -216,10 +295,10 @@ This is called when a user clicks on the close button.
 **Map<String, Object>: optional**
 This object should contain additional/optional attributes you would like to have on your transaction response
 
-
 #### <a name="transactionObject"></a> `transaction: ThepeerSuccessModel`
+
 The transaction ThepeerSuccessModel object returned from the success events.
 
-
 ## ✨ Contribution
- Lots of PR's would be needed to improve this plugin. So lots of suggestions and PRs are welcome.
+
+Lots of PR's would be needed to improve this plugin. So lots of suggestions and PRs are welcome.

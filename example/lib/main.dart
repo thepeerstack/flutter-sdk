@@ -64,6 +64,52 @@ class _MyHomePageState extends State<MyHomePage> {
                   height: 60,
                   margin: EdgeInsets.symmetric(horizontal: 30),
                   child: CupertinoButton(
+                    color: Colors.green,
+                    child: Center(
+                      child: Text(
+                        'Launch Checkout',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    onPressed: () async {
+                      await ThepeerCheckoutView(
+                        email: 'test@gmail.com',
+                        data: ThePeerData(
+                          publicKey:
+                              "pspk_test_2aj8xasztf4domzd2nphinvzkvecpbuyxldkvr3pkuvko",
+                          amount: 400000,
+                          userReference: "73f03de5-1043-4ad1-bc2e-aa4d94ebee4f",
+                          currency: 'NGN',
+                          meta: {
+                            'slug': 'F1rstm3ssag!ngSl0g',
+                            'type': 'chat',
+                            'paymentType': 'subscription',
+                            'channel': 'thePeer',
+                          },
+                        ),
+                        showLogs: true,
+                        onClosed: () {
+                          print('closed');
+                          Navigator.pop(context);
+                        },
+                        onSuccess: (v) {
+                          print(v.toString());
+                          Navigator.pop(context);
+                        },
+                        onError: print,
+                      ).show(context);
+                    },
+                  ),
+                ),
+                const SizedBox(height: 60),
+                Container(
+                  height: 60,
+                  margin: EdgeInsets.symmetric(horizontal: 30),
+                  child: CupertinoButton(
                     color: thepeerColor,
                     child: Center(
                       child: Text(
@@ -82,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               "pspk_test_2aj8xasztf4domzd2nphinvzkvecpbuyxldkvr3pkuvko",
                           amount: 400000,
                           userReference: "73f03de5-1043-4ad1-bc2e-aa4d94ebee4f",
+                          currency: 'NGN',
                           meta: {
                             'slug': 'F1rstm3ssag!ngSl0g',
                             'type': 'chat',
@@ -126,6 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               "pspk_test_2aj8xasztf4domzd2nphinvzkvecpbuyxldkvr3pkuvko",
                           amount: 400000,
                           userReference: "73f03de5-1043-4ad1-bc2e-aa4d94ebee4f",
+                          currency: 'NGN',
                           meta: {
                             'slug': 'F1rstm3ssag!ngSl0g',
                             'type': 'chat',
