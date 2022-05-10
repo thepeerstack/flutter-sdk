@@ -9,13 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  connectivity_plus: ^2.2.1
+  connectivity_plus: ^2.3.0
   equatable: ^2.0.3
-  flutter_svg: ^0.23.0+1
+  flutter_svg: ^1.0.3
   gap: ^2.0.0
-  modal_bottom_sheet: ^2.0.0
-  webview_flutter: ^3.0.0
-  url_launcher: ^6.0.15
+  modal_bottom_sheet: ^2.0.1
+  webview_flutter: ^3.0.2
+  url_launcher: ^6.1.0
 
 dev_dependencies:
   flutter_test:

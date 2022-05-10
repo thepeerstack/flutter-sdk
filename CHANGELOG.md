@@ -1,3 +1,6 @@
+## [2.0.10]
+Bumped up dependency versions
+
 ## [2.0.9]
 Added Checkout
 
