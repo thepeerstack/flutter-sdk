@@ -1,4 +1,4 @@
-import 'dart:convert';
+/* import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
@@ -366,3 +366,4 @@ class Business with EquatableMixin {
     ];
   }
 }
+ */

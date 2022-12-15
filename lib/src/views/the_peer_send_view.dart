@@ -23,10 +23,10 @@ class ThepeerSendView extends StatefulWidget {
   final ThePeerData data;
 
   /// Success callback
-  final ValueChanged<ThepeerSuccessModel>? onSuccess;
+  final ValueChanged<dynamic>? onSuccess;
 
   /// Error callback
-  final Function(dynamic)? onError;
+  final ValueChanged<dynamic>? onError;
 
   /// Thepeer popup Close callback
   final VoidCallback? onClosed;
@@ -221,9 +221,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
       switch (data.type) {
         case SEND_SUCCESS:
           if (widget.onSuccess != null) {
-            widget.onSuccess!(
-              ThepeerSuccessModel.fromJson(res),
-            );
+            widget.onSuccess!(data);
           }
           return;
         case SEND_CLOSE:

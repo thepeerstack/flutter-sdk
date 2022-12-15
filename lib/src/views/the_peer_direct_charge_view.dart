@@ -23,10 +23,10 @@ class ThepeerDirectChargeView extends StatefulWidget {
   final ThePeerData data;
 
   /// Success callback
-  final ValueChanged<ThepeerSuccessModel>? onSuccess;
+  final ValueChanged<dynamic>? onSuccess;
 
   /// Error callback
-  final Function(dynamic)? onError;
+  final ValueChanged<dynamic>? onError;
 
   /// Thepeer popup Close callback
   final VoidCallback? onClosed;
@@ -233,9 +233,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
       switch (data.type) {
         case DIRECT_DEBIT_SUCCESS:
           if (widget.onSuccess != null) {
-            widget.onSuccess!(
-              ThepeerSuccessModel.fromJson(res),
-            );
+            widget.onSuccess!(data);
           }
 
           return;
