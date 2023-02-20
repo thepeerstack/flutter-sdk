@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ThePeerFunctions {
   /// `[JS]` Create EventListener config for message client
@@ -83,5 +84,16 @@ class ThePeerFunctions {
         'meta': jsonEncode(data.meta),
       },
     );
+  }
+
+  /// Open url in an external browser
+  static void launchExternalUrl(
+      {required String url, required bool showLogs}) async {
+    try {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } catch (e) {
+      // handle failure
+      if (showLogs == true) ThePeerFunctions.log(e.toString());
+    }
   }
 }

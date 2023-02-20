@@ -259,7 +259,8 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
       // Navigate to all urls contianing Thepeer
       return NavigationDecision.navigate;
     } else {
-      // Block all navigations outside Thepeer
+      //Prevent external navigations from opening in the webview and open in an external browser instead.
+      ThePeerFunctions.launchExternalUrl(url: url, showLogs: (widget.showLogs));
       return NavigationDecision.prevent;
     }
   }
