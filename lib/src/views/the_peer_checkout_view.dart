@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +10,7 @@ import 'package:thepeer_flutter/src/const/const.dart';
 import 'package:thepeer_flutter/src/utils/functions.dart';
 import 'package:thepeer_flutter/src/widgets/the_peer_loader.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
@@ -101,8 +101,7 @@ class ThepeerCheckoutView extends StatefulWidget {
 }
 
 class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
-  final _controller = Completer<WebViewController>();
-  Future<WebViewController> get _webViewController => _controller.future;
+  late final WebViewController _controller;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -146,7 +145,7 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
                   ThePeerErrorView(
                     onClosed: widget.onClosed,
                     reload: () async {
-                      await (await _webViewController).reload();
+                      await _controller.reload();
                     },
                   ),
             );
@@ -162,25 +161,8 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
                 ],
 
                 /// Thepeer Webview
-                WebView(
-                  initialUrl: '$createUrl',
-                  onWebViewCreated: _controller.complete,
-                  javascriptChannels: _thepeerJavascriptChannel,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  zoomEnabled: false,
-                  debuggingEnabled: true,
-                  onPageStarted: (_) async {
-                    isLoading = true;
-                  },
-                  onWebResourceError: (e) {
-                    hasError = true;
-                    if (widget.showLogs) ThePeerFunctions.log(e.toString());
-                  },
-                  onPageFinished: (_) async {
-                    isLoading = false;
-                    await _injectPeerStack(await _controller.future);
-                  },
-                  navigationDelegate: _handleNavigationInterceptor,
+                WebViewWidget(
+                  controller: _controller,
                 ),
               ],
             );
@@ -194,30 +176,12 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
 
   /// Inject JS code to be run in webview
   Future<void> _injectPeerStack(WebViewController controller) async {
-    await controller.runJavascript(
+    await controller.runJavaScript(
       ThePeerFunctions.peerMessageHandler(
         'ThepeerSendClientInterface',
       ),
     );
   }
-
-  /// Javascript channel for events sent by Thepeer
-  Set<JavascriptChannel> get _thepeerJavascriptChannel => {
-        JavascriptChannel(
-          name: 'ThepeerSendClientInterface',
-          onMessageReceived: (JavascriptMessage data) {
-            try {
-              if (widget.showLogs)
-                ThePeerFunctions.log('Event: -> ${data.message}');
-              _handleResponse(data.message);
-            } on Exception {
-              if (mounted && widget.onClosed != null) widget.onClosed!();
-            } catch (e) {
-              if (widget.showLogs) ThePeerFunctions.log(e.toString());
-            }
-          },
-        )
-      };
 
   /// Parse event from javascript channel
   void _handleResponse(String res) async {
@@ -246,7 +210,46 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
   /// Handle WebView initialization
   void _handleInit() async {
     await SystemChannels.textInput.invokeMethod<String>('TextInput.hide');
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+
+    final WebViewController controller =
+        WebViewController.fromPlatformCreationParams(
+            PlatformWebViewControllerCreationParams());
+
+    controller
+      ..enableZoom(false)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..addJavaScriptChannel('ThepeerSendClientInterface',
+          onMessageReceived: _onMessageReceived)
+      ..setNavigationDelegate(NavigationDelegate(
+          onPageStarted: (_) async {
+            isLoading = true;
+          },
+          onWebResourceError: (e) {
+            hasError = true;
+            if (widget.showLogs) ThePeerFunctions.log(e.toString());
+          },
+          onPageFinished: (_) async {
+            isLoading = false;
+            await _injectPeerStack(_controller);
+          },
+          onNavigationRequest: _handleNavigationInterceptor))
+      ..loadRequest(Uri.parse('$createUrl'));
+    if (controller.platform is AndroidWebViewController) {
+      AndroidWebViewController.enableDebugging(true);
+    }
+    _controller = controller;
+  }
+
+  /// Javascript channel  onMessageRecieved for events sent by Thepeer
+  void _onMessageReceived(JavaScriptMessage data) {
+    try {
+      if (widget.showLogs) ThePeerFunctions.log('Event: -> ${data.message}');
+      _handleResponse(data.message);
+    } on Exception {
+      if (mounted && widget.onClosed != null) widget.onClosed!();
+    } catch (e) {
+      if (widget.showLogs) ThePeerFunctions.log(e.toString());
+    }
   }
 
   NavigationDecision _handleNavigationInterceptor(NavigationRequest request) {

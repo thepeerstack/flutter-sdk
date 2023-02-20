@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +11,7 @@ import 'package:thepeer_flutter/src/model/thepeer_success_model.dart';
 import 'package:thepeer_flutter/src/utils/functions.dart';
 import 'package:thepeer_flutter/src/widgets/the_peer_loader.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
@@ -98,8 +98,7 @@ class ThepeerDirectChargeView extends StatefulWidget {
 }
 
 class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
-  final _controller = Completer<WebViewController>();
-  Future<WebViewController> get _webViewController => _controller.future;
+  late final WebViewController _controller;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -148,7 +147,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
                     onClosed: widget.onClosed,
                     reload: () async {
                       setState(() {});
-                      await (await _webViewController).reload();
+                      await _controller.reload();
                     },
                   ),
             );
@@ -167,24 +166,8 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
                 AnimatedOpacity(
                   duration: const Duration(milliseconds: 400),
                   opacity: isLoading == true ? 0 : 1,
-                  child: WebView(
-                    initialUrl: createUrl.toString(),
-                    onWebViewCreated: _controller.complete,
-                    javascriptChannels: _thepeerJavascriptChannel,
-                    javascriptMode: JavascriptMode.unrestricted,
-                    zoomEnabled: false,
-                    onPageStarted: (_) async {
-                      isLoading = true;
-                    },
-                    onWebResourceError: (e) {
-                      hasError = true;
-                      if (widget.showLogs) ThePeerFunctions.log(e.toString());
-                    },
-                    onPageFinished: (_) async {
-                      isLoading = false;
-                      await _injectPeerStack(await _controller.future);
-                    },
-                    navigationDelegate: _handleNavigationInterceptor,
+                  child: WebViewWidget(
+                    controller: _controller,
                   ),
                 ),
               ],
@@ -199,31 +182,11 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
 
   /// Inject JS code to be run in webview
   Future<void> _injectPeerStack(WebViewController controller) {
-    return controller.runJavascript(
+    return controller.runJavaScript(
       ThePeerFunctions.peerMessageHandler(
         'ThepeerDirectChargeClientInterface',
       ),
     );
-  }
-
-  /// Javascript channel for events sent by Thepeer
-  Set<JavascriptChannel> get _thepeerJavascriptChannel {
-    return {
-      JavascriptChannel(
-        name: 'ThepeerDirectChargeClientInterface',
-        onMessageReceived: (JavascriptMessage data) {
-          try {
-            if (widget.showLogs)
-              ThePeerFunctions.log('Event: -> ${data.message}');
-            _handleResponse(data.message);
-          } on Exception {
-            if (mounted && widget.onClosed != null) widget.onClosed!();
-          } catch (e) {
-            if (widget.showLogs) ThePeerFunctions.log(e.toString());
-          }
-        },
-      )
-    };
   }
 
   /// Parse event from javascript channel
@@ -255,7 +218,47 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
   /// Handle WebView initialization
   void _handleInit() async {
     await SystemChannels.textInput.invokeMethod<String>('TextInput.hide');
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+
+    //                 navigationDelegate: _handleNavigationInterceptor,
+    final WebViewController controller =
+        WebViewController.fromPlatformCreationParams(
+            PlatformWebViewControllerCreationParams());
+
+    controller
+      ..enableZoom(false)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..addJavaScriptChannel('ThepeerSendClientInterface',
+          onMessageReceived: _onMessageReceived)
+      ..setNavigationDelegate(NavigationDelegate(
+          onPageStarted: (_) async {
+            isLoading = true;
+          },
+          onWebResourceError: (e) {
+            hasError = true;
+            if (widget.showLogs) ThePeerFunctions.log(e.toString());
+          },
+          onPageFinished: (_) async {
+            isLoading = false;
+            await _injectPeerStack(_controller);
+          },
+          onNavigationRequest: _handleNavigationInterceptor))
+      ..loadRequest(Uri.parse('$createUrl'));
+    if (controller.platform is AndroidWebViewController) {
+      AndroidWebViewController.enableDebugging(true);
+    }
+    _controller = controller;
+  }
+
+  /// Javascript channel  onMessageRecieved for events sent by Thepeer
+  void _onMessageReceived(JavaScriptMessage data) {
+    try {
+      if (widget.showLogs) ThePeerFunctions.log('Event: -> ${data.message}');
+      _handleResponse(data.message);
+    } on Exception {
+      if (mounted && widget.onClosed != null) widget.onClosed!();
+    } catch (e) {
+      if (widget.showLogs) ThePeerFunctions.log(e.toString());
+    }
   }
 
   NavigationDecision _handleNavigationInterceptor(NavigationRequest request) {
