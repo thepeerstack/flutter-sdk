@@ -72,7 +72,7 @@ class ThepeerCheckoutView extends StatefulWidget {
             topRight: Radius.circular(10),
           ),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.9,
+            height: MediaQuery.of(context).size.height,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
