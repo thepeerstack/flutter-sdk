@@ -227,7 +227,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
     controller
       ..enableZoom(false)
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..addJavaScriptChannel('ThepeerSendClientInterface',
+      ..addJavaScriptChannel('ThepeerDirectChargeClientInterface',
           onMessageReceived: _onMessageReceived)
       ..setNavigationDelegate(NavigationDelegate(
           onPageStarted: (_) async {
