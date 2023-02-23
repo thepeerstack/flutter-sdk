@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:thepeer_flutter/src/const/const.dart';
+import 'package:thepeer_flutter/src/model/the_peer_event_model.dart';
 import 'package:thepeer_flutter/src/utils/functions.dart';
 import 'package:thepeer_flutter/src/widgets/the_peer_loader.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -25,10 +25,10 @@ class ThepeerCheckoutView extends StatefulWidget {
   final String email;
 
   /// Success callback
-  final ValueChanged<Map<String, dynamic>>? onSuccess;
+  final ValueChanged<dynamic>? onSuccess;
 
   /// Error callback
-  final Function(dynamic)? onError;
+  final ValueChanged<dynamic>? onError;
 
   /// Thepeer popup Close callback
   final VoidCallback? onClosed;
@@ -186,13 +186,11 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
   /// Parse event from javascript channel
   void _handleResponse(String res) async {
     try {
-      final data = jsonDecode(res);
-      switch (data['type']) {
+      final data = ThepeerEventModel.fromJson(res);
+      switch (data.type) {
         case CHECKOUT_SUCCESS:
           if (widget.onSuccess != null) {
-            widget.onSuccess!(
-              data,
-            );
+            widget.onSuccess!(data);
           }
           return;
         case CHECKOUT_CLOSE:

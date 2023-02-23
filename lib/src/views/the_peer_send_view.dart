@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:thepeer_flutter/src/const/const.dart';
 import 'package:thepeer_flutter/src/model/the_peer_event_model.dart';
-import 'package:thepeer_flutter/src/model/thepeer_success_model.dart';
 import 'package:thepeer_flutter/src/utils/functions.dart';
 import 'package:thepeer_flutter/src/widgets/the_peer_loader.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -23,10 +22,10 @@ class ThepeerSendView extends StatefulWidget {
   final ThePeerData data;
 
   /// Success callback
-  final ValueChanged<ThepeerSuccessModel>? onSuccess;
+  final ValueChanged<dynamic>? onSuccess;
 
   /// Error callback
-  final Function(dynamic)? onError;
+  final ValueChanged<dynamic>? onError;
 
   /// Thepeer popup Close callback
   final VoidCallback? onClosed;
@@ -185,9 +184,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
       switch (data.type) {
         case SEND_SUCCESS:
           if (widget.onSuccess != null) {
-            widget.onSuccess!(
-              ThepeerSuccessModel.fromJson(res),
-            );
+            widget.onSuccess!(data);
           }
           return;
         case SEND_CLOSE:
