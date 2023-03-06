@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:thepeer_flutter/src/const/const.dart';
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -49,13 +50,17 @@ class ThepeerFunctions {
   /// Log data from thepeer sdk
   static void log(String data) => debugPrint('ThepeerLog: $data');
 
+  /// converts the base url to only domain name e.g [https://chain.thepeer.co?] returns [chain.thepeer.co]
+  static String domainName =
+      baseUrl.replaceAll("https://", "").substring(0, baseUrl.length - 1);
+
   /// Create peer url
   static Uri createUrl({
     required ThepeerData data,
     String? email,
     required String sdkType,
   }) {
-    var base = 'https://chain.thepeer.co?';
+    var base = baseUrl;
 
     final params = {
       'publicKey': data.publicKey,

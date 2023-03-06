@@ -248,7 +248,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
   NavigationDecision _handleNavigationInterceptor(NavigationRequest request) {
     final url = request.url.toLowerCase();
 
-    if (url.contains('groot.thepeer.co') || url.contains('chain.thepeer.co')) {
+    if (url.contains(ThepeerFunctions.domainName)) {
       // Navigate to all urls contianing Thepeer
       return NavigationDecision.navigate;
     } else {

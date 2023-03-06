@@ -253,8 +253,8 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
   NavigationDecision _handleNavigationInterceptor(NavigationRequest request) {
     final url = request.url.toLowerCase();
 
-    if (url.contains('groot.thepeer.co') || url.contains('chain.thepeer.co')) {
-      // Navigate to all urls contianing Thepeer
+    if (url.contains(ThepeerFunctions.domainName)) {
+      // Navigate to all urls contianing Thepeer domain
       return NavigationDecision.navigate;
     } else {
       //Prevent external navigations from opening in the webview and open in an external browser instead.
