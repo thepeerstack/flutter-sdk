@@ -19,7 +19,7 @@ import 'package:thepeer_flutter/src/views/the_peer_error_view.dart';
 
 class ThepeerDirectChargeView extends StatefulWidget {
   /// Public Key from your https://app.withThepeer.com/apps
-  final ThePeerData data;
+  final ThepeerData data;
 
   /// Success callback
   final ValueChanged<dynamic>? onSuccess;
@@ -120,7 +120,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
     setState(() {});
   }
 
-  String get createUrl => ThePeerFunctions.createUrl(
+  String get createUrl => ThepeerFunctions.createUrl(
         data: widget.data,
         sdkType: 'directCharge',
       ).toString();
@@ -142,7 +142,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
           if (hasError == true) {
             return Center(
               child: widget.errorWidget ??
-                  ThePeerErrorView(
+                  ThepeerErrorView(
                     onClosed: widget.onClosed,
                     reload: () async {
                       setState(() {});
@@ -182,7 +182,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
   /// Inject JS code to be run in webview
   Future<void> _injectPeerStack(WebViewController controller) {
     return controller.runJavaScript(
-      ThePeerFunctions.peerMessageHandler(
+      ThepeerFunctions.peerMessageHandler(
         'ThepeerDirectChargeClientInterface',
       ),
     );
@@ -208,7 +208,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
           return;
       }
     } catch (e) {
-      if (widget.showLogs) ThePeerFunctions.log(e.toString());
+      if (widget.showLogs) ThepeerFunctions.log(e.toString());
     }
   }
 
@@ -231,7 +231,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
           },
           onWebResourceError: (e) {
             hasError = true;
-            if (widget.showLogs) ThePeerFunctions.log(e.toString());
+            if (widget.showLogs) ThepeerFunctions.log(e.toString());
           },
           onPageFinished: (_) async {
             isLoading = false;
@@ -248,12 +248,12 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
   /// Javascript channel  onMessageRecieved for events sent by Thepeer
   void _onMessageReceived(JavaScriptMessage data) {
     try {
-      if (widget.showLogs) ThePeerFunctions.log('Event: -> ${data.message}');
+      if (widget.showLogs) ThepeerFunctions.log('Event: -> ${data.message}');
       _handleResponse(data.message);
     } on Exception {
       if (mounted && widget.onClosed != null) widget.onClosed!();
     } catch (e) {
-      if (widget.showLogs) ThePeerFunctions.log(e.toString());
+      if (widget.showLogs) ThepeerFunctions.log(e.toString());
     }
   }
 
@@ -265,7 +265,7 @@ class _ThepeerDirectChargeViewState extends State<ThepeerDirectChargeView> {
       return NavigationDecision.navigate;
     } else {
       //Prevent external navigations from opening in the webview and open in an external browser instead.
-      ThePeerFunctions.launchExternalUrl(url: url, showLogs: (widget.showLogs));
+      ThepeerFunctions.launchExternalUrl(url: url, showLogs: (widget.showLogs));
       return NavigationDecision.prevent;
     }
   }

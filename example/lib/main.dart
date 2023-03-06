@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () async {
                       await ThepeerCheckoutView(
                         email: 'test@gmail.com',
-                        data: ThePeerData(
+                        data: ThepeerData(
                           publicKey:
                               "pspk_test_2aj8xasztf4domzd2nphinvzkvecpbuyxldkvr3pkuvko",
                           amount: 400000,
@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     onPressed: () async {
                       await ThepeerSendView(
-                        data: ThePeerData(
+                        data: ThepeerData(
                           publicKey:
                               "pspk_test_2aj8xasztf4domzd2nphinvzkvecpbuyxldkvr3pkuvko",
                           amount: 400000,
@@ -168,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     onPressed: () async {
                       await ThepeerDirectChargeView(
-                        data: ThePeerData(
+                        data: ThepeerData(
                           publicKey:
                               "pspk_test_2aj8xasztf4domzd2nphinvzkvecpbuyxldkvr3pkuvko",
                           amount: 400000,

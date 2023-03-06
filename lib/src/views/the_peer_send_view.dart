@@ -19,7 +19,7 @@ import 'package:thepeer_flutter/src/views/the_peer_error_view.dart';
 
 class ThepeerSendView extends StatefulWidget {
   /// Public Key from your https://app.withThepeer.com/apps
-  final ThePeerData data;
+  final ThepeerData data;
 
   /// Success callback
   final ValueChanged<dynamic>? onSuccess;
@@ -120,7 +120,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
     _handleInit();
   }
 
-  String get createUrl => ThePeerFunctions.createUrl(
+  String get createUrl => ThepeerFunctions.createUrl(
         data: widget.data,
         sdkType: 'send',
       ).toString();
@@ -136,7 +136,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
           if (hasError == true) {
             return Center(
               child: widget.errorWidget ??
-                  ThePeerErrorView(
+                  ThepeerErrorView(
                     onClosed: widget.onClosed,
                     reload: () async {
                       await _controller.reload();
@@ -171,7 +171,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
   /// Inject JS code to be run in webview
   Future<void> _injectPeerStack(WebViewController controller) async {
     await controller.runJavaScript(
-      ThePeerFunctions.peerMessageHandler(
+      ThepeerFunctions.peerMessageHandler(
         'ThepeerSendClientInterface',
       ),
     );
@@ -195,7 +195,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
           return;
       }
     } catch (e) {
-      if (widget.showLogs == true) ThePeerFunctions.log(e.toString());
+      if (widget.showLogs == true) ThepeerFunctions.log(e.toString());
     }
   }
 
@@ -218,7 +218,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
           },
           onWebResourceError: (e) {
             hasError = true;
-            if (widget.showLogs) ThePeerFunctions.log(e.toString());
+            if (widget.showLogs) ThepeerFunctions.log(e.toString());
           },
           onPageFinished: (_) async {
             isLoading = false;
@@ -236,12 +236,12 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
 
   void _onMessageReceived(JavaScriptMessage data) {
     try {
-      if (widget.showLogs) ThePeerFunctions.log('Event: -> ${data.message}');
+      if (widget.showLogs) ThepeerFunctions.log('Event: -> ${data.message}');
       _handleResponse(data.message);
     } on Exception {
       if (mounted && widget.onClosed != null) widget.onClosed!();
     } catch (e) {
-      if (widget.showLogs) ThePeerFunctions.log(e.toString());
+      if (widget.showLogs) ThepeerFunctions.log(e.toString());
     }
   }
 
@@ -253,7 +253,7 @@ class _ThepeerSendViewState extends State<ThepeerSendView> {
       return NavigationDecision.navigate;
     } else {
       //Prevent external navigations from opening in the webview and open in an external browser instead.
-      ThePeerFunctions.launchExternalUrl(url: url, showLogs: (widget.showLogs));
+      ThepeerFunctions.launchExternalUrl(url: url, showLogs: (widget.showLogs));
       return NavigationDecision.prevent;
     }
   }

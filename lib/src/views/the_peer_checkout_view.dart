@@ -19,7 +19,7 @@ import 'package:thepeer_flutter/src/views/the_peer_error_view.dart';
 
 class ThepeerCheckoutView extends StatefulWidget {
   /// Public Key from your https://app.withThepeer.com/apps
-  final ThePeerData data;
+  final ThepeerData data;
 
   /// User email
   final String email;
@@ -125,7 +125,7 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
     _handleInit();
   }
 
-  String get createUrl => ThePeerFunctions.createUrl(
+  String get createUrl => ThepeerFunctions.createUrl(
         data: widget.data,
         email: widget.email,
         sdkType: 'checkout',
@@ -142,7 +142,7 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
           if (hasError == true) {
             return Center(
               child: widget.errorWidget ??
-                  ThePeerErrorView(
+                  ThepeerErrorView(
                     onClosed: widget.onClosed,
                     reload: () async {
                       await _controller.reload();
@@ -177,7 +177,7 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
   /// Inject JS code to be run in webview
   Future<void> _injectPeerStack(WebViewController controller) async {
     await controller.runJavaScript(
-      ThePeerFunctions.peerMessageHandler(
+      ThepeerFunctions.peerMessageHandler(
         'ThepeerSendClientInterface',
       ),
     );
@@ -201,7 +201,7 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
           return;
       }
     } catch (e) {
-      if (widget.showLogs == true) ThePeerFunctions.log(e.toString());
+      if (widget.showLogs == true) ThepeerFunctions.log(e.toString());
     }
   }
 
@@ -224,7 +224,7 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
           },
           onWebResourceError: (e) {
             hasError = true;
-            if (widget.showLogs) ThePeerFunctions.log(e.toString());
+            if (widget.showLogs) ThepeerFunctions.log(e.toString());
           },
           onPageFinished: (_) async {
             isLoading = false;
@@ -241,12 +241,12 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
   /// Javascript channel  onMessageRecieved for events sent by Thepeer
   void _onMessageReceived(JavaScriptMessage data) {
     try {
-      if (widget.showLogs) ThePeerFunctions.log('Event: -> ${data.message}');
+      if (widget.showLogs) ThepeerFunctions.log('Event: -> ${data.message}');
       _handleResponse(data.message);
     } on Exception {
       if (mounted && widget.onClosed != null) widget.onClosed!();
     } catch (e) {
-      if (widget.showLogs) ThePeerFunctions.log(e.toString());
+      if (widget.showLogs) ThepeerFunctions.log(e.toString());
     }
   }
 
@@ -258,7 +258,7 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
       return NavigationDecision.navigate;
     } else {
       //Prevent external navigations from opening in the webview and open in an external browser instead.
-      ThePeerFunctions.launchExternalUrl(url: url, showLogs: (widget.showLogs));
+      ThepeerFunctions.launchExternalUrl(url: url, showLogs: (widget.showLogs));
       return NavigationDecision.prevent;
     }
   }

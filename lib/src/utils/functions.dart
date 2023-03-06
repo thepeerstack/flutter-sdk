@@ -5,7 +5,7 @@ import 'package:thepeer_flutter/src/model/thepeer_data.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ThePeerFunctions {
+class ThepeerFunctions {
   /// `[JS]` Create EventListener config for message client
   static String peerMessageHandler(String clientName) => '''
 
@@ -47,11 +47,11 @@ class ThePeerFunctions {
 ''';
 
   /// Log data from thepeer sdk
-  static void log(String data) => debugPrint('ThePeerLog: $data');
+  static void log(String data) => debugPrint('ThepeerLog: $data');
 
   /// Create peer url
   static Uri createUrl({
-    required ThePeerData data,
+    required ThepeerData data,
     String? email,
     required String sdkType,
   }) {
@@ -93,7 +93,7 @@ class ThePeerFunctions {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } catch (e) {
       // handle failure
-      if (showLogs == true) ThePeerFunctions.log(e.toString());
+      if (showLogs == true) ThepeerFunctions.log(e.toString());
     }
   }
 }
