@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-class ThePeerData with EquatableMixin {
+class ThepeerData with EquatableMixin {
   /// Your public key an be found on your dashboard settings
   final String publicKey;
 
@@ -20,7 +20,7 @@ class ThePeerData with EquatableMixin {
 
   bool get isProd => publicKey.contains('test') == false;
 
-  ThePeerData({
+  ThepeerData({
     required this.publicKey,
     required this.userReference,
     required this.currency,
@@ -28,7 +28,7 @@ class ThePeerData with EquatableMixin {
     this.meta = const {},
   });
 
-  ThePeerData copyWith({
+  ThepeerData copyWith({
     String? publicKey,
     String? userReference,
     String? currency,
@@ -36,7 +36,7 @@ class ThePeerData with EquatableMixin {
     Map<String, Object>? meta,
     int? amount,
   }) {
-    return ThePeerData(
+    return ThepeerData(
       publicKey: publicKey ?? this.publicKey,
       userReference: userReference ?? this.userReference,
       amount: amount ?? this.amount,
@@ -54,8 +54,8 @@ class ThePeerData with EquatableMixin {
     };
   }
 
-  factory ThePeerData.fromMap(Map<String, dynamic> map) {
-    return ThePeerData(
+  factory ThepeerData.fromMap(Map<String, dynamic> map) {
+    return ThepeerData(
       publicKey: map['publicKey'],
       userReference: map['userReference'],
       amount: map['amount'],
@@ -66,8 +66,8 @@ class ThePeerData with EquatableMixin {
 
   String toJson() => json.encode(toMap());
 
-  factory ThePeerData.fromJson(String source) =>
-      ThePeerData.fromMap(json.decode(source));
+  factory ThepeerData.fromJson(String source) =>
+      ThepeerData.fromMap(json.decode(source));
 
   @override
   bool? get stringify => true;

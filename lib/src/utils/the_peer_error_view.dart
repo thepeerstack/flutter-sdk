@@ -6,12 +6,12 @@ import 'package:thepeer_flutter/src/utils/colors.dart';
 import 'package:thepeer_flutter/src/widgets/the_peer_button.dart';
 import 'package:thepeer_flutter/src/widgets/touchable_opacity.dart';
 
-/// ThePeerErrorView States Widget
-class ThePeerErrorView extends StatelessWidget {
+/// ThepeerErrorView States Widget
+class ThepeerErrorView extends StatelessWidget {
   final VoidCallback reload;
   final VoidCallback? onClosed;
 
-  const ThePeerErrorView({
+  const ThepeerErrorView({
     Key? key,
     this.onClosed,
     required this.reload,
