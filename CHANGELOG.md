@@ -3,6 +3,7 @@ Minor changes
 - Redirect external links to the browser
 - Changed widget height to fullscreen for better user experience
 - Removed reference to test/dev domain and created a dynamic base url
+
 Breaking changes
 - Migration from `WebView` to `WebViewWidget`
 - Replaced instances of `ThePeer` with `Thepeer`
