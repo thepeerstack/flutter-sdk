@@ -9,4 +9,4 @@ jobs:
   publish:
     uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
     with:
-      working-directory: ../../lib/thepeer_flutter.dart
+      working-directory: lib/thepeer_flutter.dart
