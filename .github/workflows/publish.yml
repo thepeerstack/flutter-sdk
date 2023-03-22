@@ -3,9 +3,16 @@ name: Publish to pub.dev
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+*'
+      - "v[0-9]+.[0-9]+.[0-9]+*"
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+      - run: dart fix --apply .
+      - run: flutter pub publish
   publish:
     uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
     # with:
