@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
+      - run: flutter pub get
       - run: dart fix --apply .
       - run: flutter pub publish
   publish:
