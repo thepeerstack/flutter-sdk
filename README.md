@@ -25,7 +25,7 @@ dependencies {
 }
 ```
 
-### ThePeer Send
+### Thepeer Send
 
 - Launch ThepeerSendView in a bottom_sheet
 
@@ -34,7 +34,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
 
   void launch() async {
       await ThepeerSendView(
-               data: ThePeerData(
+               data: ThepeerData(
                   amount: 400000,
                   publicKey: "pspk_one_more_thing",
                   userReference: "stay-foolish-stay-hungry-forever",
@@ -66,7 +66,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
      ...
 
      ThepeerSendView(
-         data: ThePeerData(
+         data: ThepeerData(
             amount: 10000,
             publicKey: "pspk_one_more_thing",
             userReference: "stay-foolish-stay-hungry-forever",
@@ -94,7 +94,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
 
 ---
 
-### ThePeer DirectCharge
+### Thepeer DirectCharge
 
 - Launch ThepeerDirectChargeView in a bottom_sheet
 
@@ -103,7 +103,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
 
   void launch() async {
     await ThepeerDirectChargeView(
-            data: ThePeerData(
+            data: ThepeerData(
               amount: 10000,
               publicKey: "pspk_one_more_thing",
               userReference: "stay-foolish-stay-hungry-forever",
@@ -135,7 +135,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
      ...
 
       await ThepeerDirectChargeView(
-            data: ThePeerData(
+            data: ThepeerData(
               amount: 10000,
               publicKey: "pspk_one_more_thing",
               userReference: "stay-foolish-stay-hungry-forever",
@@ -163,7 +163,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
 
 ---
 
-### ThePeer Checkout
+### Thepeer Checkout
 
 - Launch ThepeerCheckoutView in a bottom_sheet
 
@@ -172,7 +172,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
 
   void launch() async {
     await ThepeerCheckoutView(
-            data: ThePeerData(
+            data: ThepeerData(
               amount: 10000,
               publicKey: "pspk_one_more_thing",
               userReference: "stay-foolish-stay-hungry-forever",
@@ -204,7 +204,7 @@ import 'package:thepeer_flutter/thepeer_flutter.dart';
      ...
 
       await ThepeerCheckoutView(
-            data: ThePeerData(
+            data: ThepeerData(
               amount: 10000,
               publicKey: "pspk_one_more_thing",
               userReference: "stay-foolish-stay-hungry-forever",

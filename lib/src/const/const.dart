@@ -1,4 +1,5 @@
 const package = 'thepeer_flutter';
+const baseUrl = 'https://chain.thepeer.co?';
 
 const SEND_SUCCESS = 'send.success';
 const SEND_ERROR = 'send.server_error';

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +10,7 @@ import 'package:thepeer_flutter/src/model/the_peer_event_model.dart';
 import 'package:thepeer_flutter/src/utils/functions.dart';
 import 'package:thepeer_flutter/src/widgets/the_peer_loader.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
@@ -19,7 +19,7 @@ import 'package:thepeer_flutter/src/views/the_peer_error_view.dart';
 
 class ThepeerCheckoutView extends StatefulWidget {
   /// Public Key from your https://app.withThepeer.com/apps
-  final ThePeerData data;
+  final ThepeerData data;
 
   /// User email
   final String email;
@@ -72,7 +72,7 @@ class ThepeerCheckoutView extends StatefulWidget {
             topRight: Radius.circular(10),
           ),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.9,
+            height: MediaQuery.of(context).size.height,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -101,8 +101,7 @@ class ThepeerCheckoutView extends StatefulWidget {
 }
 
 class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
-  final _controller = Completer<WebViewController>();
-  Future<WebViewController> get _webViewController => _controller.future;
+  late final WebViewController _controller;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -126,7 +125,7 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
     _handleInit();
   }
 
-  String get createUrl => ThePeerFunctions.createUrl(
+  String get createUrl => ThepeerFunctions.createUrl(
         data: widget.data,
         email: widget.email,
         sdkType: 'checkout',
@@ -143,10 +142,10 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
           if (hasError == true) {
             return Center(
               child: widget.errorWidget ??
-                  ThePeerErrorView(
+                  ThepeerErrorView(
                     onClosed: widget.onClosed,
                     reload: () async {
-                      await (await _webViewController).reload();
+                      await _controller.reload();
                     },
                   ),
             );
@@ -162,25 +161,8 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
                 ],
 
                 /// Thepeer Webview
-                WebView(
-                  initialUrl: '$createUrl',
-                  onWebViewCreated: _controller.complete,
-                  javascriptChannels: _thepeerJavascriptChannel,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  zoomEnabled: false,
-                  debuggingEnabled: true,
-                  onPageStarted: (_) async {
-                    isLoading = true;
-                  },
-                  onWebResourceError: (e) {
-                    hasError = true;
-                    if (widget.showLogs) ThePeerFunctions.log(e.toString());
-                  },
-                  onPageFinished: (_) async {
-                    isLoading = false;
-                    await _injectPeerStack(await _controller.future);
-                  },
-                  navigationDelegate: _handleNavigationInterceptor,
+                WebViewWidget(
+                  controller: _controller,
                 ),
               ],
             );
@@ -194,30 +176,12 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
 
   /// Inject JS code to be run in webview
   Future<void> _injectPeerStack(WebViewController controller) async {
-    await controller.runJavascript(
-      ThePeerFunctions.peerMessageHandler(
+    await controller.runJavaScript(
+      ThepeerFunctions.peerMessageHandler(
         'ThepeerSendClientInterface',
       ),
     );
   }
-
-  /// Javascript channel for events sent by Thepeer
-  Set<JavascriptChannel> get _thepeerJavascriptChannel => {
-        JavascriptChannel(
-          name: 'ThepeerSendClientInterface',
-          onMessageReceived: (JavascriptMessage data) {
-            try {
-              if (widget.showLogs)
-                ThePeerFunctions.log('Event: -> ${data.message}');
-              _handleResponse(data.message);
-            } on Exception {
-              if (mounted && widget.onClosed != null) widget.onClosed!();
-            } catch (e) {
-              if (widget.showLogs) ThePeerFunctions.log(e.toString());
-            }
-          },
-        )
-      };
 
   /// Parse event from javascript channel
   void _handleResponse(String res) async {
@@ -237,24 +201,64 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
           return;
       }
     } catch (e) {
-      if (widget.showLogs == true) ThePeerFunctions.log(e.toString());
+      if (widget.showLogs == true) ThepeerFunctions.log(e.toString());
     }
   }
 
   /// Handle WebView initialization
   void _handleInit() async {
     await SystemChannels.textInput.invokeMethod<String>('TextInput.hide');
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+
+    final WebViewController controller =
+        WebViewController.fromPlatformCreationParams(
+            PlatformWebViewControllerCreationParams());
+
+    controller
+      ..enableZoom(false)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..addJavaScriptChannel('ThepeerSendClientInterface',
+          onMessageReceived: _onMessageReceived)
+      ..setNavigationDelegate(NavigationDelegate(
+          onPageStarted: (_) async {
+            isLoading = true;
+          },
+          onWebResourceError: (e) {
+            hasError = true;
+            if (widget.showLogs) ThepeerFunctions.log(e.toString());
+          },
+          onPageFinished: (_) async {
+            isLoading = false;
+            await _injectPeerStack(_controller);
+          },
+          onNavigationRequest: _handleNavigationInterceptor))
+      ..loadRequest(Uri.parse('$createUrl'));
+    if (controller.platform is AndroidWebViewController) {
+      AndroidWebViewController.enableDebugging(true);
+    }
+    _controller = controller;
+  }
+
+  /// Javascript channel  onMessageRecieved for events sent by Thepeer
+  void _onMessageReceived(JavaScriptMessage data) {
+    try {
+      if (widget.showLogs) ThepeerFunctions.log('Event: -> ${data.message}');
+      _handleResponse(data.message);
+    } on Exception {
+      if (mounted && widget.onClosed != null) widget.onClosed!();
+    } catch (e) {
+      if (widget.showLogs) ThepeerFunctions.log(e.toString());
+    }
   }
 
   NavigationDecision _handleNavigationInterceptor(NavigationRequest request) {
     final url = request.url.toLowerCase();
 
-    if (url.contains('groot.thepeer.co') || url.contains('chain.thepeer.co')) {
-      // Navigate to all urls contianing Thepeer
+    if (url.contains(ThepeerFunctions.domainName)) {
+      // Navigate to all urls contianing Thepeer domain
       return NavigationDecision.navigate;
     } else {
-      // Block all navigations outside Thepeer
+      //Prevent external navigations from opening in the webview and open in an external browser instead.
+      ThepeerFunctions.launchExternalUrl(url: url, showLogs: (widget.showLogs));
       return NavigationDecision.prevent;
     }
   }

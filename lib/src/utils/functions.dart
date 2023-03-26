@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:thepeer_flutter/src/const/const.dart';
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class ThePeerFunctions {
+class ThepeerFunctions {
   /// `[JS]` Create EventListener config for message client
   static String peerMessageHandler(String clientName) => '''
 
@@ -46,15 +48,19 @@ class ThePeerFunctions {
 ''';
 
   /// Log data from thepeer sdk
-  static void log(String data) => debugPrint('ThePeerLog: $data');
+  static void log(String data) => debugPrint('ThepeerLog: $data');
+
+  /// converts the base url to only domain name e.g [https://chain.thepeer.co?] returns [chain.thepeer.co]
+  static String domainName =
+      baseUrl.replaceAll("https://", "").substring(0, baseUrl.length - 1);
 
   /// Create peer url
   static Uri createUrl({
-    required ThePeerData data,
+    required ThepeerData data,
     String? email,
     required String sdkType,
   }) {
-    var base = 'https://chain.thepeer.co?';
+    var base = baseUrl;
 
     final params = {
       'publicKey': data.publicKey,
@@ -83,5 +89,16 @@ class ThePeerFunctions {
         'meta': jsonEncode(data.meta),
       },
     );
+  }
+
+  /// Open url in an external browser
+  static void launchExternalUrl(
+      {required String url, required bool showLogs}) async {
+    try {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } catch (e) {
+      // handle failure
+      if (showLogs == true) ThepeerFunctions.log(e.toString());
+    }
   }
 }
