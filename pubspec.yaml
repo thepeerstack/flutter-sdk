@@ -12,9 +12,7 @@ dependencies:
   connectivity_plus: ^3.0.2
   equatable: ^2.0.3
   flutter_svg: ^1.0.3
-  gap: 
-    git:
-      url: https://github.com/TimWhiting/gap
+  gap: ^2.0.1
   modal_bottom_sheet: ^3.0.0-pre
   webview_flutter: ^4.0.6
   webview_flutter_android: ^3.1.3
