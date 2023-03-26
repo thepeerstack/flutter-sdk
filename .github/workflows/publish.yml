@@ -27,5 +27,8 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Analyze and fix issues
+        run: dart fix --apply .
+
       - name: Publish
-        run: flutter pub publish --force
+        run: flutter pub publish
