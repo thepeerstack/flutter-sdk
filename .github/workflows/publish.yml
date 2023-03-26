@@ -1,20 +1,30 @@
+# .github/workflows/publish.yml
 name: Publish to pub.dev
 
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+*"
+      - "v[0-9]+.[0-9]+.[0-9]+*" # tag pattern on pub.dev: 'v'
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Clone repository
+      - uses: actions/checkout@v2
+
+      - name: Install Dart
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install Flutter
       - uses: subosito/flutter-action@v2
-      - run: flutter pub get
-      - run: dart fix --apply .
-      - run: flutter pub publish
-  publish:
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
-    # with:
-    #   working-directory: lib/thepeer_flutter.dart
+        with:
+          flutter-version: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Publish
+        run: flutter pub publish --force
