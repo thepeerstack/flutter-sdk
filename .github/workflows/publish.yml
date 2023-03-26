@@ -7,7 +7,7 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+*" # tag pattern on pub.dev: 'v'
 
 jobs:
-  main:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
