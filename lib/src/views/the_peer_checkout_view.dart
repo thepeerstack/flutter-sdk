@@ -10,7 +10,6 @@ import 'package:thepeer_flutter/src/model/the_peer_event_model.dart';
 import 'package:thepeer_flutter/src/utils/functions.dart';
 import 'package:thepeer_flutter/src/widgets/the_peer_loader.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 import 'package:thepeer_flutter/src/model/thepeer_data.dart';
 import 'package:thepeer_flutter/src/utils/extensions.dart';
@@ -232,9 +231,7 @@ class _ThepeerCheckoutViewState extends State<ThepeerCheckoutView> {
           },
           onNavigationRequest: _handleNavigationInterceptor))
       ..loadRequest(Uri.parse('$createUrl'));
-    if (controller.platform is AndroidWebViewController) {
-      AndroidWebViewController.enableDebugging(true);
-    }
+
     _controller = controller;
   }
 
