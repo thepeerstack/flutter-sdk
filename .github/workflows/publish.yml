@@ -31,7 +31,18 @@ jobs:
         run: dart fix --apply .
 
       - name: Prepare pub credentials
-        run: echo '${{ secrets.PUB_CREDENTIALS }}' > "$HOME/.config/dart/pub-credentials.json"
+        run: |
+          mkdir -p ~/.pub-cache
+          cat <<EOF > ~/.pub-cache/credentials.json
+          {
+            "accessToken":"${{ secrets.PUB_OAUTH_ACCESS_TOKEN }}",
+            "refreshToken":"${{ secrets.PUB_OAUTH_REFRESH_TOKEN }}",
+            "idToken":"${{ secrets.PUB_OAUTH_ID_TOKEN }}",
+            "tokenEndpoint":"https://accounts.google.com/o/oauth2/token",
+            "scopes": [ "openid", "https://www.googleapis.com/auth/userinfo.email" ],
+            "expiration": 1679810599352
+          }
+          EOF
 
       - name: Publish
         run: flutter pub publish --force
