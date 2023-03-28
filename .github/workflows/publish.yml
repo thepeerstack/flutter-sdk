@@ -31,7 +31,7 @@ jobs:
         run: dart fix --apply .
 
       - name: Prepare pub credentials
-        run: echo '${{ secrets.PUB_CREDENTIALS }}' > "$XDG_CONFIG_HOME/dart/pub-credentials.json"
+        run: echo '${{ secrets.PUB_CREDENTIALS }}' > "$HOME/.config/dart/pub-credentials.json"
 
       - name: Publish
         run: flutter pub publish --force
