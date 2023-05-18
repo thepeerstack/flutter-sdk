@@ -1,0 +1,46 @@
+# .github/workflows/publish.yml
+name: Publish to pub.dev
+
+on:
+  push:
+    branches: ["main"]
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*" # tag pattern on pub.dev: 'v'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Install Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze and fix issues
+        run: dart fix --apply .
+
+      - name: Prepare pub credentials
+        run: |
+          mkdir -p $XDG_CONFIG_HOME/dart/
+          cat <<EOF > $XDG_CONFIG_HOME/dart/pub-credentials.json
+          {
+            "accessToken":"${{ secrets.PUB_OAUTH_ACCESS_TOKEN }}",
+            "refreshToken":"${{ secrets.PUB_OAUTH_REFRESH_TOKEN }}",
+            "idToken":"${{ secrets.PUB_OAUTH_ID_TOKEN }}",
+            "tokenEndpoint":"https://accounts.google.com/o/oauth2/token",
+            "scopes": [ "openid", "https://www.googleapis.com/auth/userinfo.email" ],
+            "expiration": 1679810599352
+          }
+          EOF
+
+      - name: Publish
+        run: flutter pub publish --force
