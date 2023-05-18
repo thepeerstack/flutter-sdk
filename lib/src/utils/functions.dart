@@ -51,8 +51,7 @@ class ThepeerFunctions {
   static void log(String data) => debugPrint('ThepeerLog: $data');
 
   /// converts the base url to only domain name e.g [https://chain.thepeer.co?] returns [chain.thepeer.co]
-  static String domainName =
-      baseUrl.replaceAll("https://", "").substring(0, baseUrl.length - 1);
+  static String domainName = Uri.parse(baseUrl).host;
 
   /// Create peer url
   static Uri createUrl({
